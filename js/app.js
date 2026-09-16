@@ -2139,8 +2139,21 @@ const App = {
             };
 
             tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+                btn.addEventListener('click', () => {
+                    activateTab(btn.dataset.tab);
+                    try {
+                        btn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+                    } catch(e) {}
+                });
             });
+
+            // Smooth horizontal mouse wheel scroll on dock tabs
+            container.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    container.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
 
             activateTab(defaultTab);
         };
@@ -2306,6 +2319,16 @@ const App = {
                 if (easyTabBtn) {
                     easyTabBtn.click();
                     this.showToast('✨ সহজ মোড চালু হয়েছে!');
+                }
+                const leftSidebar = document.getElementById('left-sidebar');
+                if (leftSidebar) {
+                    if (window.innerWidth <= 1024) {
+                        leftSidebar.classList.add('open');
+                        const overlay = document.getElementById('sidebar-overlay');
+                        if (overlay) overlay.classList.add('active');
+                    }
+                    const scrollContent = leftSidebar.querySelector('.sidebar-scroll-content');
+                    if (scrollContent) scrollContent.scrollTop = 0;
                 }
             });
         }

@@ -374,8 +374,25 @@ html, body {
   flex-direction: column;
   gap: var(--sp-3);
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(0, 0, 0, 0.2);
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.sidebar-scroll-content::-webkit-scrollbar {
+  width: 7px;
+}
+.sidebar-scroll-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.sidebar-scroll-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.24);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sidebar-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .sidebar-scroll-content > * {
@@ -2589,12 +2606,24 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
   display: none !important;
 }
 .sidebar-scroll-content.tabbed-mode .panel-section.dock-active {
-  display: flex !important;
-  flex-direction: column;
+  display: block !important;
   animation: fadeInTab 0.16s ease-out;
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-scroll-content.tabbed-mode .panel-section.dock-active .panel-body,
+#panel-easy .panel-body {
+  overflow: visible !important;
+  height: auto !important;
 }
 .sidebar-scroll-content.all-mode .panel-section {
   display: block !important;
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  flex-shrink: 0 !important;
 }
 
 @keyframes fadeInTab {
