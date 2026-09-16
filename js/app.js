@@ -819,6 +819,8 @@ const App = {
         if (hInput) hInput.value = h;
 
         this.updateResolutionCard();
+        this.updateEasyMasterLabels();
+        this.syncEasyFmtResUI();
         this.requestRender();
         this.updatePatternInfo();
         this.showToast(`Resolution: ${w} × ${h}`);
@@ -838,25 +840,48 @@ const App = {
         const memBytes = w * h * 4;
         const memMB = (memBytes / (1024 * 1024)).toFixed(1);
 
-        // Quality grade
-        let quality = 'Custom';
+        // Realistic lossless PNG file size estimation based on resolution
         const pixels = w * h;
-        if (pixels >= 7680 * 4320 * 0.9) quality = '8K UHD';
-        else if (pixels >= 6000 * 4000 * 0.9) quality = '6K Print';
-        else if (pixels >= 3840 * 2160 * 0.8) quality = '4K UHD';
-        else if (pixels >= 2560 * 1440 * 0.8) quality = '2K QHD';
-        else if (pixels >= 1920 * 1080 * 0.8) quality = 'FHD 1080p';
-        else quality = 'HD';
+        let quality = 'Custom';
+        let estFileText = '~4.5 MB';
+
+        if (pixels >= 11520 * 6480 * 0.9) {
+            quality = '12K Museum Master';
+            estFileText = '~35 – 65 MB (১০MB+ নিশ্চিত)';
+        } else if (pixels >= 8192 * 8192 * 0.9) {
+            quality = '8K Square Master';
+            estFileText = '~20 – 40 MB (১০MB+ নিশ্চিত)';
+        } else if (pixels >= 7680 * 4320 * 0.9) {
+            quality = '8K UHD Master';
+            estFileText = '~15 – 28 MB (১০MB+ নিশ্চিত)';
+        } else if (pixels >= 6000 * 4000 * 0.9) {
+            quality = '6K Print';
+            estFileText = '~10 – 16 MB (১০MB+ নিশ্চিত)';
+        } else if (pixels >= 3840 * 2160 * 0.8) {
+            quality = '4K UHD';
+            estFileText = '~6 – 10 MB';
+        } else if (pixels >= 2560 * 1440 * 0.8) {
+            quality = '2K QHD';
+            estFileText = '~3.5 – 5.5 MB';
+        } else if (pixels >= 1920 * 1080 * 0.8) {
+            quality = 'FHD 1080p';
+            estFileText = '~2 – 3.5 MB';
+        } else {
+            quality = 'HD';
+            estFileText = '~1 – 2 MB';
+        }
 
         const qEl = document.getElementById('res-info-quality');
         const rEl = document.getElementById('res-info-aspect');
         const mEl = document.getElementById('res-info-mem');
         const badge = document.getElementById('canvas-res-badge');
+        const fileSizeBadge = document.getElementById('master-size-indicator');
 
         if (qEl) qEl.textContent = quality;
         if (rEl) rEl.textContent = ratioText;
-        if (mEl) mEl.textContent = `~${memMB} MB`;
-        if (badge) badge.textContent = `${w} × ${h} (${s.ppi || 300} PPI)`;
+        if (mEl) mEl.textContent = estFileText;
+        if (badge) badge.textContent = `${w} × ${h} (${s.ppi || 300} PPI) • ${quality}`;
+        if (fileSizeBadge) fileSizeBadge.textContent = estFileText;
     },
 
     // ─── Zoom & Canvas Controls ───────────────────────────────────────────────
@@ -959,6 +984,50 @@ const App = {
             this.updateStatusBar('Export failed');
         } finally {
             if (btn) { btn.disabled = false; btn.innerHTML = origText || '<span>⬇</span> Download'; }
+        }
+    },
+
+    // ─── 💎 Guaranteed 10MB+ Ultra-HD Master Download ──────────────────────────
+    async downloadMaster10MB() {
+        const btns = [
+            document.getElementById('btn-download-master-10mb'),
+            document.getElementById('btn-easy-download-master'),
+            document.getElementById('btn-canvas-dl-master')
+        ].filter(Boolean);
+
+        const fmt = (this.state.exportFormat || 'png').toLowerCase();
+        const fmtUpper = (fmt === 'jpeg' ? 'jpg' : fmt).toUpperCase();
+        const w = this.state.canvasWidth || 7680;
+        const resTag = w >= 7680 ? '8K' : w >= 6000 ? '6K' : w >= 3840 ? '4K' : w >= 2560 ? '2K' : 'HD';
+
+        btns.forEach(b => {
+            b.disabled = true;
+            b.dataset.origHtml = b.innerHTML;
+            b.innerHTML = `<span class="spin-icon">⏳</span> ${resTag} ${fmtUpper} Exporting…`;
+        });
+
+        this.updateStatusBar(`💎 Rendering ${resTag} Master (${fmtUpper})…`);
+        this.showToast(`🚀 ${resTag} (${fmtUpper}) মাস্টার ইমেজ রেন্ডার হচ্ছে…`);
+
+        try {
+            const res = await exportMasterUltra10MB(this.state);
+            if (fmt === 'svg') {
+                this.showToast(`🎉 ${resTag} ভেক্টর SVG মাস্টার তৈরি হয়েছে! (সাইজ: ${res.sizeMB})`);
+            } else if (fmt === 'jpg' || fmt === 'jpeg') {
+                this.showToast(`🎉 ${resTag} হাই-কোয়ালিটি JPEG সেভ হয়েছে! (সাইজ: ${res.sizeMB})`);
+            } else {
+                this.showToast(`🎉 ১০MB+ মাস্টার PNG ইমেজ সেভ হয়েছে! (সাইজ: ${res.sizeMB})`);
+            }
+            this.updateStatusBar(`${resTag} ${fmtUpper} Master Downloaded: ${res.sizeMB}`);
+        } catch (err) {
+            console.error('Master export error:', err);
+            this.showError('Master export error: ' + err.message);
+            this.updateStatusBar('Master export failed');
+        } finally {
+            btns.forEach(b => {
+                b.disabled = false;
+                b.innerHTML = b.dataset.origHtml || '<span>💎</span> Download Master';
+            });
         }
     },
 
@@ -1686,7 +1755,11 @@ const App = {
         });
 
         // Export format / quality
-        on('export-format',  'change', e => { this.state.exportFormat  = e.target.value; });
+        on('export-format',  'change', e => { 
+            this.state.exportFormat  = e.target.value; 
+            this.updateEasyMasterLabels();
+            this.syncEasyFmtResUI();
+        });
         on('export-quality', 'change', e => { this.state.exportQuality = parseInt(e.target.value); });
 
         // Zoom controls
@@ -2134,53 +2207,65 @@ const App = {
             });
         }
 
-        // Magic Themes configuration
+        // Magic Themes configuration - Featuring 8 "মারাত্মক" Master Art Engines
         this.easyThemes = {
             'cyberpunk': {
-                name: 'সাইবারপাঙ্ক (Cyberpunk)',
-                pattern: 'neon-spiral',
-                colors: ['#ff007f', '#00f0ff', '#7928ca', '#0d1117'],
-                scale: 60, rotation: 45, density: 6, blendStrength: 0.8,
+                name: '⚡ সাইবারপাঙ্ক ২০৯৯ (Cyberpunk Godcore)',
+                pattern: 'cyberpunkQuantumMatrix',
+                colors: ['#0a0718', '#00f0ff', '#ff0055', '#7928ca', '#ffe600'],
+                scale: 60, rotation: 45, density: 6.5, blendStrength: 0.85,
             },
             'royal-gold': {
-                name: 'রয়্যাল গোল্ড (Royal Gold)',
-                pattern: 'golden-mandala',
-                colors: ['#d4af37', '#f3e5ab', '#aa7c11', '#111111'],
-                scale: 50, rotation: 30, density: 5, blendStrength: 0.65,
-            },
-            'pastel-dream': {
-                name: 'সফট পেস্টেল (Pastel Dream)',
-                pattern: 'rose-curve-8',
-                colors: ['#ffb7b2', '#b5ead7', '#c7ceea', '#fff1f0'],
-                scale: 45, rotation: 15, density: 4.5, blendStrength: 0.6,
+                name: '👑 রয়্যাল ২৪কে গোল্ড (Royal 24K Liquid Gold)',
+                pattern: 'royal24kLiquidGold',
+                colors: ['#08080a', '#d4af37', '#f3e5ab', '#aa7c11', '#fff2b2', '#221c10'],
+                scale: 50, rotation: 30, density: 5.5, blendStrength: 0.7,
             },
             'cosmic-galaxy': {
-                name: 'গ্যালাক্সি (Cosmic Galaxy)',
-                pattern: 'galaxy-arms-spiral',
-                colors: ['#050515', '#4a00e0', '#8e2de2', '#00c6ff'],
-                scale: 55, rotation: 60, density: 6, blendStrength: 0.75,
-            },
-            'emerald-zen': {
-                name: 'এমারেল্ড জেন (Nature Green)',
-                pattern: 'sacred-torus',
-                colors: ['#064e3b', '#059669', '#34d399', '#a7f3d0'],
-                scale: 50, rotation: 0, density: 5, blendStrength: 0.65,
-            },
-            'sunset-glow': {
-                name: 'সানসেট গ্লো (Sunset Glow)',
-                pattern: 'logarithmic-spiral',
-                colors: ['#ff512f', '#f09819', '#dd2476', '#3a1c71'],
-                scale: 50, rotation: 45, density: 5.5, blendStrength: 0.7,
+                name: '🌌 কসমিক হাইপার নেবুলা (Cosmic Hyper-Nebula)',
+                pattern: 'cosmicHyperNebula',
+                colors: ['#030308', '#ff007f', '#4a00e0', '#00f0ff', '#ffd700'],
+                scale: 55, rotation: 60, density: 6, blendStrength: 0.8,
             },
             'sacred-neon': {
-                name: 'সেক্রেড নিয়ন (Sacred Neon)',
-                pattern: 'metatrons-cube-spiral',
-                colors: ['#00f5d4', '#7b2cbf', '#f72585', '#0f0c29'],
+                name: '🔯 সেক্রেড মাল্টিভার্স (Multiverse Sacred Portal)',
+                pattern: 'multiverseSacredPortal',
+                colors: ['#05020f', '#00f5d4', '#7b2cbf', '#f72585', '#ffd166', '#ffffff'],
                 scale: 55, rotation: 30, density: 6, blendStrength: 0.75,
             },
+            'prismatic-aurora': {
+                name: '🔮 প্রিজমেটিক ডায়মন্ড (Diamond Aurora Prism)',
+                pattern: 'prismaticDiamondAurora',
+                colors: ['#020b14', '#00ffff', '#ff00aa', '#ffff00', '#00ff66', '#ffffff'],
+                scale: 50, rotation: 15, density: 5.5, blendStrength: 0.7,
+            },
+            'volcanic-magma': {
+                name: '🌋 ভলক্যানিক ম্যাগমা (Volcanic Solar Corona)',
+                pattern: 'volcanicMagmaCore',
+                colors: ['#080202', '#ff2200', '#ff7700', '#ffcc00', '#ffffff', '#3d0505'],
+                scale: 50, rotation: 45, density: 6, blendStrength: 0.8,
+            },
+            'bioluminescent': {
+                name: '🧬 বায়োলুমিনেসেন্ট অ্যাবিস (Deep Sea Glow)',
+                pattern: 'bioluminescentAbyss',
+                colors: ['#01060f', '#00f5d4', '#00bbf9', '#7209b7', '#f72585', '#ffffff'],
+                scale: 52, rotation: 0, density: 5.5, blendStrength: 0.7,
+            },
+            'quantum-storm': {
+                name: '🌀 কোয়ান্টাম পার্টিকেল স্টর্ম (Quantum Particle Storm)',
+                pattern: 'quantumParticleStorm',
+                colors: ['#04020a', '#9d4edd', '#00f0ff', '#ff007f', '#ffffff'],
+                scale: 55, rotation: 0, density: 6.5, blendStrength: 0.75,
+            },
+            'pastel-dream': {
+                name: '🌸 সফট পেস্টেল (Pastel Dream)',
+                pattern: 'rhodoneaRose',
+                colors: ['#ffb7b2', '#b5ead7', '#c7ceea', '#fff1f0', '#957dad'],
+                scale: 45, rotation: 15, density: 4.5, blendStrength: 0.6,
+            },
             'minimal-black': {
-                name: 'মিনিমালিস্ট (Clean Minimal)',
-                pattern: 'hyperbolic-spiral',
+                name: '⚪ মিনিমালিস্ট (Clean Minimal)',
+                pattern: 'archimedeanSpiral',
                 colors: ['#ffffff', '#888888', '#111111', '#000000'],
                 scale: 40, rotation: 0, density: 4, blendStrength: 0.5,
             }
@@ -2224,11 +2309,62 @@ const App = {
             surpriseBtn.addEventListener('click', () => this.randomCyclerPattern());
         }
 
-        // Easy Direct Download
+        // Easy Direct Download (Standard)
         const directDl = document.getElementById('btn-easy-download-direct');
         if (directDl) {
             directDl.addEventListener('click', () => this.download());
         }
+
+        // 💎 Guaranteed 10MB+ Master Download Buttons (Header, Easy Mode, Canvas)
+        const masterDls = [
+            document.getElementById('btn-download-master-10mb'),
+            document.getElementById('btn-easy-download-master'),
+            document.getElementById('btn-canvas-dl-master')
+        ].filter(Boolean);
+
+        masterDls.forEach(btn => {
+            btn.addEventListener('click', () => this.downloadMaster10MB());
+        });
+
+        // 📁 Easy Mode Format Chips (PNG, JPEG, SVG)
+        document.querySelectorAll('.easy-fmt-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.easy-fmt-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                const fmt = chip.dataset.fmt || 'png';
+                this.state.exportFormat = fmt;
+
+                // Sync main export format select
+                const sel = document.getElementById('export-format');
+                if (sel) sel.value = fmt;
+
+                // Sync format pills in canvas toolbar
+                document.querySelectorAll('.format-pill').forEach(pill => {
+                    pill.classList.toggle('active', pill.dataset.format === fmt);
+                });
+
+                this.updateEasyMasterLabels();
+                const fmtName = fmt === 'svg' ? 'SVG ভেক্টর গ্রাফিক' : fmt === 'png' ? 'PNG লসলেস (১০MB+ নিশ্চিত)' : 'JPEG হাই-কোয়ালিটি';
+                this.showToast(`📁 ফরম্যাট: ${fmtName}`);
+            });
+        });
+
+        // 📐 Easy Mode Resolution Chips (2K, 4K, 6K, 8K)
+        document.querySelectorAll('.easy-res-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.easy-res-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                const res = chip.dataset.res;
+                const label = chip.dataset.label || 'Master';
+                if (res) {
+                    this.setResolutionPreset(res);
+                    const resSelect = document.getElementById('res-preset-select');
+                    if (resSelect) resSelect.value = res;
+                    this.updateEasyMasterLabels();
+                    this.showToast(`📐 রেজোলিউশন: ${label} (${res})`);
+                }
+            });
+        });
 
         // Easy Sliders (Scale, Rotation, Density, Blend)
         const bindEasySlider = (sliderId, displayId, stateKey, unit = '', isDiv100 = false) => {
@@ -2263,6 +2399,45 @@ const App = {
         bindEasySlider('easy-blend', 'easy-blend-val', 'blendStrength', '%', true);
 
         this.syncEasySlidersFromState();
+        this.updateEasyMasterLabels();
+        this.syncEasyFmtResUI();
+    },
+
+    updateEasyMasterLabels() {
+        const fmt = (this.state?.exportFormat || 'png').toLowerCase();
+        const w = this.state?.canvasWidth || 7680;
+        const resTag = w >= 7680 ? '8K' : w >= 6000 ? '6K' : w >= 3840 ? '4K' : w >= 2560 ? '2K' : 'HD';
+        const titleEl = document.getElementById('easy-master-dl-title');
+        const subEl = document.getElementById('easy-master-dl-sub');
+        if (!titleEl) return;
+
+        if (fmt === 'png') {
+            titleEl.textContent = `১০ MB+ মাস্টার ইমেজ ডাউনলোড (${resTag} PNG)`;
+            if (subEl) subEl.textContent = 'Guaranteed 10MB+ Lossless Masterpiece';
+        } else if (fmt === 'svg') {
+            titleEl.textContent = `ভেক্টর মাস্টার ডাউনলোড (${resTag} SVG)`;
+            if (subEl) subEl.textContent = 'Scalable Vector Graphic (Illustrator / Figma Ready)';
+        } else if (fmt === 'jpg' || fmt === 'jpeg') {
+            titleEl.textContent = `আল্ট্রা ফটো ডাউনলোড (${resTag} JPEG)`;
+            if (subEl) subEl.textContent = 'High Quality Compressed Photo Export';
+        } else {
+            titleEl.textContent = `মাস্টার ডাউনলোড (${resTag} ${fmt.toUpperCase()})`;
+            if (subEl) subEl.textContent = 'Ultra High Definition Export';
+        }
+    },
+
+    syncEasyFmtResUI() {
+        if (!this.state) return;
+        const curFmt = (this.state.exportFormat || 'png').toLowerCase();
+        const curRes = `${this.state.canvasWidth}x${this.state.canvasHeight}`;
+
+        document.querySelectorAll('.easy-fmt-chip').forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.fmt === curFmt);
+        });
+
+        document.querySelectorAll('.easy-res-chip').forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.res === curRes);
+        });
     },
 
     syncEasySlidersFromState() {
@@ -2300,27 +2475,28 @@ const App = {
     },
 
     easyMagicGenerate() {
-        // Picks a high-impact pattern from spirals/rose/sacred/fractals
+        // Picks high-impact master art patterns and intricate sacred/spiral geometries
         const curated = [
-            'golden-mandala', 'neon-spiral', 'flower-of-life-spiral', 'rose-curve-8',
-            'galaxy-arms-spiral', 'hypnotic-swirl', 'metatrons-cube-spiral', 'celtic-spiral-knot',
-            'sacred-torus', 'vortex-tunnel', 'fibonacci-phyllotaxis', 'aurora-spiral-ribbon'
+            'cosmicHyperNebula', 'cyberpunkQuantumMatrix', 'royal24kLiquidGold',
+            'multiverseSacredPortal', 'prismaticDiamondAurora', 'volcanicMagmaCore',
+            'bioluminescentAbyss', 'quantumParticleStorm',
+            'goldenSpiral', 'rhodoneaRose', 'spiralGalaxy', 'metatronCube', 'sriYantra', 'torusSacred'
         ];
         const rng = createSeededRandom(Date.now() % 999999);
         const randomPattern = curated[Math.floor(Math.random() * curated.length)];
         this.state.patternType = randomPattern;
 
-        // Apply a vibrant or luxury random palette
+        // Apply vibrant / luxury master palette
         if (typeof randomPremiumPalette === 'function') {
-            const types = ['cyberpunk', 'gold', 'neon', 'sunset', 'cosmic', 'pastel'];
+            const types = ['luxury', 'vibrant', 'dark', 'neon', 'earth'];
             const pType = types[Math.floor(Math.random() * types.length)];
             this.state.colors = randomPremiumPalette(rng, pType, 4);
         }
 
-        this.state.scale = 35 + Math.floor(Math.random() * 40);
+        this.state.scale = 40 + Math.floor(Math.random() * 35);
         this.state.rotation = Math.floor(Math.random() * 180);
-        this.state.density = 4 + Math.floor(Math.random() * 4);
-        this.state.blendStrength = 0.5 + Math.random() * 0.35;
+        this.state.density = 5 + Math.floor(Math.random() * 4);
+        this.state.blendStrength = 0.65 + Math.random() * 0.25;
         this.state.seed = Math.floor(Math.random() * 899999) + 100000;
 
         this.applyStateToUI();

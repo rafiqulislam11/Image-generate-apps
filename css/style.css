@@ -2708,4 +2708,295 @@ body.one-page-mode #preview-canvas {
   opacity: 0.9;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   💎 10MB+ MASTER ART STUDIO & RESOLUTION STYLES
+   ══════════════════════════════════════════════════════════════ */
+
+/* Header Master 10MB+ Button */
+.btn-hdr-master {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #06b6d4 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 14px rgba(124, 58, 237, 0.45), inset 0 1px 0 rgba(255,255,255,0.4) !important;
+  letter-spacing: 0.2px;
+  animation: pulseMasterGlow 3s infinite alternate ease-in-out;
+}
+
+.btn-hdr-master:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.65), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+  transform: translateY(-1px);
+}
+
+@keyframes pulseMasterGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+  }
+}
+
+/* Flagship 10MB+ Easy Download Button */
+.btn-easy-download-master {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  background: linear-gradient(135deg, #1e1136 0%, #31135e 40%, #0f324c 100%);
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-easy-download-master::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: rotate(35deg);
+  animation: shineMaster 4s infinite linear;
+}
+
+@keyframes shineMaster {
+  0% { transform: translate(-80%, -80%) rotate(35deg); }
+  100% { transform: translate(80%, 80%) rotate(35deg); }
+}
+
+.btn-easy-download-master:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.15);
+  box-shadow: 0 6px 26px rgba(147, 51, 234, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 215, 0, 0.8);
+}
+
+.btn-easy-download-master .dl-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+}
+
+.btn-easy-download-master .dl-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff9d6;
+  letter-spacing: 0.2px;
+}
+
+.btn-easy-download-master .dl-sub {
+  font-size: 10px;
+  color: #c4b5fd;
+  font-weight: 500;
+}
+
+/* Master Category Chip */
+.category-chip-master {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(6, 182, 212, 0.25)) !important;
+  color: #a5f3fc !important;
+  border-color: rgba(6, 182, 212, 0.5) !important;
+  font-weight: 700 !important;
+}
+
+.category-chip-master.active {
+  background: linear-gradient(135deg, #7c3aed, #06b6d4) !important;
+  color: #ffffff !important;
+}
+
+/* Master Pattern Button */
+.pattern-btn-master {
+  border-color: rgba(147, 51, 234, 0.45) !important;
+  background: rgba(30, 17, 54, 0.7) !important;
+  color: #f1f5f9 !important;
+  font-weight: 600;
+  position: relative;
+}
+
+.pattern-btn-master:hover, .pattern-btn-master.active {
+  background: linear-gradient(135deg, #4f46e5, #9333ea) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 12px rgba(147, 51, 234, 0.5);
+  color: #ffffff !important;
+}
+
+/* Toolbar Master Size Badge & Button */
+.toolbar-master-badge {
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.2px;
+}
+
+.btn-canvas-master {
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all var(--t-fast);
+}
+
+.btn-canvas-master:hover {
+  filter: brightness(1.2);
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(109, 40, 217, 0.5);
+}
+
+.easy-label-pill {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #10b981;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  margin-left: auto;
+}
+
+/* ─── Easy Mode Format Chips (PNG, JPEG, SVG) ─────────────────────── */
+.easy-fmt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.easy-fmt-chip {
+  background: var(--bg-card, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--r-md, 8px);
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--t-fast, 0.15s ease);
+  color: var(--text-secondary, #94a3b8);
+  outline: none;
+  user-select: none;
+}
+
+.easy-fmt-chip:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.08));
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #fff;
+  transform: translateY(-1.5px);
+}
+
+.easy-fmt-chip.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(124, 58, 237, 0.25));
+  border-color: #06b6d4;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.35), inset 0 0 8px rgba(6, 182, 212, 0.15);
+  color: #ffffff;
+}
+
+.easy-fmt-chip .fmt-ext {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #f8fafc;
+}
+
+.easy-fmt-chip.active .fmt-ext {
+  color: #38bdf8;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+.easy-fmt-chip .fmt-desc {
+  font-size: 9.5px;
+  color: var(--text-muted, #64748b);
+  margin-top: 2px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.easy-fmt-chip.active .fmt-desc {
+  color: #bae6fd;
+}
+
+/* ─── Easy Mode Resolution Chips (2K, 4K, 6K, 8K) ─────────────────── */
+.easy-res-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.easy-res-chip {
+  background: var(--bg-card, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--r-md, 8px);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all var(--t-fast, 0.15s ease);
+  color: var(--text-secondary, #94a3b8);
+  outline: none;
+  user-select: none;
+}
+
+.easy-res-chip:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.08));
+  border-color: rgba(147, 51, 234, 0.4);
+  color: #fff;
+  transform: translateY(-1.5px);
+}
+
+.easy-res-chip.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(244, 63, 94, 0.2));
+  border-color: #a855f7;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.35), inset 0 0 8px rgba(168, 85, 247, 0.15);
+  color: #ffffff;
+}
+
+.easy-res-chip .res-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.easy-res-chip.active .res-tag {
+  color: #e879f9;
+  text-shadow: 0 0 6px rgba(232, 121, 249, 0.4);
+}
+
+.easy-res-chip .res-px {
+  font-size: 10px;
+  color: var(--text-muted, #64748b);
+  margin-top: 2px;
+  font-family: monospace;
+}
+
+.easy-res-chip.active .res-px {
+  color: #cbd5e1;
+}
+
+
 
