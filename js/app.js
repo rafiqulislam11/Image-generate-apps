@@ -243,10 +243,13 @@ const App = {
         document.getElementById('left-sidebar')?.classList.add('open');
         document.getElementById('right-panel')?.classList.remove('open');
         document.getElementById('sidebar-overlay')?.classList.add('active');
+        document.getElementById('nav-btn-controls')?.classList.add('active');
+        document.getElementById('nav-btn-palette')?.classList.remove('active');
     },
 
     closeLeftSidebar() {
         document.getElementById('left-sidebar')?.classList.remove('open');
+        document.getElementById('nav-btn-controls')?.classList.remove('active');
         if (!document.getElementById('right-panel')?.classList.contains('open')) {
             document.getElementById('sidebar-overlay')?.classList.remove('active');
         }
@@ -265,10 +268,13 @@ const App = {
         document.getElementById('right-panel')?.classList.add('open');
         document.getElementById('left-sidebar')?.classList.remove('open');
         document.getElementById('sidebar-overlay')?.classList.add('active');
+        document.getElementById('nav-btn-palette')?.classList.add('active');
+        document.getElementById('nav-btn-controls')?.classList.remove('active');
     },
 
     closeRightPanel() {
         document.getElementById('right-panel')?.classList.remove('open');
+        document.getElementById('nav-btn-palette')?.classList.remove('active');
         if (!document.getElementById('left-sidebar')?.classList.contains('open')) {
             document.getElementById('sidebar-overlay')?.classList.remove('active');
         }
@@ -287,6 +293,8 @@ const App = {
         document.getElementById('left-sidebar')?.classList.remove('open');
         document.getElementById('right-panel')?.classList.remove('open');
         document.getElementById('sidebar-overlay')?.classList.remove('active');
+        document.getElementById('nav-btn-controls')?.classList.remove('active');
+        document.getElementById('nav-btn-palette')?.classList.remove('active');
     },
 
     // ─── Pattern Filter & Search ──────────────────────────────────────────────
@@ -2568,6 +2576,9 @@ const App = {
         this.updatePatternInfo();
         this.generateVariations();
         this.showToast(`✨ ${t.name} থিম চালু হয়েছে!`);
+        if (window.innerWidth <= 768) {
+            this.closeLeftSidebar();
+        }
     },
 
     easyMagicGenerate() {
@@ -2602,6 +2613,9 @@ const App = {
         this.updatePatternInfo();
         this.generateVariations();
         this.showToast('✨ নতুন ম্যাজিক ডিজাইন তৈরি হয়েছে!');
+        if (window.innerWidth <= 768) {
+            this.closeLeftSidebar();
+        }
     },
 };
 
