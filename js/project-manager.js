@@ -1,7 +1,9 @@
 'use strict';
 /**
- * Pattern Generator PRO V2 — project-manager.js
- * Save / Load / Auto-save projects (localStorage + export JSON)
+ * AI Pattern & Image Design Studio PRO — js/project-manager.js
+ * Comprehensive Project Management System
+ * Supports 6 Folders: My Designs, Favorites, Client Projects, Stock Ready, Templates, Archived
+ * Search, Sort, Filter, Duplicate, Rename, Delete, and Full Structured JSON Import/Export.
  */
 
 const ProjectManager = {
@@ -11,17 +13,29 @@ const ProjectManager = {
   _isDirty: false,
   _onDirtyChange: null,
 
+  FOLDERS: [
+    { id: 'all', name: 'All Projects', icon: '📁' },
+    { id: 'my_designs', name: 'My Designs', icon: '🎨' },
+    { id: 'favorites', name: 'Favorites', icon: '❤️' },
+    { id: 'client_projects', name: 'Client Projects', icon: '💼' },
+    { id: 'stock_ready', name: 'Stock Ready', icon: '🏷️' },
+    { id: 'templates', name: 'Templates', icon: '📋' },
+    { id: 'archived', name: 'Archived', icon: '📦' }
+  ],
+
+  activeFolder: 'all',
+  searchQuery: '',
+  sortBy: 'updated_desc', // 'updated_desc', 'created_desc', 'name_asc'
+
   init(onDirtyChange) {
     this._onDirtyChange = onDirtyChange;
   },
 
-  // ─── Dirty Tracking ─────────────────────────────────────
   markDirty() {
     if (!this._isDirty) {
       this._isDirty = true;
       this._fireChange();
     }
-    this._scheduleAutoSave();
   },
 
   markSaved() {
@@ -37,16 +51,6 @@ const ProjectManager = {
     }
   },
 
-  // ─── Auto-Save ──────────────────────────────────────────
-  _scheduleAutoSave(state) {
-    clearTimeout(this._autoSaveTimer);
-    if (state) {
-      this._autoSaveTimer = setTimeout(() => {
-        this.saveLastState(state);
-      }, 2000);
-    }
-  },
-
   saveLastState(state) {
     try { localStorage.setItem(this._LAST_KEY, JSON.stringify(state)); } catch(e) {}
   },
@@ -55,34 +59,93 @@ const ProjectManager = {
     try { return JSON.parse(localStorage.getItem(this._LAST_KEY) || 'null'); } catch { return null; }
   },
 
-  // ─── Project CRUD ────────────────────────────────────────
+  // ─── Project Storage & Query ──────────────────────────────
   getAll() {
-    try { return JSON.parse(localStorage.getItem(this._KEY) || '[]'); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(this._KEY) || '[]');
+    } catch {
+      return [];
+    }
   },
 
-  save(id, name, state, thumbnail) {
+  getFilteredProjects() {
+    let projects = this.getAll();
+
+    // Folder filter
+    if (this.activeFolder === 'favorites') {
+      projects = projects.filter(p => p.favorite);
+    } else if (this.activeFolder !== 'all') {
+      projects = projects.filter(p => p.folder === this.activeFolder);
+    }
+
+    // Search query filter
+    if (this.searchQuery && this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase().trim();
+      projects = projects.filter(p => 
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.category && p.category.toLowerCase().includes(q)) ||
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
+      );
+    }
+
+    // Sorting
+    projects.sort((a, b) => {
+      if (this.sortBy === 'name_asc') return (a.name || '').localeCompare(b.name || '');
+      if (this.sortBy === 'created_desc') return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(b.updatedAt) - new Date(a.updatedAt);
+    });
+
+    return projects;
+  },
+
+  save(id, name, state, thumbnail, folder = 'my_designs', category = 'Abstract', tags = []) {
     const projects = this.getAll();
     const now = new Date().toISOString();
-    const idx = projects.findIndex(p => p.id === id);
+    const idx = id ? projects.findIndex(p => p.id === id) : -1;
 
-    const entry = {
+    const structuredData = {
       id: id || ('proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
-      name: name || 'Untitled Project',
+      name: (name && name.trim()) ? name.trim() : 'Untitled Design',
+      version: '2.0',
+      folder: folder || 'my_designs',
+      category: category || (state.patternType || 'Abstract'),
+      tags: Array.isArray(tags) ? tags : [],
+      favorite: idx >= 0 ? projects[idx].favorite : false,
+      status: 'Ready',
+      exportStatus: 'Draft',
       createdAt: idx >= 0 ? projects[idx].createdAt : now,
       updatedAt: now,
       thumbnail: thumbnail || '',
+      canvas: {
+        width: state.canvasWidth || 4000,
+        height: state.canvasHeight || 2663,
+        ppi: state.ppi || 300,
+      },
+      prompt: state.prompt || '',
+      style: state.style || 'Modern',
+      colors: state.colors || [],
+      layers: state.layers || [],
+      effects: state.effects || {},
+      seed: state.seed || 483920,
+      variations: state.variations || [],
+      metadata: state.metadata || {},
       state: JSON.parse(JSON.stringify(state)),
     };
 
     if (idx >= 0) {
-      projects[idx] = entry;
+      projects[idx] = structuredData;
     } else {
-      projects.unshift(entry);
+      projects.unshift(structuredData);
     }
 
-    // Keep max 50 projects
-    const trimmed = projects.slice(0, 50);
-    try { localStorage.setItem(this._KEY, JSON.stringify(trimmed)); return entry; } catch(e) { return null; }
+    try {
+      localStorage.setItem(this._KEY, JSON.stringify(projects.slice(0, 100)));
+      this.markSaved();
+      return structuredData;
+    } catch(e) {
+      console.error('Failed to save project:', e);
+      return null;
+    }
   },
 
   load(id) {
@@ -93,8 +156,19 @@ const ProjectManager = {
   rename(id, newName) {
     const projects = this.getAll();
     const p = projects.find(p => p.id === id);
+    if (p && newName && newName.trim()) {
+      p.name = newName.trim();
+      p.updatedAt = new Date().toISOString();
+      try { localStorage.setItem(this._KEY, JSON.stringify(projects)); return true; } catch { return false; }
+    }
+    return false;
+  },
+
+  setFolder(id, targetFolder) {
+    const projects = this.getAll();
+    const p = projects.find(p => p.id === id);
     if (p) {
-      p.name = newName;
+      p.folder = targetFolder;
       p.updatedAt = new Date().toISOString();
       try { localStorage.setItem(this._KEY, JSON.stringify(projects)); return true; } catch { return false; }
     }
@@ -104,13 +178,13 @@ const ProjectManager = {
   duplicate(id) {
     const p = this.load(id);
     if (!p) return null;
-    const newProject = JSON.parse(JSON.stringify(p));
-    newProject.id = 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-    newProject.name = p.name + ' Copy';
-    newProject.createdAt = newProject.updatedAt = new Date().toISOString();
+    const copy = JSON.parse(JSON.stringify(p));
+    copy.id = 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    copy.name = p.name + ' (Copy)';
+    copy.createdAt = copy.updatedAt = new Date().toISOString();
     const projects = this.getAll();
-    projects.unshift(newProject);
-    try { localStorage.setItem(this._KEY, JSON.stringify(projects.slice(0, 50))); return newProject; } catch { return null; }
+    projects.unshift(copy);
+    try { localStorage.setItem(this._KEY, JSON.stringify(projects.slice(0, 100))); return copy; } catch { return null; }
   },
 
   delete(id) {
@@ -123,24 +197,44 @@ const ProjectManager = {
     const p = projects.find(p => p.id === id);
     if (p) {
       p.favorite = !p.favorite;
+      p.updatedAt = new Date().toISOString();
       try { localStorage.setItem(this._KEY, JSON.stringify(projects)); return p.favorite; } catch {}
     }
     return false;
   },
 
-  // ─── JSON Import / Export ────────────────────────────────
-  exportJSON(state, name) {
-    const data = {
+  // ─── Standard JSON Project Format (Import & Export) ────────
+  exportJSON(state, name = 'AI_Design_Studio_Project') {
+    const cleanName = (name || 'pattern-project').toLowerCase().replace(/\s+/g, '-');
+    const projectDoc = {
+      projectName: name,
       version: '2.0',
-      name: name || 'PatternGeneratorPRO',
-      exportedAt: new Date().toISOString(),
+      generator: 'AI Pattern & Image Design Studio PRO',
+      canvas: {
+        width: state.canvasWidth || 4000,
+        height: state.canvasHeight || 2663,
+        ppi: state.ppi || 300,
+        tileMode: state.tileMode || 1
+      },
+      prompt: state.prompt || '',
+      category: state.patternType || 'Geometric',
+      style: state.style || 'Modern',
+      colors: state.colors || [],
+      layers: state.layers || [],
+      effects: state.effects || {},
+      seed: state.seed || 483920,
+      variations: state.variations || [],
+      metadata: state.metadata || {},
       state: JSON.parse(JSON.stringify(state)),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+
+    const blob = new Blob([JSON.stringify(projectDoc, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = (name || 'pattern-project').toLowerCase().replace(/\s+/g, '-') + '.json';
+    a.download = `${cleanName}.json`;
     a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
@@ -151,27 +245,26 @@ const ProjectManager = {
   async importJSON(file) {
     return new Promise((resolve, reject) => {
       if (!file || !file.name.endsWith('.json')) {
-        reject(new Error('Please select a .json project file'));
+        reject(new Error('Please select a valid .json project file.'));
         return;
       }
       const reader = new FileReader();
       reader.onload = e => {
         try {
-          const data = JSON.parse(e.target.result);
-          if (data.state) resolve(data);
-          else reject(new Error('Invalid project file format'));
+          const doc = JSON.parse(e.target.result);
+          if (doc.state || doc.canvas) {
+            resolve(doc);
+          } else {
+            reject(new Error('Unrecognized project file schema.'));
+          }
         } catch(err) {
-          reject(new Error('Could not parse project file: ' + err.message));
+          reject(new Error('Could not parse JSON project: ' + err.message));
         }
       };
-      reader.onerror = () => reject(new Error('Could not read file'));
+      reader.onerror = () => reject(new Error('Failed reading file.'));
       reader.readAsText(file);
     });
-  },
-
-  generateId() {
-    return 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-  },
+  }
 };
 
 if (typeof window !== 'undefined') window.ProjectManager = ProjectManager;

@@ -200,6 +200,115 @@ const ColorEngine = {
     return `hsl(${h}, ${s}%, ${l}%)`;
   },
 
+  // ─── CMYK Conversions ────────────────────────────────────
+  hexToCmyk(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    return this.rgbToCmyk(r, g, b);
+  },
+
+  rgbToCmyk(r, g, b) {
+    const rf = r / 255;
+    const gf = g / 255;
+    const bf = b / 255;
+    const k = 1 - Math.max(rf, gf, bf);
+    if (k === 1) {
+      return { c: 0, m: 0, y: 0, k: 100 };
+    }
+    const c = Math.round(((1 - rf - k) / (1 - k)) * 100);
+    const m = Math.round(((1 - gf - k) / (1 - k)) * 100);
+    const y = Math.round(((1 - bf - k) / (1 - k)) * 100);
+    return { c, m, y, k: Math.round(k * 100) };
+  },
+
+  cmykToRgb(c, m, y, k) {
+    const cf = c / 100;
+    const mf = m / 100;
+    const yf = y / 100;
+    const kf = k / 100;
+    const r = Math.round(255 * (1 - cf) * (1 - kf));
+    const g = Math.round(255 * (1 - mf) * (1 - kf));
+    const b = Math.round(255 * (1 - yf) * (1 - kf));
+    return { r, g, b };
+  },
+
+  cmykToHex(c, m, y, k) {
+    const { r, g, b } = this.cmykToRgb(c, m, y, k);
+    return rgbToHex(r, g, b);
+  },
+
+  // ─── Grayscale Conversion ────────────────────────────────
+  toGrayscale(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    const gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+    return rgbToHex(gray, gray, gray);
+  },
+
+  paletteToGrayscale(colors) {
+    return colors.map(c => this.toGrayscale(c));
+  },
+
+  // ─── Color Locking System ────────────────────────────────
+  lockedIndices: new Set(),
+
+  toggleLock(index) {
+    if (this.lockedIndices.has(index)) {
+      this.lockedIndices.delete(index);
+      return false;
+    } else {
+      this.lockedIndices.add(index);
+      return true;
+    }
+  },
+
+  isLocked(index) {
+    return this.lockedIndices.has(index);
+  },
+
+  clearLocks() {
+    this.lockedIndices.clear();
+  },
+
+  // Randomize only unlocked colors
+  randomizeUnlocked(currentColors, newColors) {
+    return currentColors.map((col, idx) => {
+      if (this.isLocked(idx)) return col;
+      return newColors[idx] || col;
+    });
+  },
+
+  // Replace single color
+  replaceColor(colors, index, newHex) {
+    const next = colors.slice();
+    if (index >= 0 && index < next.length) {
+      next[index] = newHex;
+    }
+    this.recordHistory(next);
+    return next;
+  },
+
+  // ─── Palette History ─────────────────────────────────────
+  _historyKey: 'pgpro_palette_history',
+
+  getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(this._historyKey) || '[]');
+    } catch {
+      return [];
+    }
+  },
+
+  recordHistory(palette) {
+    if (!palette || !palette.length) return;
+    const hist = this.getHistory();
+    const key = palette.join('|');
+    const filtered = hist.filter(p => p.join('|') !== key);
+    filtered.unshift(palette.slice());
+    const trimmed = filtered.slice(0, 20); // Keep last 20
+    try {
+      localStorage.setItem(this._historyKey, JSON.stringify(trimmed));
+    } catch {}
+  },
+
   // ─── Saved Palettes (localStorage) ──────────────────────
   getSavedPalettes() {
     try { return JSON.parse(localStorage.getItem('pgpro_palettes') || '{}'); } catch { return {}; }

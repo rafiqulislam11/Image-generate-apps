@@ -117,6 +117,22 @@ const App = {
         this.updatePatternInfo();
         this.updateResolutionCard();
 
+        // New Integrations
+        if (typeof I18N !== 'undefined') I18N.init();
+        this.initAccentTheme();
+        if (typeof CanvasTools !== 'undefined') {
+            CanvasTools.init(this.previewCanvas, this.state, () => this.render());
+        }
+        if (typeof LayerSystem !== 'undefined') {
+            LayerSystem.init();
+        }
+        if (typeof AIService !== 'undefined') {
+            AIService.init();
+        }
+        this.initCategories();
+        this.initTemplates();
+        this.initCommandPalette();
+
         // Responsive window resize listener
         window.addEventListener('resize', () => {
             clearTimeout(this._resizeTimer);
@@ -554,6 +570,17 @@ const App = {
             const div = document.createElement('div');
             div.className = 'variation-item';
             div.title = `Seed: ${seed}`;
+
+            // Evaluate similarity score
+            let simText = '92% Unique';
+            if (typeof SimilarityEngine !== 'undefined' && SimilarityEngine.evaluateSimilarity) {
+                const evalRes = SimilarityEngine.evaluateSimilarity(vs, base);
+                simText = `${evalRes.uniquenessPercent}% Unique`;
+            }
+            const badge = document.createElement('span');
+            badge.className = 'variation-sim-badge';
+            badge.textContent = simText;
+
             const captured = vs;
             div.addEventListener('click', () => {
                 this.state = this.cloneState(captured);
@@ -564,6 +591,7 @@ const App = {
                 this.showToast('Variation applied');
             });
             div.appendChild(thumb);
+            div.appendChild(badge);
             grid.appendChild(div);
 
             i++;
@@ -778,6 +806,28 @@ const App = {
             const txtColor = contrastColor(c);
             return `<div class="palette-swatch" style="background:${c};color:${txtColor}" title="${c} (Click to copy)" onclick="navigator.clipboard.writeText('${c}');App.showToast('Copied ${c}')">${c.slice(1)}</div>`;
         }).join('');
+
+        // CMYK Print Preview Update
+        if (this.state.colors && this.state.colors.length > 0) {
+            const primaryHex = this.state.colors[0];
+            const rgb = typeof hexToRgb === 'function' ? hexToRgb(primaryHex) : { r: 13, g: 27, b: 62 };
+            let cmyk = { c: 0, m: 0, y: 0, k: 100 };
+            if (typeof ColorEngine !== 'undefined' && ColorEngine.rgbToCmyk) {
+                cmyk = ColorEngine.rgbToCmyk(rgb);
+            }
+            const cmykText = document.getElementById('cmyk-primary-val');
+            if (cmykText) {
+                cmykText.textContent = `C:${cmyk.c}% M:${cmyk.m}% Y:${cmyk.y}% K:${cmyk.k}%`;
+            }
+            const barC = document.querySelector('.cmyk-bar.cmyk-c');
+            const barM = document.querySelector('.cmyk-bar.cmyk-m');
+            const barY = document.querySelector('.cmyk-bar.cmyk-y');
+            const barK = document.querySelector('.cmyk-bar.cmyk-k');
+            if (barC) barC.style.width = `${cmyk.c}%`;
+            if (barM) barM.style.width = `${cmyk.m}%`;
+            if (barY) barY.style.width = `${cmyk.y}%`;
+            if (barK) barK.style.width = `${cmyk.k}%`;
+        }
     },
 
     applyHarmony(harmonyType) {
@@ -1299,12 +1349,43 @@ const App = {
         this.updatePatternInfo();
         this.generateVariations();
         this.showToast(`✨ Generated: ${this.state.patternType} (${this.state.colors.length} colors)`);
+
+        // Structured AI Design Analysis Card (Section 4)
+        const card = document.getElementById('ai-analysis-card');
+        if (card && parsed) {
+            card.style.display = 'block';
+            const setCardVal = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+            setCardVal('ai-card-pattern', parsed.patternType || this.state.patternType);
+            setCardVal('ai-card-palette', parsed.paletteName || `${this.state.colors.length} Colors`);
+            setCardVal('ai-card-density', parsed.density || this.state.density);
+            setCardVal('ai-card-rotation', `${parsed.rotation || this.state.rotation}°`);
+            setCardVal('ai-card-mood', parsed.mood || 'High Aesthetic');
+            setCardVal('ai-card-engine', parsed.engineName || 'Master Art Studio');
+        }
     },
 
     // ─── Project Management Studio ────────────────────────────────────────────
     openProjectsModal() {
         this.renderProjectsList();
-        document.getElementById('modal-projects')?.classList.add('open');
+        const modal = document.getElementById('modal-projects');
+        modal?.classList.add('open');
+
+        // Setup folder pills & search listener once
+        if (!this._projectFiltersBound) {
+            this._projectFiltersBound = true;
+            document.querySelectorAll('#project-folder-pills .category-chip').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('#project-folder-pills .category-chip').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    this.renderProjectsList();
+                });
+            });
+
+            const searchInput = document.getElementById('project-search-filter');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => this.renderProjectsList());
+            }
+        }
     },
 
     closeProjectsModal() {
@@ -1331,11 +1412,15 @@ const App = {
             }
         } catch(e) {}
 
-        const entry = ProjectManager.save(null, name, this.state, thumb);
+        const folder = document.getElementById('project-folder-select')?.value || 'my_designs';
+        const tagInput = document.getElementById('project-tags-input')?.value || '';
+        const tags = tagInput.split(',').map(t => t.trim()).filter(Boolean);
+
+        const entry = ProjectManager.save(null, name, this.state, thumb, folder, this.state.patternType, tags);
         if (entry) {
             if (nameInput) nameInput.value = '';
             this.renderProjectsList();
-            this.showToast(`💾 Saved: "${name}"`);
+            this.showToast(`💾 Saved: "${name}" (${folder})`);
         } else {
             this.showError('Could not save project');
         }
@@ -1402,7 +1487,7 @@ const App = {
                 this.state = this.cloneState(data.state);
                 if (typeof setSeed === 'function') setSeed(this.state.seed);
                 const projName = data.name || 'Imported Project';
-                ProjectManager.save(null, projName, this.state, '');
+                ProjectManager.save(null, projName, this.state, '', 'my_designs', data.category || 'Imported');
                 this.renderProjectsList();
                 this.applyStateToUI();
                 this.pushHistory();
@@ -1420,18 +1505,28 @@ const App = {
         const countEl = document.getElementById('projects-count');
         if (!grid || typeof ProjectManager === 'undefined') return;
 
-        const projects = ProjectManager.getAll();
+        const activePill = document.querySelector('#project-folder-pills .category-chip.active');
+        if (typeof ProjectManager.getFilteredProjects === 'function') {
+            ProjectManager.activeFolder = activePill ? activePill.dataset.pfolder : 'all';
+            ProjectManager.searchQuery = document.getElementById('project-search-filter')?.value || '';
+        }
+
+        const projects = (typeof ProjectManager.getFilteredProjects === 'function')
+            ? ProjectManager.getFilteredProjects()
+            : ProjectManager.getAll();
+
         if (countEl) countEl.textContent = projects.length;
 
         if (!projects.length) {
-            grid.innerHTML = '<div class="no-projects-msg" style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text-muted);">No saved projects yet. Type a name above and click "Save Current Design"!</div>';
+            grid.innerHTML = '<div class="no-projects-msg" style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text-muted);">No saved projects found in this folder.</div>';
             return;
         }
 
         grid.innerHTML = projects.map(p => {
             const dateStr = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : '';
             const thumbSrc = p.thumbnail || '';
-            const pType = p.state?.patternType || 'Pattern';
+            const pType = p.state?.patternType || p.category || 'Pattern';
+            const pFolder = p.folder ? p.folder.replace(/_/g, ' ') : 'Design';
             return `
                 <div class="project-card" data-id="${p.id}">
                     <div class="project-thumb-wrap">
@@ -1440,7 +1535,7 @@ const App = {
                     </div>
                     <div class="project-info">
                         <div class="project-name" title="${p.name}">${p.name}</div>
-                        <div class="project-date">${dateStr}</div>
+                        <div class="project-date">${dateStr} • <span style="text-transform:capitalize;">${pFolder}</span></div>
                     </div>
                     <div class="project-actions">
                         <button class="btn-sm btn-load-proj" onclick="App.loadProject('${p.id}')" title="Load this project">Load</button>
@@ -2070,12 +2165,126 @@ const App = {
             });
         });
 
+        // Language & Accent theme
+        on('lang-select', 'change', e => {
+            if (typeof I18N !== 'undefined') I18N.setLocale(e.target.value);
+        });
+
+        on('accent-theme-select', 'change', e => {
+            const val = e.target.value;
+            document.documentElement.setAttribute('data-accent', val);
+            localStorage.setItem('pf_accent', val);
+            this.showToast(`🎨 Theme Accent: ${val.charAt(0).toUpperCase() + val.slice(1)}`);
+        });
+
+        // Command Palette
+        on('btn-command-palette', 'click', () => {
+            const modal = document.getElementById('modal-command-palette');
+            if (modal) {
+                modal.classList.add('open');
+                const inp = document.getElementById('cmd-input');
+                if (inp) { inp.value = ''; inp.focus(); }
+            }
+        });
+
+        // Canvas Toolset
+        on('btn-toggle-rulers', 'click', () => {
+            if (typeof CanvasTools !== 'undefined') CanvasTools.toggleRulers();
+        });
+        on('btn-toggle-grid', 'click', () => {
+            if (typeof CanvasTools !== 'undefined') CanvasTools.toggleGrid();
+        });
+        on('btn-center-view', 'click', () => {
+            if (typeof CanvasTools !== 'undefined') CanvasTools.centerView();
+        });
+        on('btn-rotate-view', 'click', () => {
+            if (typeof CanvasTools !== 'undefined') CanvasTools.rotateView(90);
+        });
+        on('btn-before-after', 'click', () => {
+            if (typeof CanvasTools !== 'undefined') CanvasTools.toggleBeforeAfter();
+        });
+        on('btn-seamless-test', 'click', () => {
+            if (typeof SeamlessTester !== 'undefined') SeamlessTester.openModal(this.previewCanvas, this.state);
+        });
+
+        // AI Provider Setup & Credits Modals
+        on('btn-open-ai-config', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.openConfigModal();
+        });
+        on('btn-open-ai-config-panel', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.openConfigModal();
+        });
+        on('modal-ai-config-close', 'click', () => {
+            document.getElementById('modal-ai-config')?.classList.remove('open');
+        });
+        on('modal-ai-config-backdrop', 'click', () => {
+            document.getElementById('modal-ai-config')?.classList.remove('open');
+        });
+        on('btn-save-ai-config', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.saveConfigFromUI();
+        });
+        on('btn-test-ai-connection', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.testConnection();
+        });
+        on('btn-toggle-ai-key-vis', 'click', () => {
+            const inp = document.getElementById('ai-cfg-key');
+            if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+        });
+
+        on('btn-open-ai-credits', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.openCreditModal();
+        });
+        on('btn-open-credit-modal', 'click', () => {
+            if (typeof AIService !== 'undefined') AIService.openCreditModal();
+        });
+        on('modal-ai-credits-close', 'click', () => {
+            document.getElementById('modal-ai-credits')?.classList.remove('open');
+        });
+        on('modal-ai-credits-close2', 'click', () => {
+            document.getElementById('modal-ai-credits')?.classList.remove('open');
+        });
+        on('modal-ai-credits-backdrop', 'click', () => {
+            document.getElementById('modal-ai-credits')?.classList.remove('open');
+        });
+
+        // AI Studio & Card Actions
+        on('btn-trigger-ai-studio', 'click', () => this.triggerAIStudio());
+        on('btn-apply-ai-card', 'click', () => {
+            const card = document.getElementById('ai-analysis-card');
+            if (card) card.style.display = 'none';
+            this.requestRender();
+            this.showToast('AI parameters applied');
+        });
+        on('btn-close-ai-analysis', 'click', () => {
+            const card = document.getElementById('ai-analysis-card');
+            if (card) card.style.display = 'none';
+        });
+        on('btn-vary-ai-card', 'click', () => {
+            this.randomize();
+        });
+
+        // Layer System Buttons
+        on('btn-add-layer', 'click', () => {
+            if (typeof LayerSystem !== 'undefined') LayerSystem.addLayer();
+        });
+        on('btn-duplicate-layer', 'click', () => {
+            if (typeof LayerSystem !== 'undefined') LayerSystem.duplicateActive();
+        });
+        on('btn-delete-layer', 'click', () => {
+            if (typeof LayerSystem !== 'undefined') LayerSystem.deleteActive();
+        });
+        on('btn-merge-layers', 'click', () => {
+            if (typeof LayerSystem !== 'undefined') LayerSystem.mergeDown();
+        });
+
         // Keyboard shortcuts
         document.addEventListener('keydown', e => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-            if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); this.undo(); }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); this.redo(); }
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); this.download(); }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); this.undo(); }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); this.redo(); }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); this.download(); }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') { e.preventDefault(); if (typeof CanvasTools !== 'undefined') CanvasTools.toggleRulers(); }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'g') { e.preventDefault(); if (typeof CanvasTools !== 'undefined') CanvasTools.toggleGrid(); }
             if (e.key === ' ' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); this.randomize(); }
             if (e.key === 'r' && !e.ctrlKey && !e.metaKey) this.randomize();
             if (e.key === 'g' && !e.ctrlKey && !e.metaKey) { this.pushHistory(); this.requestRender(); this.showToast('⚡ Generated'); }
@@ -2092,6 +2301,10 @@ const App = {
                 this.closeStockModal();
                 this.closeProjectsModal();
                 this.closeHotkeysModal();
+                document.getElementById('modal-command-palette')?.classList.remove('open');
+                document.getElementById('modal-ai-config')?.classList.remove('open');
+                document.getElementById('modal-ai-credits')?.classList.remove('open');
+                document.getElementById('modal-seamless-test')?.classList.remove('open');
             }
         });
     },
@@ -2159,17 +2372,21 @@ const App = {
         };
 
         setupTabs('left-dock-tabs', '#left-sidebar .sidebar-scroll-content', {
-            easy:       ['panel-easy'],
-            patterns:   ['panel-patterns'],
-            colors:     ['panel-colors'],
-            controls:   ['panel-controls'],
-            effects:    ['panel-effects', 'panel-gradient'],
-            resolution: ['panel-resolution'],
-            export:     ['panel-export'],
+            easy:          ['panel-easy'],
+            categories:    ['panel-categories'],
+            patterns:      ['panel-patterns'],
+            templates:     ['panel-templates'],
+            'ai-generate': ['panel-ai-generate'],
+            colors:        ['panel-colors'],
+            controls:      ['panel-controls'],
+            effects:       ['panel-effects', 'panel-gradient'],
+            resolution:    ['panel-resolution'],
+            export:        ['panel-export'],
         }, 'easy');
 
         setupTabs('right-dock-tabs', '#right-panel .sidebar-scroll-content', {
             palette:    ['panel-right-palette'],
+            layers:     ['panel-right-layers'],
             info:       ['panel-right-info'],
             seed:       ['panel-right-seed'],
             variations: ['panel-right-variations'],
@@ -2638,6 +2855,374 @@ const App = {
         this.showToast('✨ নতুন ম্যাজিক ডিজাইন তৈরি হয়েছে!');
         if (window.innerWidth <= 768) {
             this.closeLeftSidebar();
+        }
+    },
+
+    // ─── Accent Theme Switcher ──────────────────────────────────────────────
+    initAccentTheme() {
+        const sel = document.getElementById('accent-selector');
+        const saved = localStorage.getItem('pf_accent') || 'indigo';
+        document.documentElement.setAttribute('data-accent', saved);
+        if (sel) {
+            sel.value = saved;
+            sel.addEventListener('change', (e) => {
+                const val = e.target.value;
+                document.documentElement.setAttribute('data-accent', val);
+                localStorage.setItem('pf_accent', val);
+                this.showToast(`🎨 Accent theme: ${val}`);
+            });
+        }
+    },
+
+    // ─── 30 Design Categories Studio ────────────────────────────────────────
+    initCategories() {
+        const container = document.getElementById('categories-grid-container');
+        const searchInput = document.getElementById('category-search-input');
+        const chips = document.querySelectorAll('#category-filter-chips .category-chip');
+
+        if (!container || typeof PATTERN_CATEGORIES === 'undefined') return;
+
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        const renderCategories = () => {
+            container.innerHTML = '';
+            const filtered = PATTERN_CATEGORIES.filter(cat => {
+                const matchesFilter = activeFilter === 'all' || 
+                    (cat.tags && cat.tags.some(t => t.toLowerCase() === activeFilter.toLowerCase())) ||
+                    (cat.id && cat.id.toLowerCase().includes(activeFilter.toLowerCase()));
+                const q = searchQuery.toLowerCase().trim();
+                const matchesQuery = !q || 
+                    cat.name.toLowerCase().includes(q) ||
+                    cat.description.toLowerCase().includes(q) ||
+                    (cat.tags && cat.tags.some(t => t.toLowerCase().includes(q))) ||
+                    (cat.patternTypes && cat.patternTypes.some(pt => pt.toLowerCase().includes(q)));
+                return matchesFilter && matchesQuery;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-xs text-muted" style="grid-column:1/-1;padding:16px;text-align:center;">No matching categories found</div>';
+                return;
+            }
+
+            filtered.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'category-studio-card';
+                card.innerHTML = `
+                    <div class="category-studio-icon">${cat.icon || '📁'}</div>
+                    <div class="category-studio-content">
+                        <div class="category-studio-name">${cat.name}</div>
+                        <div class="category-studio-desc">${cat.description}</div>
+                        <div class="category-studio-tags">
+                            ${(cat.tags || []).slice(0, 3).map(t => `<span class="category-tag-badge">#${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (cat.patternTypes && cat.patternTypes.length > 0) {
+                        const targetPattern = cat.patternTypes[0];
+                        this.selectPattern(targetPattern);
+                    }
+                    if (cat.suggestedPrompts && cat.suggestedPrompts.length > 0) {
+                        const promptInput = document.getElementById('ai-prompt-input');
+                        const studioPrompt = document.getElementById('ai-studio-prompt');
+                        if (promptInput) promptInput.value = cat.suggestedPrompts[0];
+                        if (studioPrompt) studioPrompt.value = cat.suggestedPrompts[0];
+                    }
+                    this.showToast(`📁 Selected: ${cat.name}`);
+                });
+                container.appendChild(card);
+            });
+        };
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderCategories();
+            });
+        }
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeFilter = chip.getAttribute('data-cfilter') || 'all';
+                renderCategories();
+            });
+        });
+
+        renderCategories();
+    },
+
+    // ─── Curated Design Templates Studio ────────────────────────────────────
+    initTemplates() {
+        const container = document.getElementById('templates-grid-container');
+        const chips = document.querySelectorAll('#template-filter-chips .category-chip');
+
+        if (!container || typeof PATTERN_TEMPLATES === 'undefined') return;
+
+        let activeFilter = 'all';
+
+        const renderTemplates = () => {
+            container.innerHTML = '';
+            const filtered = PATTERN_TEMPLATES.filter(tpl => {
+                if (activeFilter === 'all') return true;
+                return (tpl.category && tpl.category.toLowerCase() === activeFilter.toLowerCase()) ||
+                       (tpl.tags && tpl.tags.some(t => t.toLowerCase() === activeFilter.toLowerCase()));
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-xs text-muted" style="grid-column:1/-1;padding:16px;text-align:center;">No templates found</div>';
+                return;
+            }
+
+            filtered.forEach(tpl => {
+                const card = document.createElement('div');
+                card.className = 'template-studio-card';
+                const colorsHtml = (tpl.state && tpl.state.colors) ? 
+                    tpl.state.colors.slice(0, 4).map(c => `<span class="template-color-dot" style="background:${c}"></span>`).join('') : '';
+
+                card.innerHTML = `
+                    <div class="template-studio-header">
+                        <span class="template-icon">${tpl.icon || '🎨'}</span>
+                        <div class="template-name">${tpl.name}</div>
+                        <span class="template-badge">${tpl.category || 'Preset'}</span>
+                    </div>
+                    <div class="template-desc">${tpl.description || ''}</div>
+                    <div class="template-colors-row">${colorsHtml}</div>
+                `;
+                card.addEventListener('click', () => this.applyTemplate(tpl));
+                container.appendChild(card);
+            });
+        };
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeFilter = chip.getAttribute('data-tfilter') || 'all';
+                renderTemplates();
+            });
+        });
+
+        renderTemplates();
+    },
+
+    applyTemplate(tpl) {
+        if (!tpl || !tpl.state) return;
+        this.state = this.mergeState(this.state, tpl.state);
+        this.applyStateToUI();
+        this.syncEasySlidersFromState();
+        this.pushHistory();
+        this.requestRender();
+        this.updatePatternInfo();
+        this.generateVariations();
+        this.showToast(`✨ Applied Template: ${tpl.name}`);
+    },
+
+    // ─── Command Palette (Ctrl+K) ──────────────────────────────────────────
+    initCommandPalette() {
+        const modal = document.getElementById('modal-command-palette');
+        const input = document.getElementById('cmd-input');
+        const list = document.getElementById('cmd-results-list');
+        const btnOpen = document.getElementById('btn-command-palette');
+        const backdrop = document.getElementById('modal-cmd-backdrop');
+
+        if (!modal || !input || !list) return;
+
+        const openPalette = () => {
+            modal.classList.add('open');
+            input.value = '';
+            input.focus();
+            renderCommands('');
+        };
+
+        const closePalette = () => {
+            modal.classList.remove('open');
+        };
+
+        if (btnOpen) btnOpen.addEventListener('click', openPalette);
+        if (backdrop) backdrop.addEventListener('click', closePalette);
+
+        const coreCommands = [
+            { title: '✨ Easy Mode', subtitle: 'Switch to beginner 1-click magic interface', action: () => this.setMode('easy') },
+            { title: '⚡ Pro Mode', subtitle: 'Switch to full parametric studio controls', action: () => this.setMode('pro') },
+            { title: '🎲 Randomize Design (R)', subtitle: 'Generate brand new seed, colors & scale', action: () => this.randomize() },
+            { title: '🪄 Magic Generate', subtitle: 'Auto-pick curated harmony & pattern combination', action: () => this.easyMagicGenerate() },
+            { title: '📐 Toggle Rulers (Ctrl+R)', subtitle: 'Show pixel measurement rulers around canvas', action: () => typeof CanvasTools !== 'undefined' && CanvasTools.toggleRulers() },
+            { title: '▦ Toggle Grid (Ctrl+G)', subtitle: 'Overlay precision alignment grid', action: () => typeof CanvasTools !== 'undefined' && CanvasTools.toggleGrid() },
+            { title: '🔍 Reset Canvas Viewport', subtitle: 'Reset zoom and center canvas to 100%', action: () => typeof CanvasTools !== 'undefined' && CanvasTools.resetViewport() },
+            { title: '🔁 Seamless Pattern Matrix Tester', subtitle: 'Test 2x2 to 5x5 repetition & verify mathematical boundary MSE', action: () => typeof SeamlessTester !== 'undefined' && SeamlessTester.openModal() },
+            { title: '🌓 Before / After Split Compare', subtitle: 'Slider to compare current design against original state', action: () => typeof CanvasTools !== 'undefined' && CanvasTools.toggleSplitCompare() },
+            { title: '💾 Save Project', subtitle: 'Save current design into organized project library', action: () => this.openProjectsModal() },
+            { title: '📥 Download PNG (Ctrl+S)', subtitle: 'Export high quality PNG of current pattern', action: () => this.download() },
+            { title: '💎 Export 10MB+ Master PNG (8K)', subtitle: 'Commercial grade ultra-high resolution export', action: () => this.downloadMaster10MB() },
+            { title: '📐 Export Vector SVG', subtitle: 'Export mathematical vector paths', action: () => typeof VectorPdfExport !== 'undefined' && VectorPdfExport.exportSVG(this.state) },
+            { title: '📄 Export Print PDF', subtitle: 'Export print-ready 300 DPI PDF document', action: () => typeof VectorPdfExport !== 'undefined' && VectorPdfExport.exportPDF(this.state) },
+            { title: '📊 Export Stock CSV Metadata', subtitle: 'Generate 12-column commercial metadata sheet', action: () => typeof MetadataEngine !== 'undefined' && MetadataEngine.exportCSV(this.state) },
+            { title: '🎨 Harmony: Complementary', subtitle: 'Apply complementary dual-tone palette', action: () => this.applyHarmony('complementary') },
+            { title: '🎨 Harmony: Triadic', subtitle: 'Apply vibrant three-point balanced harmony', action: () => this.applyHarmony('triadic') },
+            { title: '🎨 Harmony: Analogous', subtitle: 'Apply serene adjacent hue palette', action: () => this.applyHarmony('analogous') },
+            { title: '🤖 AI Pattern Studio', subtitle: 'Open AI image and pattern generation studio', action: () => this.switchDockTab('ai-generate') }
+        ];
+
+        let selectedIndex = 0;
+        let currentItems = [];
+
+        const renderCommands = (query) => {
+            list.innerHTML = '';
+            const q = query.toLowerCase().trim();
+
+            let items = coreCommands.filter(cmd => 
+                !q || cmd.title.toLowerCase().includes(q) || cmd.subtitle.toLowerCase().includes(q)
+            );
+
+            if (q.length >= 2) {
+                const patternBtns = document.querySelectorAll('.pattern-btn');
+                patternBtns.forEach(btn => {
+                    const pName = btn.textContent.trim();
+                    const pType = btn.getAttribute('data-type');
+                    if (pName.toLowerCase().includes(q) || (pType && pType.toLowerCase().includes(q))) {
+                        items.push({
+                            title: `🔷 Pattern: ${pName}`,
+                            subtitle: `Select procedural pattern [${pType}]`,
+                            action: () => this.selectPattern(pType)
+                        });
+                    }
+                });
+            }
+
+            currentItems = items.slice(0, 15);
+            selectedIndex = 0;
+
+            if (currentItems.length === 0) {
+                list.innerHTML = '<div class="cmd-no-results">No matching commands or patterns found</div>';
+                return;
+            }
+
+            currentItems.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = 'cmd-result-item' + (idx === selectedIndex ? ' selected' : '');
+                el.innerHTML = `
+                    <div class="cmd-item-title">${item.title}</div>
+                    <div class="cmd-item-desc">${item.subtitle}</div>
+                `;
+                el.addEventListener('click', () => {
+                    closePalette();
+                    item.action();
+                });
+                list.appendChild(el);
+            });
+        };
+
+        input.addEventListener('input', (e) => {
+            renderCommands(e.target.value);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (currentItems.length > 0) {
+                    selectedIndex = (selectedIndex + 1) % currentItems.length;
+                    updateSelection();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (currentItems.length > 0) {
+                    selectedIndex = (selectedIndex - 1 + currentItems.length) % currentItems.length;
+                    updateSelection();
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentItems[selectedIndex]) {
+                    closePalette();
+                    currentItems[selectedIndex].action();
+                }
+            } else if (e.key === 'Escape') {
+                closePalette();
+            }
+        });
+
+        const updateSelection = () => {
+            const domItems = list.querySelectorAll('.cmd-result-item');
+            domItems.forEach((item, idx) => {
+                if (idx === selectedIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                if (modal.classList.contains('open')) {
+                    closePalette();
+                } else {
+                    openPalette();
+                }
+            }
+        });
+    },
+
+    // ─── AI Studio Generation Trigger ───────────────────────────────────────
+    async triggerAIStudio() {
+        const promptInput = document.getElementById('ai-studio-prompt');
+        const prompt = (promptInput && promptInput.value.trim()) || 
+            (document.getElementById('ai-prompt-input') && document.getElementById('ai-prompt-input').value.trim()) ||
+            'Luxurious emerald and gold art deco damask with floral symmetry, seamless 8K wallpaper';
+
+        const btn = document.getElementById('btn-trigger-ai-studio');
+        const origText = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="icon">⏳</span> Generating...';
+        }
+
+        try {
+            const parsed = typeof AIParser !== 'undefined' ? AIParser.parse(prompt) : null;
+            const result = typeof AIService !== 'undefined' ? await AIService.generateDesign(parsed || { prompt }) : { source: 'local_demo', label: 'Local Demo Generator' };
+
+            if (parsed) {
+                if (parsed.patternType && this.state.patternType !== parsed.patternType) {
+                    this.state.patternType = parsed.patternType;
+                }
+                if (parsed.colors && parsed.colors.length >= 2) {
+                    this.state.colors = parsed.colors;
+                }
+                if (parsed.scale) this.state.scale = parsed.scale;
+                if (parsed.density) this.state.density = parsed.density;
+                if (parsed.effects) {
+                    this.state.effects = Object.assign({}, this.state.effects, parsed.effects);
+                }
+            }
+
+            this.applyStateToUI();
+            this.syncEasySlidersFromState();
+            this.pushHistory();
+            this.requestRender();
+            this.updatePatternInfo();
+            this.generateVariations();
+
+            if (typeof AIService !== 'undefined') {
+                AIService.updateCreditUI();
+                const panelCred = document.getElementById('ai-panel-credits');
+                if (panelCred) panelCred.textContent = AIService.credits.remainingCredits;
+                const modalCred = document.getElementById('modal-credit-balance');
+                if (modalCred) modalCred.textContent = AIService.credits.remainingCredits;
+            }
+
+            this.showToast(`✨ Generated: ${result.label || 'Design Ready'}`);
+        } catch (err) {
+            console.error('AI Generation error:', err);
+            this.showToast(`⚠️ ${err.message || 'Generation failed'}`);
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origText;
+            }
         }
     },
 };

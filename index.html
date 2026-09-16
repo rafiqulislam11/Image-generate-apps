@@ -23,65 +23,82 @@
       <button class="btn-icon mobile-menu-btn" id="btn-toggle-left" aria-label="Toggle controls sidebar" title="Open Controls">
         <span class="icon">☰</span>
       </button>
-      <a class="logo header-logo" href="#" aria-label="PatternForge Home">
+      <a class="logo header-logo" href="#" aria-label="AI Pattern Studio Home">
         <div class="logo-icon" aria-hidden="true">◈</div>
         <div class="logo-text-group">
           <div class="logo-title-row">
-            <span class="logo-text logo-name">PatternForge</span>
-            <span class="logo-badge">PRO V2</span>
+            <span class="logo-text logo-name" data-i18n="appName">AI Pattern Studio</span>
+            <span class="logo-badge">PRO SaaS</span>
           </div>
-          <div class="logo-tagline">Generate. Customize. Create.</div>
+          <div class="logo-tagline" data-i18n="tagline">Generate. Customize. Create.</div>
         </div>
       </a>
+
+      <!-- Easy Mode / Pro Mode Switcher -->
+      <div class="mode-switch-group" role="radiogroup" aria-label="Operating Mode">
+        <button class="mode-btn active" id="btn-mode-easy" data-mode="easy" role="radio" aria-checked="true" title="Easy Mode for Beginners">
+          <span>✨</span> <span data-i18n="easyMode">Easy</span>
+        </button>
+        <button class="mode-btn" id="btn-mode-pro" data-mode="pro" role="radio" aria-checked="false" title="Pro Mode for Advanced Designers">
+          <span>⚡</span> <span data-i18n="proMode">Pro</span>
+        </button>
+      </div>
+
+      <!-- Command Palette / Quick Search Trigger -->
+      <button class="btn-hdr btn-header" id="btn-command-palette" title="Quick Search & Actions (Ctrl+K)" aria-label="Search">
+        <span class="icon">🔍</span> <span class="btn-text">Search (Ctrl+K)</span>
+      </button>
     </div>
 
     <!-- Desktop Toolbar / Actions -->
     <div class="header-actions" role="toolbar" aria-label="Main actions">
       <div class="header-group">
-        <button class="btn-hdr btn-easy-toggle active" id="btn-easy-mode" title="সহজ মোড (Easy Mode) চালু/বন্ধ করুন" aria-label="Easy Mode">
-          <span class="icon">✨</span> <span class="btn-text">সহজ মোড (Easy)</span>
-        </button>
-        <button class="btn-hdr btn-mode-toggle" id="btn-view-mode" title="Toggle Single-Page Studio Mode" aria-label="Toggle Single-Page Mode">
-          <span class="icon">🖥</span> <span class="btn-text">One-Page Mode</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-hotkeys" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
-          <span class="icon">⌨</span> <span class="btn-text">Hotkeys</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-new" title="New Pattern (Clear Canvas)" aria-label="New Pattern">
-          <span class="icon">+</span> <span class="btn-text">New</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
-          <span class="icon">↶</span> <span class="btn-text">Undo</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-redo" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
-          <span class="icon">↷</span> <span class="btn-text">Redo</span>
-        </button>
+        <!-- Language Switcher -->
+        <select id="locale-selector" class="locale-select" aria-label="Select Language">
+          <option value="en" selected>English (EN)</option>
+          <option value="bn">বাংলা (BN)</option>
+          <option value="ar">العربية (AR - RTL)</option>
+        </select>
+
+        <!-- Accent Color Theme Picker -->
+        <select id="accent-selector" class="accent-select" aria-label="Select Accent Theme" title="Accent Color Theme">
+          <option value="indigo" selected>Theme: Indigo Blue</option>
+          <option value="emerald">Theme: Emerald Zen</option>
+          <option value="cyber">Theme: Cyber Neon</option>
+          <option value="gold">Theme: Royal Gold</option>
+          <option value="sunset">Theme: Sunset Glow</option>
+        </select>
+
+        <!-- AI Credits Meter -->
+        <div id="ai-credits-badge" class="ai-credits-badge" title="AI Generation Credits (Click to View Plan)" role="button" tabindex="0">
+          ✨ <span class="credit-count">72</span> / 100 <span class="credit-label">Credits</span>
+        </div>
       </div>
 
       <div class="header-group">
+        <button class="btn-hdr btn-header" id="btn-hotkeys" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
+          <span class="icon">⌨</span> <span class="btn-text" data-i18n="hotkeys">Hotkeys</span>
+        </button>
+        <button class="btn-hdr btn-header" id="btn-undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+          <span class="icon">↶</span> <span class="btn-text" data-i18n="undo">Undo</span>
+        </button>
+        <button class="btn-hdr btn-header" id="btn-redo" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+          <span class="icon">↷</span> <span class="btn-text" data-i18n="redo">Redo</span>
+        </button>
         <button class="btn-hdr btn-header" id="btn-projects" title="Open Project Manager (P)" aria-label="Open Projects">
-          <span class="icon">📁</span> <span class="btn-text">Projects</span>
+          <span class="icon">📁</span> <span class="btn-text" data-i18n="projects">Projects</span>
         </button>
         <button class="btn-hdr-accent btn-accent" id="btn-randomize" title="Randomize all settings (R)" aria-label="Randomize pattern">
-          <span class="icon">🎲</span> <span class="btn-text">Randomize</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-copy-settings" title="Copy settings as JSON" aria-label="Copy settings">
-          <span class="icon">📋</span> <span class="btn-text">Copy</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-export-csv" title="Export CSV metadata" aria-label="Export CSV">
-          <span class="icon">📄</span> <span class="btn-text">CSV</span>
-        </button>
-        <button class="btn-hdr btn-header" id="btn-stock-export" title="Stock export metadata (S)" aria-label="Stock export">
-          <span class="icon">🏷</span> <span class="btn-text">Stock</span>
+          <span class="icon">🎲</span> <span class="btn-text" data-i18n="randomize">Randomize</span>
         </button>
       </div>
 
       <div class="header-group header-group-primary">
         <button class="btn-hdr-master btn-accent" id="btn-download-master-10mb" title="Download 10MB+ Master PNG (8K Ultra HD)" aria-label="Download 10MB+ Master Pattern">
-          <span class="icon">💎</span> <span class="btn-text">10MB+ Master (8K)</span>
+          <span class="icon">💎</span> <span class="btn-text">10MB+ Master</span>
         </button>
         <button class="btn-hdr-primary btn-accent" id="btn-download" title="Download pattern (Ctrl+S)" aria-label="Download pattern">
-          <span class="icon">⬇</span> <span class="btn-text">Download</span>
+          <span class="icon">⬇</span> <span class="btn-text" data-i18n="download">Download</span>
         </button>
         <button class="btn-icon" id="btn-theme" title="Toggle dark/light mode" aria-label="Toggle theme">
           <span id="theme-icon">☀</span>
@@ -93,7 +110,7 @@
     </div>
   </header>
 
-  <!-- ─── Main Layout Shell ──────────────────────────────────────────────── -->
+  <!-- ─── Main Layout Shell ────────────────────────────────________________ -->
   <div id="app-layout" class="app-shell" role="main">
 
     <!-- ===== LEFT SIDEBAR (Controls) ===== -->
@@ -105,10 +122,13 @@
 
       <!-- ─── Studio Dock Tabs (Instant 1-Click Panel Switcher) ──────────── -->
       <div class="sidebar-dock-tabs" id="left-dock-tabs" role="tablist" aria-label="Left sidebar tabs">
-        <button class="dock-tab-btn dock-tab-easy active" data-tab="easy" role="tab" title="সহজ মোড - ১-ক্লিকে ম্যাজিক ডিজাইন">✨ সহজ মোড</button>
-        <button class="dock-tab-btn" data-tab="patterns" role="tab" title="Patterns (203 Available)">🎨 Patterns</button>
+        <button class="dock-tab-btn dock-tab-easy active" data-tab="easy" role="tab" title="Easy Mode — 1-Click Magic Design">✨ Easy</button>
+        <button class="dock-tab-btn" data-tab="categories" role="tab" title="30 Searchable Design Categories">📂 Categories</button>
+        <button class="dock-tab-btn" data-tab="patterns" role="tab" title="Procedural Patterns (203+ Available)">🎨 Patterns</button>
+        <button class="dock-tab-btn" data-tab="templates" role="tab" title="Curated Design Templates">📋 Templates</button>
+        <button class="dock-tab-btn" data-tab="ai-generate" role="tab" title="AI Image Generation Studio">🤖 AI Generate</button>
         <button class="dock-tab-btn" data-tab="colors" role="tab" title="Color Studio & Harmonies">🌈 Colors</button>
-        <button class="dock-tab-btn" data-tab="controls" role="tab" title="Pattern Sliders">⚙ Sliders</button>
+        <button class="dock-tab-btn" data-tab="controls" role="tab" title="Parametric Sliders">⚙ Sliders</button>
         <button class="dock-tab-btn" data-tab="effects" role="tab" title="Effects & Gradients">✨ FX</button>
         <button class="dock-tab-btn" data-tab="resolution" role="tab" title="Resolution & Canvas Size">📐 Size</button>
         <button class="dock-tab-btn" data-tab="export" role="tab" title="Export & Settings">📦 Export</button>
@@ -120,8 +140,8 @@
         <!-- ─── EASY MODE STUDIO (সহজ মোড) ─── -->
         <div class="panel panel-section dock-active" id="panel-easy">
           <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
-            <h3>✨ সহজ মোড (Easy Studio)</h3>
-            <span class="badge-easy-pill">সহজ ও দ্রুত</span>
+            <h3>✨ Easy Studio (সহজ মোড)</h3>
+            <span class="badge-easy-pill">Fast & Clean</span>
           </div>
           <div class="panel-body panel-section-body">
             
@@ -134,9 +154,9 @@
               </div>
             </button>
 
-            <!-- 1-Click Magic Themes Grid (Featuring 8 "মারাত্মক" Master Engines) -->
+            <!-- 1-Click Magic Themes Grid (Featuring 8 Master Engines) -->
             <div class="easy-section-label">
-              <span>👑 মারাত্মক মাস্টার স্টাইল (Master 8K Art Themes)</span>
+              <span>👑 মাস্টার স্টাইল (Master 8K Art Themes)</span>
               <span class="easy-label-pill">10MB+ কোয়ালিটি</span>
             </div>
             <div class="easy-themes-grid">
@@ -148,37 +168,37 @@
               <button class="easy-theme-card" data-theme="royal-gold" title="Royal 24K Liquid Gold & Black Obsidian">
                 <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #d4af37, #f3e5ab, #aa7c11, #111111)"></div>
                 <div class="theme-name">👑 ২৪কে রয়্যাল গোল্ড</div>
-                <div class="theme-sub">Liquid Gold & Marble</div>
+                <div class="theme-sub">Gold Obsidian</div>
               </button>
-              <button class="easy-theme-card" data-theme="cosmic-galaxy" title="Cosmic Hyper-Nebula & Deep Space Abyss">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ff007f, #4a00e0, #00f0ff, #ffd700)"></div>
-                <div class="theme-name">🌌 হাইপার নেবুলা</div>
-                <div class="theme-sub">Cosmic Deep Abyss</div>
+              <button class="easy-theme-card" data-theme="pastel-dream" title="Pastel Dream Blush Floral">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #f43f5e, #fda4af, #fecdd3, #a78bfa)"></div>
+                <div class="theme-name">🌸 প্যাস্টেল ড্রিম</div>
+                <div class="theme-sub">Blush Rose Floral</div>
               </button>
-              <button class="easy-theme-card" data-theme="sacred-neon" title="Multiverse Sacred Geometry Portal">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #00f5d4, #7b2cbf, #f72585, #ffd166)"></div>
-                <div class="theme-name">🔯 সেক্রেড মাল্টিভার্স</div>
-                <div class="theme-sub">Metatron & Sri Yantra</div>
+              <button class="easy-theme-card" data-theme="emerald-zen" title="Emerald Zen Sacred Torus">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #10b981, #047857, #6ee7b7, #d4af37)"></div>
+                <div class="theme-name">🍃 এমারেল্ড জেন</div>
+                <div class="theme-sub">Sacred Bamboo Knot</div>
               </button>
-              <button class="easy-theme-card" data-theme="prismatic-aurora" title="Prismatic Diamond Aurora & Caustics">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #00ffff, #ff00aa, #ffff00, #00ff66)"></div>
-                <div class="theme-name">🔮 প্রিজমেটিক ডায়মন্ড</div>
-                <div class="theme-sub">Diamond Aurora Prism</div>
+              <button class="easy-theme-card" data-theme="cosmic-galaxy" title="Deep Cosmic Galaxy Vortex">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #020617)"></div>
+                <div class="theme-name">🌌 কসমিক গ্যালাক্সি</div>
+                <div class="theme-sub">Deep Space Abyss</div>
               </button>
-              <button class="easy-theme-card" data-theme="volcanic-magma" title="Volcanic Magma Abyss & Solar Flare">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ff2200, #ff7700, #ffcc00, #6b0800)"></div>
-                <div class="theme-name">🌋 ভলক্যানিক ম্যাগমা</div>
-                <div class="theme-sub">Solar Corona Core</div>
+              <button class="easy-theme-card" data-theme="sunset-glow" title="Horizon Sunset Glow Curve">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ea580c, #f59e0b, #be185d, #1e1b4b)"></div>
+                <div class="theme-name">🌅 সানসেট গ্লো</div>
+                <div class="theme-sub">Radiant Twilight</div>
               </button>
-              <button class="easy-theme-card" data-theme="bioluminescent" title="Bioluminescent Deep Ocean Alien Fractal">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #00f5d4, #00bbf9, #7209b7, #f72585)"></div>
-                <div class="theme-name">🧬 বায়োলুমিনেসেন্ট</div>
-                <div class="theme-sub">Deep Ocean Glow</div>
+              <button class="easy-theme-card" data-theme="sacred-neon" title="Sacred Neon Metatron Cube">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #06b6d4, #a855f7, #f43f5e, #0f172a)"></div>
+                <div class="theme-name">🔯 সেক্রেড নিয়ন</div>
+                <div class="theme-sub">Metatron Cube</div>
               </button>
-              <button class="easy-theme-card" data-theme="quantum-storm" title="Quantum Particle Storm (50k Orbits)">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #9d4edd, #00f0ff, #ff007f, #ffffff)"></div>
-                <div class="theme-name">🌀 কোয়ান্টাম স্টর্ম</div>
-                <div class="theme-sub">50,000+ Orbit Particles</div>
+              <button class="easy-theme-card" data-theme="clean-minimal" title="Monochrome Clean Minimal Hyper-Spiral">
+                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ffffff, #94a3b8, #334155, #09090b)"></div>
+                <div class="theme-name">⚪ ক্লিন মিনিমাল</div>
+                <div class="theme-sub">Hyper Minimalist</div>
               </button>
             </div>
 
@@ -214,7 +234,7 @@
                 <span class="easy-slider-title">📏 আকার (Size / Scale)</span>
                 <span class="easy-slider-val" id="easy-scale-val">50</span>
               </div>
-              <input type="range" id="easy-scale" min="10" max="110" value="50" step="1" aria-label="Easy size slider">
+              <input type="range" id="easy-scale" min="10" max="100" value="50" step="1" aria-label="Easy scale slider">
               <div class="easy-slider-hints"><span>ছোট (Fine)</span><span>মাঝারি</span><span>বড় (Large)</span></div>
             </div>
 
@@ -305,6 +325,30 @@
               </div>
             </button>
 
+          </div>
+        </div>
+
+        <!-- ─── 30 SEARCHABLE DESIGN CATEGORIES ─── -->
+        <div class="panel panel-section" id="panel-categories">
+          <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
+            <h3>📂 30 Design Categories</h3>
+            <span class="badge-easy-pill">30 Categories</span>
+          </div>
+          <div class="panel-body panel-section-body">
+            <div class="pattern-search-wrap mb-2">
+              <span class="pattern-search-icon">🔍</span>
+              <input type="text" id="category-search-input" class="pattern-search" placeholder="Search 30 categories (e.g. geometric, floral, islamic, luxury)…" aria-label="Search categories">
+            </div>
+            <div class="category-filter-chips mb-2" id="category-filter-chips">
+              <button class="category-chip active" data-cfilter="all">All (30)</button>
+              <button class="category-chip" data-cfilter="classic">Classic</button>
+              <button class="category-chip" data-cfilter="modern">Modern</button>
+              <button class="category-chip" data-cfilter="seasonal">Seasonal</button>
+              <button class="category-chip" data-cfilter="artistic">Artistic</button>
+            </div>
+            <div class="categories-grid-container" id="categories-grid-container">
+              <!-- Dynamically populated from data/categories.js -->
+            </div>
           </div>
         </div>
 
@@ -576,6 +620,106 @@
               <button class="pattern-btn"        data-type="wedding"        data-cat="themed" role="option">Wedding</button>
               <button class="pattern-btn"        data-type="valentine"      data-cat="themed" role="option">Valentine</button>
             </div>
+          </div>
+        </div>
+
+        <!-- ─── CURATED DESIGN TEMPLATES STUDIO ─── -->
+        <div class="panel panel-section" id="panel-templates">
+          <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
+            <h3>📋 Design Templates</h3>
+            <span class="badge-easy-pill">Pro Presets</span>
+          </div>
+          <div class="panel-body panel-section-body">
+            <p class="text-xs text-muted mb-2">Instant 1-click ready-made professional patterns & palettes.</p>
+            <div class="category-filter-chips mb-2" id="template-filter-chips">
+              <button class="category-chip active" data-tfilter="all">All</button>
+              <button class="category-chip" data-tfilter="luxury">Luxury</button>
+              <button class="category-chip" data-tfilter="geometric">Geometric</button>
+              <button class="category-chip" data-tfilter="organic">Organic</button>
+              <button class="category-chip" data-tfilter="modern">Modern</button>
+            </div>
+            <div class="templates-grid-container" id="templates-grid-container">
+              <!-- Dynamically populated from data/templates.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── AI IMAGE & PATTERN STUDIO ─── -->
+        <div class="panel panel-section" id="panel-ai-generate">
+          <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
+            <h3>🤖 AI Studio (Image & Pattern)</h3>
+            <span class="badge-easy-pill" id="ai-panel-badge">API Ready</span>
+          </div>
+          <div class="panel-body panel-section-body">
+            <!-- AI Provider Status Alert -->
+            <div class="ai-provider-banner" id="ai-provider-banner">
+              <div class="ai-provider-status-dot offline" id="ai-provider-status-dot"></div>
+              <div class="ai-provider-info">
+                <div class="ai-provider-title" id="ai-provider-status-text">AI provider not configured.</div>
+                <div class="ai-provider-desc" id="ai-provider-status-desc">Using built-in Local Demo Generator. Add an API key for live external AI.</div>
+              </div>
+              <button class="btn-xs-accent" id="btn-open-ai-config-panel">⚙ Setup</button>
+            </div>
+
+            <div class="form-field form-group mt-2">
+              <label for="ai-studio-prompt">Prompt Description</label>
+              <textarea id="ai-studio-prompt" class="ai-studio-textarea" rows="3" placeholder="e.g. Luxurious emerald and gold art deco damask with floral symmetry, seamless 8K wallpaper"></textarea>
+            </div>
+
+            <div class="form-field form-group">
+              <label for="ai-negative-prompt">Negative Prompt (Exclude)</label>
+              <input type="text" id="ai-negative-prompt" placeholder="blurry, low resolution, watermark, deformed, ugly" value="blurry, low resolution, watermark, artifacts, low quality">
+            </div>
+
+            <div class="grid-2">
+              <div class="form-field form-group">
+                <label for="ai-style-preset">Art Style</label>
+                <select id="ai-style-preset">
+                  <option value="vector">Vector Graphic</option>
+                  <option value="photorealistic">Photorealistic Texture</option>
+                  <option value="minimalist">Minimalist Line Art</option>
+                  <option value="3d-render">3D Embossed Render</option>
+                  <option value="watercolor">Watercolor Wash</option>
+                  <option value="cyberpunk">Cyberpunk Neon</option>
+                  <option value="vintage">Vintage Engraving</option>
+                </select>
+              </div>
+              <div class="form-field form-group">
+                <label for="ai-aspect-ratio">Aspect Ratio</label>
+                <select id="ai-aspect-ratio">
+                  <option value="1:1" selected>1:1 Square</option>
+                  <option value="16:9">16:9 Landscape</option>
+                  <option value="9:16">9:16 Story / Mobile</option>
+                  <option value="4:3">4:3 Standard</option>
+                  <option value="3:4">3:4 Portrait</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-field form-group">
+                <label for="ai-model-select">AI Model</label>
+                <select id="ai-model-select">
+                  <option value="imagen-3.0-generate-002">Imagen 3 (Fast HQ)</option>
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                  <option value="sd-xl-turbo">Stable Diffusion XL</option>
+                  <option value="local-procedural" selected>Local Demo Engine</option>
+                </select>
+              </div>
+              <div class="form-field form-group">
+                <label for="ai-seed-input">Seed (-1 = Random)</label>
+                <input type="number" id="ai-seed-input" value="-1" min="-1" max="999999999">
+              </div>
+            </div>
+
+            <div class="ai-credits-summary-row mt-1 mb-2">
+              <span>💳 Remaining Credits: <strong id="ai-panel-credits">72</strong> / 100</span>
+              <button class="btn-link-xs" id="btn-open-credit-modal">Get More</button>
+            </div>
+
+            <button class="btn-primary w-full btn-generate-ai" id="btn-trigger-ai-studio">
+              ⚡ Generate with AI / Demo
+            </button>
           </div>
         </div>
 
@@ -1109,6 +1253,15 @@
 
         <div class="toolbar-sep"></div>
 
+        <div class="toolbar-toolset-group">
+          <button class="btn-icon btn-toolbar" id="btn-toggle-rulers" title="Toggle Pixel Rulers (Ctrl+R)" aria-label="Toggle rulers">📏</button>
+          <button class="btn-icon btn-toolbar" id="btn-toggle-grid" title="Toggle Alignment Grid (Ctrl+G)" aria-label="Toggle grid">#</button>
+          <button class="btn-icon btn-toolbar" id="btn-center-view" title="Center Viewport" aria-label="Center view">⌖</button>
+          <button class="btn-icon btn-toolbar" id="btn-rotate-view" title="Rotate Canvas 90°" aria-label="Rotate canvas">↻</button>
+        </div>
+
+        <div class="toolbar-sep"></div>
+
         <div class="toolbar-seamless-group">
           <label class="toggle" title="Seamless mode" aria-label="Toggle seamless mode">
             <input type="checkbox" id="seamless-toggle" checked>
@@ -1116,6 +1269,14 @@
           </label>
           <span class="toolbar-label">Seamless</span>
         </div>
+
+        <button class="btn-toolbar-seamless" id="btn-seamless-test" title="Open Seamless Matrix Tester with Mathematical Edge Check">
+          🔍 Test Seamless
+        </button>
+
+        <button class="btn-toolbar-compare" id="btn-before-after" title="Toggle Before/After Split Comparison Slider">
+          ⚖ Compare
+        </button>
 
         <div class="toolbar-res-badge" id="canvas-res-badge" title="Active Canvas Dimensions">
           7680 × 4320 (300 PPI) • 8K UHD Master
@@ -1175,10 +1336,75 @@
           <button class="ai-chip" data-prompt="sierpinski fractal recursive geometric monochrome">🔬 Sierpinski Fractal</button>
           <button class="ai-chip" data-prompt="art deco fan gold and midnight black luxury">🏛 Art Deco Fan</button>
         </div>
+
+        <!-- Structured AI Analysis Card (Expanded on AI Prompt Generation) -->
+        <div id="ai-analysis-card" class="ai-analysis-card" style="display:none;">
+          <div class="ai-analysis-header">
+            <div class="ai-analysis-title">
+              <span class="icon">✨</span> <strong>AI Design Analysis & Strategy</strong>
+              <span class="ai-badge-match" id="ai-analysis-match">Match 98%</span>
+            </div>
+            <button class="btn-icon btn-xs" id="btn-close-ai-analysis">✕</button>
+          </div>
+          <div class="ai-analysis-body">
+            <div class="ai-params-grid">
+              <div class="ai-param-item">
+                <span class="param-lbl">Pattern:</span>
+                <strong id="ai-card-pattern">Cosmic Nebula</strong>
+              </div>
+              <div class="ai-param-item">
+                <span class="param-lbl">Palette:</span>
+                <strong id="ai-card-palette">Gold & Navy</strong>
+              </div>
+              <div class="ai-param-item">
+                <span class="param-lbl">Density:</span>
+                <strong id="ai-card-density">6.5</strong>
+              </div>
+              <div class="ai-param-item">
+                <span class="param-lbl">Rotation:</span>
+                <strong id="ai-card-rotation">45°</strong>
+              </div>
+              <div class="ai-param-item">
+                <span class="param-lbl">Mood:</span>
+                <strong id="ai-card-mood">Futuristic Luxury</strong>
+              </div>
+              <div class="ai-param-item">
+                <span class="param-lbl">Engine:</span>
+                <strong id="ai-card-engine">Master 8K Art Engine</strong>
+              </div>
+            </div>
+            <div class="ai-analysis-actions">
+              <button class="btn-sm btn-accent" id="btn-apply-ai-card">✓ Apply Parameters</button>
+              <button class="btn-sm btn-secondary" id="btn-vary-ai-card">🎲 Randomize Palette</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Canvas Container -->
       <div id="canvas-container" role="img" aria-label="Generated pattern preview">
+        <!-- Rulers -->
+        <div id="ruler-corner" class="ruler-corner" style="display:none;"></div>
+        <canvas id="ruler-top" class="ruler-canvas ruler-top" style="display:none;"></canvas>
+        <canvas id="ruler-left" class="ruler-canvas ruler-left" style="display:none;"></canvas>
+        
+        <!-- Grid overlay -->
+        <div id="canvas-grid-overlay" class="canvas-grid-overlay" style="display:none;"></div>
+        
+        <!-- Interactive Before/After Split Slider Container -->
+        <div id="before-after-container" class="before-after-container" style="display:none;">
+          <div class="before-after-inner" id="before-after-inner">
+            <canvas id="canvas-before" class="ba-canvas ba-canvas-before"></canvas>
+            <div class="ba-after-wrapper" id="ba-after-wrapper">
+              <canvas id="canvas-after" class="ba-canvas ba-canvas-after"></canvas>
+            </div>
+            <div class="ba-handle" id="ba-handle">
+              <div class="ba-handle-line"></div>
+              <div class="ba-handle-thumb">⇄</div>
+            </div>
+          </div>
+        </div>
+
         <canvas id="preview-canvas" aria-label="Pattern preview canvas"></canvas>
       </div>
 
@@ -1232,6 +1458,7 @@
       <!-- ─── Right Dock Tabs ───────────────────────────────────────────── -->
       <div class="sidebar-dock-tabs right-dock-tabs" id="right-dock-tabs" role="tablist" aria-label="Right sidebar tabs">
         <button class="dock-tab-btn active" data-tab="palette" role="tab" title="Active Palette">🎨 Palette</button>
+        <button class="dock-tab-btn" data-tab="layers" role="tab" title="Layer Stack">📑 Layers</button>
         <button class="dock-tab-btn" data-tab="variations" role="tab" title="Live Variations">🔁 Variations</button>
         <button class="dock-tab-btn" data-tab="favorites" role="tab" title="Saved Favorites">❤️ Favorites</button>
         <button class="dock-tab-btn" data-tab="upload" role="tab" title="Image to Palette">📷 Upload</button>
@@ -1242,12 +1469,44 @@
       <div class="sidebar-scroll-content">
 
         <!-- Color Palette Display -->
-        <div class="panel panel-section" id="panel-right-palette">
+        <div class="panel panel-section dock-active" id="panel-right-palette">
           <div class="panel-header panel-section-header" role="button" tabindex="0">
             <h3>Active Palette</h3><span class="collapse-icon collapse-arrow">▼</span>
           </div>
           <div class="panel-body panel-section-body">
             <div id="palette-display" aria-label="Current palette colors"></div>
+            
+            <!-- CMYK Print Preview Box -->
+            <div class="cmyk-display-box mt-2" id="cmyk-display-box">
+              <div class="cmyk-header">
+                <span class="text-xs font-bold">🖨 CMYK Print Values:</span>
+                <span class="text-xs text-muted" id="cmyk-primary-val">C: 15% M: 82% Y: 94% K: 5%</span>
+              </div>
+              <div class="cmyk-bars-strip" id="cmyk-bars-strip">
+                <div class="cmyk-bar cmyk-c" title="Cyan" style="width: 15%"></div>
+                <div class="cmyk-bar cmyk-m" title="Magenta" style="width: 82%"></div>
+                <div class="cmyk-bar cmyk-y" title="Yellow" style="width: 94%"></div>
+                <div class="cmyk-bar cmyk-k" title="Key (Black)" style="width: 5%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layer System Stack -->
+        <div class="panel panel-section" id="panel-right-layers">
+          <div class="panel-header panel-section-header" role="button" tabindex="0">
+            <h3>📑 Layers Stack</h3><span class="collapse-icon collapse-arrow">▼</span>
+          </div>
+          <div class="panel-body panel-section-body">
+            <div class="layers-toolbar mb-2">
+              <button class="btn-icon-xs" id="btn-add-layer" title="Add Layer">➕ New</button>
+              <button class="btn-icon-xs" id="btn-duplicate-layer" title="Duplicate Active Layer">📋 Copy</button>
+              <button class="btn-icon-xs" id="btn-delete-layer" title="Delete Active Layer">🗑 Delete</button>
+              <button class="btn-icon-xs" id="btn-merge-layers" title="Merge Visible Layers">⬇ Merge</button>
+            </div>
+            <div id="layers-list-container" class="layers-list-container">
+              <!-- Rendered dynamically by LayerSystem -->
+            </div>
           </div>
         </div>
 
@@ -1458,13 +1717,36 @@
         <!-- Save Current Project Bar -->
         <div class="project-save-bar">
           <input type="text" id="project-save-name" class="project-input" placeholder="Project name (e.g., Luxury Blue Silk)" aria-label="Project name">
-          <button class="btn-primary" id="btn-save-project-action">💾 Save Current Design</button>
-          <button class="btn-secondary" id="btn-export-project-json" title="Download project JSON file">📤 Export JSON</button>
-          <button class="btn-secondary" id="btn-import-project-trigger" title="Load project from JSON file">📥 Import JSON</button>
+          <select id="project-folder-select" class="project-folder-select" title="Target Folder">
+            <option value="my_designs">📁 My Designs</option>
+            <option value="favorites">❤️ Favorites</option>
+            <option value="client_projects">💼 Client Projects</option>
+            <option value="stock_ready">🏷 Stock Ready</option>
+            <option value="templates">📋 Templates</option>
+            <option value="archived">📦 Archived</option>
+          </select>
+          <input type="text" id="project-tags-input" class="project-tags-input" placeholder="Tags (e.g. gold, geo)" style="max-width:140px;">
+          <button class="btn-primary" id="btn-save-project-action">💾 Save</button>
+          <button class="btn-secondary" id="btn-export-project-json" title="Download project JSON file">📤 Export</button>
+          <button class="btn-secondary" id="btn-import-project-trigger" title="Load project from JSON file">📥 Import</button>
           <input type="file" id="project-file-input" accept=".json" style="display:none" aria-label="Project JSON file input">
         </div>
 
-        <div class="projects-section-title">
+        <!-- Filter & Search Bar -->
+        <div class="project-filters-bar mt-2" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <input type="text" id="project-search-filter" class="pattern-search" placeholder="Filter projects by title, pattern, or tag…" style="flex:1;min-width:180px;">
+          <div class="project-folder-pills" id="project-folder-pills" style="display:flex;gap:4px;flex-wrap:wrap;">
+            <button class="category-chip active" data-pfolder="all">All</button>
+            <button class="category-chip" data-pfolder="my_designs">My Designs</button>
+            <button class="category-chip" data-pfolder="favorites">Favorites</button>
+            <button class="category-chip" data-pfolder="client_projects">Client</button>
+            <button class="category-chip" data-pfolder="stock_ready">Stock</button>
+            <button class="category-chip" data-pfolder="templates">Templates</button>
+            <button class="category-chip" data-pfolder="archived">Archived</button>
+          </div>
+        </div>
+
+        <div class="projects-section-title mt-2">
           <span>Saved Projects (<span id="projects-count">0</span>)</span>
         </div>
 
@@ -1572,7 +1854,10 @@
           <div class="hotkey-card"><kbd>R</kbd><span>🎲 Randomize Settings</span></div>
           <div class="hotkey-card"><kbd>V</kbd><span>🔁 Generate Variation</span></div>
           <div class="hotkey-card"><kbd>F</kbd><span>❤️ Save to Favorites</span></div>
-          <div class="hotkey-card"><kbd>◀</kbd> / <kbd>▶</kbd><span>Cycle All 203 Patterns</span></div>
+          <div class="hotkey-card"><kbd>Ctrl</kbd>+<kbd>K</kbd><span>🔍 Command Palette</span></div>
+          <div class="hotkey-card"><kbd>Ctrl</kbd>+<kbd>R</kbd><span>📏 Toggle Rulers</span></div>
+          <div class="hotkey-card"><kbd>Ctrl</kbd>+<kbd>G</kbd><span># Toggle Alignment Grid</span></div>
+          <div class="hotkey-card"><kbd>◀</kbd> / <kbd>▶</kbd><span>Cycle All Patterns</span></div>
           <div class="hotkey-card"><kbd>[</kbd> / <kbd>]</kbd><span>Previous / Next Pattern</span></div>
           <div class="hotkey-card"><kbd>Ctrl</kbd>+<kbd>S</kbd><span>⬇ Download Pattern</span></div>
           <div class="hotkey-card"><kbd>Ctrl</kbd>+<kbd>Z</kbd><span>↶ Undo Action</span></div>
@@ -1580,7 +1865,6 @@
           <div class="hotkey-card"><kbd>B</kbd><span>📦 Batch Generator</span></div>
           <div class="hotkey-card"><kbd>P</kbd><span>📁 Projects Manager</span></div>
           <div class="hotkey-card"><kbd>S</kbd><span>🏷 Commercial Stock Studio</span></div>
-          <div class="hotkey-card"><kbd>1</kbd>–<kbd>6</kbd><span>Switch Sidebar Panels</span></div>
           <div class="hotkey-card"><kbd>?</kbd><span>Show / Hide Hotkeys</span></div>
         </div>
       </div>
@@ -1590,21 +1874,204 @@
     </div>
   </div>
 
+  <!-- ─── AI Provider Configuration Modal ──────────────────────────────────── -->
+  <div id="modal-ai-config" class="modal" role="dialog" aria-modal="true" aria-labelledby="ai-config-modal-title">
+    <div class="modal-backdrop" id="modal-ai-config-backdrop"></div>
+    <div class="modal-box modal-box-md">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h2 id="ai-config-modal-title">⚙ AI Provider Configuration</h2>
+          <p class="modal-subtitle">Connect Gemini, OpenAI, Claude, or custom API endpoints securely.</p>
+        </div>
+        <button class="modal-close" id="modal-ai-config-close" aria-label="Close AI config modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field form-group">
+          <label for="ai-cfg-provider">AI Provider</label>
+          <select id="ai-cfg-provider">
+            <option value="none">None (Local Demo Engine Only)</option>
+            <option value="gemini">Google Gemini (Gemini 2.5 Flash / Pro)</option>
+            <option value="openai">OpenAI (GPT-4o / DALL-E 3)</option>
+            <option value="custom">Custom Compatible OpenAI Endpoint</option>
+          </select>
+        </div>
+        <div class="form-field form-group">
+          <label for="ai-cfg-key">API Key</label>
+          <div class="input-with-action" style="display:flex;gap:4px;">
+            <input type="password" id="ai-cfg-key" placeholder="Enter your API Key (stored locally only)" style="flex:1;">
+            <button type="button" class="btn-secondary" id="btn-toggle-ai-key-vis" title="Toggle visibility">👁</button>
+          </div>
+          <span class="text-xs text-muted">Keys remain strictly on your device in localStorage and are never sent to external third parties.</span>
+        </div>
+        <div class="form-field form-group" id="ai-cfg-endpoint-group" style="display:none;">
+          <label for="ai-cfg-endpoint">Base URL</label>
+          <input type="url" id="ai-cfg-endpoint" placeholder="https://api.openai.com/v1">
+        </div>
+        <div class="form-field form-group">
+          <label for="ai-cfg-model">Model Name</label>
+          <input type="text" id="ai-cfg-model" placeholder="gemini-2.5-flash" value="gemini-2.5-flash">
+        </div>
+        <div class="ai-test-status" id="ai-test-status-box" style="display:none;padding:10px;border-radius:6px;font-size:12px;margin-top:8px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-test-ai-connection">Test Connection</button>
+        <button class="btn-primary" id="btn-save-ai-config">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AI Credit Plans Modal ────────────────────────────────────────────── -->
+  <div id="modal-ai-credits" class="modal" role="dialog" aria-modal="true" aria-labelledby="ai-credits-modal-title">
+    <div class="modal-backdrop" id="modal-ai-credits-backdrop"></div>
+    <div class="modal-box modal-box-lg">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h2 id="ai-credits-modal-title">💎 Studio Credits & SaaS Plans</h2>
+          <p class="modal-subtitle">Generate high-resolution AI patterns and commercial stock assets.</p>
+        </div>
+        <button class="modal-close" id="modal-ai-credits-close" aria-label="Close credits modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="credit-balance-hero" style="text-align:center;padding:20px;background:var(--bg-card);border-radius:8px;margin-bottom:16px;">
+          <div class="credit-balance-big" style="font-size:36px;font-weight:bold;color:var(--accent);">
+            <span class="credit-num" id="modal-credit-balance">72</span> <span style="font-size:18px;color:var(--text-muted);">/ 100</span>
+          </div>
+          <div class="credit-lbl" style="font-weight:600;margin-top:4px;">Credits Remaining</div>
+          <p class="credit-sub text-xs text-muted mt-1">1 Credit = 1 AI Generation or Commercial High-Res Export</p>
+        </div>
+        <div class="plans-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;">
+          <div class="plan-card" style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
+            <div class="plan-name" style="font-weight:700;font-size:16px;">Starter</div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$9 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
+              <li>✓ 100 AI Generation Credits</li>
+              <li>✓ Standard Resolution (4K)</li>
+              <li>✓ Procedural Engines Unlimited</li>
+            </ul>
+            <button class="btn-secondary w-full" onclick="alert('Starter Plan selected (Demo)')">Select Starter</button>
+          </div>
+          <div class="plan-card plan-featured" style="padding:16px;background:var(--bg-secondary);border:2px solid var(--accent);border-radius:8px;position:relative;">
+            <div class="plan-badge" style="position:absolute;top:-10px;right:12px;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">Most Popular</div>
+            <div class="plan-name" style="font-weight:700;font-size:16px;">Pro Studio</div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;color:var(--accent);">$29 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
+              <li>✓ 500 AI Generation Credits</li>
+              <li>✓ 8K Ultra HD & 10MB+ Master</li>
+              <li>✓ Commercial Stock CSV Exports</li>
+              <li>✓ Vector SVG & Print PDF</li>
+            </ul>
+            <button class="btn-primary w-full" onclick="alert('Pro Studio Plan selected (Demo)')">Upgrade to Pro</button>
+          </div>
+          <div class="plan-card" style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
+            <div class="plan-name" style="font-weight:700;font-size:16px;">Agency</div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$79 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
+              <li>✓ 2,000 AI Credits</li>
+              <li>✓ Multi-seat Collaboration</li>
+              <li>✓ Batch 100x Generation</li>
+              <li>✓ Priority API Queue</li>
+            </ul>
+            <button class="btn-secondary w-full" onclick="alert('Agency Plan selected (Demo)')">Select Agency</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-ai-credits-close2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Command Palette Modal (Ctrl+K) ─────────────────────────────────── -->
+  <div id="modal-command-palette" class="modal" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="modal-backdrop" id="modal-cmd-backdrop"></div>
+    <div class="cmd-palette-box">
+      <div class="cmd-search-row">
+        <span class="cmd-search-icon">🔍</span>
+        <input type="text" id="cmd-input" class="cmd-input" placeholder="Type a command, pattern, or template (e.g. 'Cosmic', 'Export PDF', 'Rulers')…" autocomplete="off">
+        <kbd class="cmd-shortcut-badge">ESC</kbd>
+      </div>
+      <div class="cmd-results-list" id="cmd-results-list" role="listbox">
+        <!-- Live populated commands and pattern options -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Seamless Pattern Tester Modal ──────────────────────────────────── -->
+  <div id="modal-seamless-test" class="modal" role="dialog" aria-modal="true" aria-labelledby="seamless-test-title">
+    <div class="modal-backdrop" id="modal-seamless-backdrop"></div>
+    <div class="modal-box modal-box-lg seamless-modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h2 id="seamless-test-title">🔍 Seamless Repeating Matrix & Math Edge Check</h2>
+          <p class="modal-subtitle">Inspect infinite repetition grid and mathematically verify pixel-perfect boundary matching.</p>
+        </div>
+        <button class="modal-close" id="modal-seamless-close" aria-label="Close seamless tester modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="seamless-modal-toolbar" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div class="seamless-grid-selector" role="radiogroup" aria-label="Matrix Grid Size" style="display:flex;gap:4px;">
+            <button class="category-chip" data-grid="2">2×2</button>
+            <button class="category-chip active" data-grid="3">3×3</button>
+            <button class="category-chip" data-grid="4">4×4</button>
+            <button class="category-chip" data-grid="5">5×5</button>
+          </div>
+          <div class="seamless-tool-actions" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn-secondary btn-sm" id="btn-toggle-seam-borders">Show Tile Borders</button>
+            <button class="btn-secondary btn-sm" id="btn-seamless-zoom-in">Zoom In (+)</button>
+            <button class="btn-secondary btn-sm" id="btn-seamless-zoom-out">Zoom Out (−)</button>
+            <button class="btn-primary btn-sm" id="btn-run-edge-check">🔬 Run Math Edge Check</button>
+          </div>
+        </div>
+
+        <!-- Verification Results Alert Banner -->
+        <div id="seamless-edge-report" class="seamless-edge-report" style="padding:10px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;margin-bottom:12px;">
+          <div class="edge-report-header" style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+            <span class="edge-status-pill pending" id="edge-status-pill">Analysis Pending</span>
+            <span class="edge-score" id="edge-score-text">Edge Delta MSE: --</span>
+          </div>
+          <div class="edge-details text-xs text-muted mt-1" id="edge-details-text">
+            Click "Run Math Edge Check" to perform rigorous pixel-by-pixel boundary delta analysis.
+          </div>
+        </div>
+
+        <div class="seamless-preview-viewport" id="seamless-preview-viewport" style="width:100%;height:380px;overflow:auto;background:#18181b;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+          <div class="seamless-matrix-canvas-wrap" id="seamless-matrix-canvas-wrap">
+            <canvas id="seamless-matrix-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-seamless-close2">Close</button>
+        <button class="btn-primary" id="btn-download-seamless-proof">Download 3×3 Proof (PNG)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── Toast System ──────────────────────────────────────────────────── -->
   <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- ─── Engine Scripts ────────────────────────────────────────────────── -->
-  <script src="js/random.js?v=2.5"></script>
-  <script src="js/color-engine.js?v=2.5"></script>
-  <script src="js/pattern-engine.js?v=2.5"></script>
-  <script src="js/spiral-patterns.js?v=2.5"></script>
-  <script src="js/master-art-engine.js?v=2.5"></script>
-  <script src="js/metadata-engine.js?v=2.5"></script>
-  <script src="js/export.js?v=2.5"></script>
-  <script src="js/history-manager.js?v=2.5"></script>
-  <script src="js/project-manager.js?v=2.5"></script>
-  <script src="js/ai-parser.js?v=2.5"></script>
-  <script src="js/app.js?v=2.5"></script>
+  <!-- ─── Engine & Data Scripts ────────────────────────────────────────── -->
+  <script src="data/categories.js?v=3.0"></script>
+  <script src="data/templates.js?v=3.0"></script>
+  <script src="data/palettes.js?v=3.0"></script>
+  <script src="js/i18n.js?v=3.0"></script>
+  <script src="js/random.js?v=3.0"></script>
+  <script src="js/color-engine.js?v=3.0"></script>
+  <script src="js/pattern-engine.js?v=3.0"></script>
+  <script src="js/spiral-patterns.js?v=3.0"></script>
+  <script src="js/master-art-engine.js?v=3.0"></script>
+  <script src="js/layer-system.js?v=3.0"></script>
+  <script src="js/canvas-tools.js?v=3.0"></script>
+  <script src="js/seamless-tester.js?v=3.0"></script>
+  <script src="js/similarity-engine.js?v=3.0"></script>
+  <script src="js/vector-pdf-export.js?v=3.0"></script>
+  <script src="js/ai-service.js?v=3.0"></script>
+  <script src="js/metadata-engine.js?v=3.0"></script>
+  <script src="js/export.js?v=3.0"></script>
+  <script src="js/history-manager.js?v=3.0"></script>
+  <script src="js/project-manager.js?v=3.0"></script>
+  <script src="js/ai-parser.js?v=3.0"></script>
+  <script src="js/app.js?v=3.0"></script>
 
 </body>
 </html>

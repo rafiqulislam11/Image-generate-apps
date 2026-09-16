@@ -309,13 +309,35 @@ function exportImage(sourceCanvas, format, quality, filename, forceMin10MB = fal
             const ext = fmt === 'jpeg' ? 'jpg' : fmt;
             const finalName = filename || `patternforge_export.${ext}`;
 
+            // ─── PDF Export (Print-Ready) ─────────────────────────
+            if (fmt === 'pdf') {
+                if (typeof VectorPdfExport !== 'undefined' && typeof VectorPdfExport.generatePrintPDF === 'function') {
+                    VectorPdfExport.generatePrintPDF(sourceCanvas, settings || {}, finalName)
+                        .then(res => resolve(res))
+                        .catch(err => reject(err));
+                    return;
+                }
+            }
+
             // ─── SVG Export (Scalable Vector Graphic) ──────────────
             if (fmt === 'svg') {
                 const w = sourceCanvas.width;
                 const h = sourceCanvas.height;
                 const title = finalName.replace(/\.[^.]+$/, '');
 
-                // Safely convert canvas to blob and read via FileReader (prevents RangeError: Invalid string length on 4K/8K)
+                // If procedural vector generation is possible via VectorPdfExport
+                if (settings && typeof VectorPdfExport !== 'undefined' && typeof VectorPdfExport.generateVectorSVG === 'function') {
+                    const vectorSvg = VectorPdfExport.generateVectorSVG(settings, w, h);
+                    const blob = new Blob([vectorSvg], { type: 'image/svg+xml;charset=utf-8' });
+                    const sizeMB = (blob.size / (1024 * 1024)).toFixed(2) + ' MB';
+                    const url = URL.createObjectURL(blob);
+                    triggerDownload(url, finalName);
+                    setTimeout(() => URL.revokeObjectURL(url), 60000);
+                    resolve({ url, filename: finalName, sizeBytes: blob.size, sizeMB });
+                    return;
+                }
+
+                // Safely convert canvas to blob and read via FileReader (fallback high-res SVG wrapper)
                 if (typeof sourceCanvas.toBlob === 'function') {
                     sourceCanvas.toBlob(blob => {
                         if (!blob) {
@@ -343,7 +365,7 @@ function exportImage(sourceCanvas, format, quality, filename, forceMin10MB = fal
                     const svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <title>${title}</title>
-  <desc>PatternForge PRO V2 - Ultra High Resolution Generative Art</desc>
+  <desc>AI Pattern Studio PRO - Ultra High Resolution Generative Art</desc>
   <image width="${w}" height="${h}" x="0" y="0" href="${dataUrl}" preserveAspectRatio="none"/>
 </svg>`;
                     const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
@@ -642,7 +664,7 @@ async function batchExport(settingsList, onProgress) {
     return metadataList;
 }
 
-// ─── Batch Export As Single ZIP (1-Click Safe Archive) ─────────────────────────
+// ─── Batch Export As Single ZIP (Structured Archive) ─────────────────────────
 async function batchExportZip(settingsList, onProgress) {
     const files = [];
     const metadataList = [];
@@ -657,18 +679,42 @@ async function batchExportZip(settingsList, onProgress) {
             const ext = format === 'jpeg' ? 'jpg' : format;
             const filename = generateFilename(s.patternType, i + 1, format, s.seed, s.canvasWidth, s.canvasHeight);
 
+            // Full res design
             const imgBlob = await new Promise(res => canvas.toBlob(res, mime, quality));
             if (imgBlob) {
                 const arrBuf = await imgBlob.arrayBuffer();
                 files.push({
-                    name: filename,
+                    name: `Designs/${filename}`,
                     data: new Uint8Array(arrBuf)
                 });
             }
 
-            const meta = generateMetadata(s, i + 1);
+            // Quick thumbnail preview (512x512)
+            const thumbCanvas = document.createElement('canvas');
+            thumbCanvas.width = 512;
+            thumbCanvas.height = 512;
+            const tCtx = thumbCanvas.getContext('2d');
+            tCtx.drawImage(canvas, 0, 0, 512, 512);
+            const thumbBlob = await new Promise(res => thumbCanvas.toBlob(res, 'image/jpeg', 0.85));
+            if (thumbBlob) {
+                const thumbBuf = await thumbBlob.arrayBuffer();
+                files.push({
+                    name: `Previews/${filename.replace(/\.[^.]+$/, '')}_thumb.jpg`,
+                    data: new Uint8Array(thumbBuf)
+                });
+            }
+
+            // Metadata item
+            const meta = typeof MetadataEngine !== 'undefined'
+                ? MetadataEngine.generate(s, i + 1)
+                : generateMetadata(s, i + 1);
             meta.filename = filename;
             metadataList.push(meta);
+
+            files.push({
+                name: `Metadata/${filename.replace(/\.[^.]+$/, '')}_meta.json`,
+                data: JSON.stringify(meta, null, 2)
+            });
 
             if (typeof onProgress === 'function') onProgress(i + 1, settingsList.length);
         } catch (err) {
@@ -676,23 +722,39 @@ async function batchExportZip(settingsList, onProgress) {
         }
     }
 
-    // Add metadata CSV to ZIP
+    // Add metadata.csv to ZIP (Standard 12 columns)
     if (metadataList.length > 0) {
         const headers = [
             'Filename', 'Title', 'Description', 'Keywords', 'Category',
-            'Pattern Type', 'Color Palette', 'Seed', 'Width', 'Height'
+            'Design Type', 'Style', 'Background', 'Color', 'Orientation',
+            'Resolution', 'Format'
         ];
         const esc = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
         const rows = metadataList.map(m => [
             m.filename, m.title, m.description,
-            Array.isArray(m.keywords) ? m.keywords.join(', ') : m.keywords,
-            m.category, m.patternType, m.colorPalette,
-            m.seed, m.width, m.height,
+            Array.isArray(m.keywords) ? m.keywords.join(', ') : m.keywordsString,
+            m.category, m.designType || 'Pattern', m.style || 'Modern',
+            m.background || 'Solid', m.color || 'Multicolor',
+            m.orientation || 'Square', m.resolution || `${m.width}x${m.height}`,
+            m.format || 'PNG'
         ].map(esc));
         const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
         files.push({
             name: 'metadata.csv',
             data: csvContent
+        });
+
+        // Add overall project.json
+        const projectJson = {
+            projectName: `Batch Export ${metadataList.length} Designs`,
+            version: '2.0',
+            exportedAt: new Date().toISOString(),
+            totalDesigns: metadataList.length,
+            designs: metadataList
+        };
+        files.push({
+            name: 'project.json',
+            data: JSON.stringify(projectJson, null, 2)
         });
     }
 
@@ -700,7 +762,7 @@ async function batchExportZip(settingsList, onProgress) {
     const url = URL.createObjectURL(zipBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `patternforge_batch_${files.length > 1 ? (files.length - 1) : 1}_patterns.zip`;
+    a.download = `AI_Pattern_Studio_PRO_Batch_${metadataList.length}_Designs.zip`;
     a.style.display = 'none';
     document.body.appendChild(a);
     a.click();

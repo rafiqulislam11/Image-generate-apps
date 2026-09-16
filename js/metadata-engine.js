@@ -1,13 +1,12 @@
 'use strict';
 /**
- * Pattern Generator PRO V2 — metadata-engine.js
- * Stock metadata for Adobe Stock, Shutterstock, Pond5
- * Smart keyword generation + quality scoring
+ * AI Pattern & Image Design Studio PRO — js/metadata-engine.js
+ * Commercial Stock Metadata Studio: Adobe Stock, Shutterstock, Pond5, Creative Fabrica, Design Bundles
+ * Generates SEO-optimized titles, descriptions, keyword tags, and multi-platform CSV exports.
  */
 
 const MetadataEngine = {
 
-  // ─── Pattern Display Names ────────────────────────────────
   PATTERN_NAMES: {
     plaid:'Plaid',tartan:'Tartan',checkered:'Checkered',gingham:'Gingham',
     grid:'Grid',stripe:'Stripe',diagonalStripe:'Diagonal Stripe',crossStripe:'Cross Stripe',
@@ -24,60 +23,73 @@ const MetadataEngine = {
     pixel:'Pixel Art',luxury:'Luxury',kids:'Kids Fun',technology:'Technology',
     futuristic:'Futuristic',christmas:'Christmas',halloween:'Halloween',
     wedding:'Wedding',valentine:'Valentine',business:'Business',
+    versaceBaroque:'Versace Baroque',artDecoFan:'Art Deco Fan',
+    cyberpunkCircuit:'Cyber Circuit',topographicIso:'Topographic Contour',
+    auroraBorealis:'Aurora Borealis',supernovaBurst:'Supernova Burst'
+  },
+
+  PLATFORMS: {
+    adobe: { name: 'Adobe Stock', maxTitle: 120, maxKeywords: 50 },
+    shutterstock: { name: 'Shutterstock', maxTitle: 200, maxKeywords: 50 },
+    pond5: { name: 'Pond5', maxTitle: 100, maxKeywords: 50 },
+    creativeFabrica: { name: 'Creative Fabrica', maxTitle: 150, maxKeywords: 40 },
+    designBundles: { name: 'Design Bundles', maxTitle: 150, maxKeywords: 40 }
   },
 
   CATEGORIES: {
     adobe: ['Backgrounds/Textures','Abstract','Architecture/Buildings','Arts/Entertainment',
-      'Beauty/Fashion','Business/Finance','Education','Food/Drink','Health/Medicine',
-      'Holidays','Illustrations/Clip-Art','Industrial','Interiors/Furniture',
-      'Miscellaneous','Nature','Objects','Parks/Outdoor','People','Science','Technology',
-      'Travel','Vintage','Wildlife'],
+      'Beauty/Fashion','Business/Finance','Education','Food/Drink','Holidays','Illustrations/Clip-Art',
+      'Miscellaneous','Nature','Objects','Science','Technology','Vintage'],
     shutterstock: ['Abstract','Backgrounds','Beauty & Fashion','Business & Finance',
-      'Celebrities','Culture & Religion','Education','Environment','Food & Drink',
-      'Healthcare & Medical','Holidays','Icons & Symbols','Illustration & Painting',
-      'Industry','Nature & Wildlife','Objects','People','Sports & Recreation',
-      'Technology','Transportation & Vehicles','Vintage'],
-    pond5: ['Abstract','Backgrounds & Textures','Business','Design Elements',
-      'Fashion','Food & Beverage','Holidays','Icons','Illustrations','Nature',
-      'Patterns','Technology','Vintage & Retro'],
+      'Culture & Religion','Education','Environment','Food & Drink','Holidays','Illustrations & Vectors',
+      'Nature','Objects','Technology','Vintage'],
+    pond5: ['Abstract','Backgrounds & Textures','Business','Design Elements','Holidays','Illustrations','Patterns','Technology'],
+    creativeFabrica: ['Patterns','Backgrounds','Sublimation','Digital Papers','Textures','Craft Designs'],
+    designBundles: ['Patterns','Digital Paper','Textures','Sublimation Designs','Backgrounds','Graphic Packs']
   },
 
-  DESIGN_TYPES: ['Digital Artwork','Illustration','Pattern','Background','Textile','Texture','Vector Style'],
+  DESIGN_TYPES: ['Digital Artwork', 'Seamless Pattern', 'Vector Graphic', 'Textile Design', 'Commercial Background', 'Sublimation Texture'],
 
   // ─── Generate Metadata ───────────────────────────────────
-  generate(state, index) {
-    index = Math.max(1, index || 1);
+  generate(state, index = 1) {
+    index = Math.max(1, index);
     const type = state.patternType || 'geometric';
-    const typeName = this.PATTERN_NAMES[type] || 'Pattern';
+    const typeName = this.PATTERN_NAMES[type] || (type.charAt(0).toUpperCase() + type.slice(1));
     const getColor = (typeof getColorName === 'function') ? getColorName
       : (typeof ColorEngine !== 'undefined' && typeof ColorEngine.getColorName === 'function') ? ColorEngine.getColorName
       : (c => c);
-    const colors = state.colors || ['#333333'];
+    
+    const colors = state.colors || ['#1e293b', '#3b82f6'];
     const colorNames = colors.map(getColor);
-    const seed = state.seed || 1;
+    const seed = state.seed || 483920;
 
     const primaryColor = colorNames[0] || 'Multicolor';
     const secondaryColor = colorNames[1] || '';
     const paletteDesc = colorNames.slice(0, 3).join(', ');
 
-    // Style descriptors
+    // Infer Style, Use, and Orientation
     const style = this._inferStyle(type, state);
     const use = this._inferUse(type);
+    const w = state.canvasWidth || 4000;
+    const h = state.canvasHeight || 2663;
+    const orientation = w > h ? 'Landscape' : (w < h ? 'Portrait' : 'Square');
+
+    const background = (state.colors && state.colors.length > 0) ? `${colorNames[0]} Background` : 'Neutral Background';
 
     const title = this._buildTitle(typeName, primaryColor, secondaryColor, style);
     const description = this._buildDescription(typeName, paletteDesc, style, use, seed);
     const keywords = this._buildKeywords(type, typeName, colorNames, style, use, state);
-    const filename = this._buildFilename(typeName, primaryColor, secondaryColor, style, index, state.exportFormat || 'png', seed, state.canvasWidth, state.canvasHeight);
+    const filename = this._buildFilename(typeName, primaryColor, secondaryColor, style, index, state.exportFormat || 'png', seed, w, h);
     const category = this._inferCategory(type);
-    const designType = this._inferDesignType(type);
+    const designType = 'Seamless Pattern / Background';
 
-    // Quality metrics
+    // Quality & SEO Scoring
     const kwCount = keywords.length;
     const duplicates = kwCount - new Set(keywords).size;
     const seoScore = Math.min(100, Math.round(
-      (Math.min(kwCount, 50) / 50) * 40 +
-      (title.length > 30 && title.length < 120 ? 30 : 15) +
-      (description.length > 100 ? 30 : 15)
+      (Math.min(kwCount, 45) / 45) * 40 +
+      (title.length >= 35 && title.length <= 120 ? 30 : 15) +
+      (description.length >= 90 ? 30 : 15)
     ));
 
     return {
@@ -88,206 +100,148 @@ const MetadataEngine = {
       keywordsString: [...new Set(keywords)].join(', '),
       category,
       designType,
+      style,
+      background,
+      color: primaryColor,
+      orientation,
+      resolution: `${w}x${h}`,
+      format: (state.exportFormat || 'png').toUpperCase(),
       colorPalette: colorNames.join(' | '),
       patternType: typeName,
       seed: String(seed),
-      width: String(state.canvasWidth || 4000),
-      height: String(state.canvasHeight || 2663),
-      stats: { kwCount, duplicates, seoScore, titleLen: title.length, descLen: description.length },
+      width: String(w),
+      height: String(h),
+      aiDisclosure: 'Generative AI: Yes (Procedural & Algorithmic Design)',
+      disclaimer: 'Metadata is optimized for commercial indexing. Marketplace acceptance is subject to target platform review.',
+      stats: { kwCount, duplicates, seoScore, titleLen: title.length, descLen: description.length }
     };
   },
 
   _inferStyle(type, state) {
-    const luxuryTypes = ['mandala','moroccan','islamic','luxury','wedding'];
-    const minimalTypes = ['minimalLine','lineart','stripe','grid'];
-    const retroTypes = ['memphis','retro','vintage','doodle'];
-    const techTypes = ['technology','futuristic','pixel','isometric'];
-    const organicTypes = ['organic','organicFlow','floral','botanical','leaves','marble','wave'];
-    const seasonalTypes = ['christmas','halloween','valentine','kids'];
-
-    if (luxuryTypes.includes(type)) return 'Luxury';
-    if (minimalTypes.includes(type)) return 'Minimal';
-    if (retroTypes.includes(type)) return 'Retro';
-    if (techTypes.includes(type)) return 'Modern';
-    if (organicTypes.includes(type)) return 'Organic';
-    if (seasonalTypes.includes(type)) return 'Festive';
-    if (state && state.density > 7) return 'Dense';
-    return 'Abstract';
+    if (state && state.density > 7) return 'Intricate';
+    if (state && state.scale < 30) return 'Micro Minimal';
+    if (['luxury', 'versaceBaroque', 'artDecoFan'].includes(type)) return 'Luxury Opulent';
+    if (['islamic', 'moroccan'].includes(type)) return 'Traditional Geometric';
+    if (['cyberpunkCircuit', 'futuristic', 'supernovaBurst'].includes(type)) return 'Futuristic Sci-Fi';
+    if (['mandala', 'spiral'].includes(type)) return 'Sacred Radial';
+    if (['retro', 'memphis'].includes(type)) return 'Retro 80s';
+    if (['floral', 'botanical'].includes(type)) return 'Botanical Organic';
+    return 'Modern Minimalist';
   },
 
   _inferUse(type) {
-    const uses = {
-      plaid:'fabric printing,textile design,fashion',
-      tartan:'fabric printing,textile design,Scottish style',
-      checkered:'surface design,flooring,textile',
-      gingham:'picnic,fashion,home decor',
-      mandala:'meditation,wall art,yoga',
-      moroccan:'interior design,tile design,decor',
-      islamic:'architecture,art,textile',
-      floral:'fashion,wallpaper,gift wrap',
-      botanical:'nature decor,fabric,stationery',
-      marble:'luxury backgrounds,interior,branding',
-      technology:'tech branding,website background,presentations',
-      christmas:'holiday cards,packaging,wrapping paper',
-      halloween:'holiday design,costume,party decor',
-      wedding:'invitations,decor,stationery',
-      valentine:'greeting cards,gifts,packaging',
-    };
-    return uses[type] || 'backgrounds,wallpaper,graphic design,web design';
+    if (['plaid', 'tartan', 'herringbone', 'woven', 'houndstoothPro'].includes(type)) return 'textiles, fabrics, apparel, and fashion prints';
+    if (['artDecoFan', 'versaceBaroque', 'damask', 'moroccan'].includes(type)) return 'luxury wallpaper, feature walls, and interior decor';
+    if (['cyberpunkCircuit', 'business', 'grid'].includes(type)) return 'digital website backgrounds, app interfaces, and tech presentations';
+    return 'packaging, gift wrap, stationery, posters, and digital artwork';
   },
 
   _buildTitle(typeName, primary, secondary, style) {
-    if (secondary) {
-      return `${style} ${primary} and ${secondary} ${typeName} Seamless Pattern Background`;
-    }
-    return `${style} ${primary} ${typeName} Seamless Repeat Pattern Background`;
+    const sec = secondary ? `and ${secondary} ` : '';
+    return `Seamless ${primary} ${sec}${typeName} Pattern Background — ${style} Digital Texture`;
   },
 
   _buildDescription(typeName, paletteDesc, style, use, seed) {
-    return `A professional seamless ${typeName.toLowerCase()} pattern in ${paletteDesc} color palette. ` +
-      `This ${style.toLowerCase()} digital design tiles perfectly for ${use}. ` +
-      `High-resolution, royalty-free seamless repeat pattern suitable for print and web. Seed: ${seed}.`;
+    return `A high-resolution seamless ${typeName.toLowerCase()} pattern background designed with a refined ${style.toLowerCase()} aesthetic. ` +
+      `Featuring harmonious ${paletteDesc} tones, this commercial-ready repeating design is ideal for ${use}. ` +
+      `Clean edge continuity and print-ready quality. Unique Seed: ${seed}.`;
   },
 
   _buildKeywords(type, typeName, colorNames, style, use, state) {
     const base = [
-      typeName.toLowerCase(),
-      'seamless pattern',
-      'seamless',
-      'pattern',
-      'background',
-      'texture',
-      'tile',
-      'repeat',
-      'digital art',
-      'surface design',
-      style.toLowerCase(),
-      'abstract',
-      'decorative',
-      'wallpaper',
-      'fabric',
-      'textile',
-      'stock',
-      'royalty free',
-      'print ready',
-      'high resolution',
+      typeName.toLowerCase(), 'seamless', 'pattern', 'background', 'texture',
+      'repeating', 'tile', 'wallpaper', 'textile', 'print', 'digital paper',
+      'commercial use', 'geometric', 'graphic design', 'decorative', 'high resolution',
+      ...colorNames.map(c => c.toLowerCase())
     ];
 
-    // Color keywords
-    colorNames.forEach(c => {
-      if (c && c.length > 2) {
-        base.push(c.toLowerCase());
-        base.push(c.toLowerCase() + ' pattern');
-      }
-    });
-
-    // Use keywords
-    use.split(',').forEach(u => base.push(u.trim()));
-
-    // Type-specific
-    const typeKws = {
-      plaid: ['plaid pattern','tartan style','Scottish','preppy','buffalo plaid'],
-      tartan: ['tartan pattern','Scottish plaid','clan tartan','kilt fabric'],
-      checkered: ['checker','checkerboard','chess pattern','grid pattern'],
-      mandala: ['mandala art','circle pattern','meditation','boho','spiritual'],
-      moroccan: ['moroccan tile','arabesque','geometric arabesque','Moroccan design'],
-      islamic: ['Islamic art','geometric Islamic','arabesque','star pattern'],
-      herringbone: ['herringbone','chevron weave','tweed','arrow pattern'],
-      marble: ['marble texture','stone background','natural marble','luxury marble'],
-      floral: ['flower pattern','botanical','bloom','spring pattern','garden'],
-      botanical: ['leaves pattern','plant design','nature pattern','botanical art'],
-      geometric: ['geometric shapes','modern geometric','abstract geometric'],
-      hexagonal: ['honeycomb pattern','hexagon','honeycomb'],
-      wave: ['wave pattern','ocean wave','fluid','flowing'],
-      christmas: ['Christmas pattern','holiday','festive','xmas','winter holiday'],
-      halloween: ['Halloween pattern','spooky','ghost','pumpkin','horror'],
-      technology: ['tech pattern','circuit board','digital pattern','cyber'],
-      memphis: ['Memphis design','80s pattern','retro geometric','pop art'],
+    const typeSpecific = {
+      plaid: ['tartan', 'scottish', 'flannel', 'fabric weave', 'lumberjack'],
+      tartan: ['highland', 'kilt', 'clan plaid', 'scottish wool', 'textile'],
+      islamic: ['girih', 'zellige', 'arabesque', 'moroccan mosaic', 'star geometric', 'mosque'],
+      mandala: ['zen', 'spiritual', 'meditation', 'radial symmetry', 'sacred geometry', 'sri yantra'],
+      floral: ['botanical', 'flowers', 'blossom', 'rose petals', 'nature print', 'spring'],
+      cyberpunkCircuit: ['circuit board', 'pcb', 'cyber neon', 'futuristic', 'digital matrix', 'sci-fi'],
+      versaceBaroque: ['luxury gold', 'acanthus', 'damask', 'royal velvet', 'baroque scroll', 'vintage'],
+      artDecoFan: ['gatsby', '1920s', 'luxury fan', 'vintage glamour', 'deco lines', 'brass'],
+      houndstoothPro: ['houndstooth', 'pied de poule', 'tweed', 'fashion textile', 'woven wool'],
+      herringbone: ['herringbone', 'chevron weave', 'parquet', 'arrow stripe', 'tweed fabric'],
+      topographicIso: ['topographic map', 'contour lines', 'elevation', 'geographic', 'river bed'],
+      auroraBorealis: ['northern lights', 'polar sky', 'cosmic wave', 'luminescent', 'night lights']
     };
 
-    if (typeKws[type]) base.push(...typeKws[type]);
-
-    // Scale/density modifiers
-    if (state) {
-      if (state.scale < 30) base.push('small pattern','fine pattern','micro pattern');
-      if (state.scale > 70) base.push('large scale','bold pattern','oversized');
-      if (state.density > 7) base.push('dense pattern','intricate');
+    if (typeSpecific[type]) {
+      base.push(...typeSpecific[type]);
     }
 
-    // Clean and deduplicate
+    if (state && state.scale > 70) base.push('large scale', 'bold pattern');
+    if (state && state.scale < 30) base.push('small scale', 'micro pattern', 'delicate');
+
+    // Deduplicate and filter out unwanted words
     return [...new Set(base.map(k => k.trim().toLowerCase()).filter(Boolean))].slice(0, 50);
   },
 
-  _buildFilename(typeName, primary, secondary, style, index, format, seed, width, height) {
+  _buildFilename(typeName, primary, secondary, style, index, format, seed, w, h) {
     if (typeof generateFilename === 'function') {
-      return generateFilename(typeName, index, format, seed, width, height);
+      return generateFilename(typeName, index, format, seed, w, h);
     }
-    const parts = [
-      'patternforge',
-      typeName.toLowerCase().replace(/[^a-z0-9]/g, '_'),
-      seed ? `s${seed}` : '',
-      (width && height) ? `${width}x${height}` : '',
-      String(index).padStart(3, '0'),
-    ].filter(Boolean);
-    return parts.join('_') + '.' + format.replace('.', '');
+    const cleanType = typeName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const idx = String(index).padStart(3, '0');
+    return `patternforge_${cleanType}_s${seed}_${w}x${h}_${idx}.${format.toLowerCase().replace('.', '')}`;
   },
 
   _inferCategory(type) {
     const catMap = {
-      plaid:'Backgrounds/Textures',tartan:'Backgrounds/Textures',
-      checkered:'Backgrounds/Textures',gingham:'Backgrounds/Textures',
-      mandala:'Arts/Entertainment',moroccan:'Arts/Entertainment',
-      islamic:'Arts/Entertainment',floral:'Nature',botanical:'Nature',
-      leaves:'Nature',marble:'Backgrounds/Textures',
-      christmas:'Holidays',halloween:'Holidays',valentine:'Holidays',wedding:'Holidays',
-      technology:'Technology',futuristic:'Technology',
-      kids:'Illustrations/Clip-Art',memphis:'Abstract',retro:'Vintage',
+      plaid:'Backgrounds/Textures', tartan:'Backgrounds/Textures',
+      islamic:'Culture & Religion', moroccan:'Culture & Religion',
+      mandala:'Abstract', floral:'Nature', botanical:'Nature',
+      cyberpunkCircuit:'Technology', business:'Business & Finance',
+      versaceBaroque:'Backgrounds/Textures', artDecoFan:'Backgrounds/Textures'
     };
-    return catMap[type] || 'Abstract';
+    return catMap[type] || 'Backgrounds/Textures';
   },
 
-  _inferDesignType(type) {
-    const rasterTypes = ['marble','grain','noise'];
-    if (rasterTypes.includes(type)) return 'Raster';
-    return 'Digital Artwork';
-  },
-
-  // ─── CSV Export ──────────────────────────────────────────
-  exportCSV(metadataList, platform) {
+  // ─── Standard 12-Column CSV Export (Single & Bulk) ──────────────────────────
+  exportCSV(metadataList, filename = 'pattern_metadata.csv') {
     if (!metadataList || !metadataList.length) return;
-    platform = platform || 'all';
 
-    let headers, getRow;
+    // The standard 12 columns requested in Section 16
+    const headers = [
+      'Filename', 'Title', 'Description', 'Keywords', 'Category',
+      'Design Type', 'Style', 'Background', 'Color', 'Orientation',
+      'Resolution', 'Format'
+    ];
 
-    if (platform === 'adobe') {
-      headers = ['Filename','Title','Description','Keywords','Category','Sub-Category'];
-      getRow = m => [m.filename, m.title, m.description, m.keywordsString, m.category, m.designType];
-    } else if (platform === 'shutterstock') {
-      headers = ['Filename','Description','Keywords','Category'];
-      getRow = m => [m.filename, m.title, m.keywordsString, m.category];
-    } else if (platform === 'pond5') {
-      headers = ['Filename','Title','Description','Tags'];
-      getRow = m => [m.filename, m.title, m.description, m.keywordsString];
-    } else {
-      // All platforms
-      headers = ['Filename','Title','Description','Keywords','Category','Design Type',
-        'Pattern Type','Colors','Seed','Width','Height'];
-      getRow = m => [m.filename, m.title, m.description, m.keywordsString,
-        m.category, m.designType, m.patternType, m.colorPalette, m.seed, m.width, m.height];
-    }
+    const esc = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
 
-    const esc = v => `"${(v || '').replace(/"/g, '""')}"`;
-    const rows = metadataList.map(m => getRow(m).map(esc).join(','));
-    const csv = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const rows = metadataList.map(m => [
+      m.filename,
+      m.title,
+      m.description,
+      Array.isArray(m.keywords) ? m.keywords.join(', ') : m.keywordsString,
+      m.category,
+      m.designType,
+      m.style,
+      m.background,
+      m.color,
+      m.orientation,
+      m.resolution,
+      m.format
+    ].map(esc).join(','));
+
+    // Include UTF-8 BOM for full Microsoft Excel & cross-platform compatibility
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pgpro_${platform}_metadata.csv`;
+    a.download = filename;
     a.style.display = 'none';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 60000);
-  },
+  }
 };
 
 if (typeof window !== 'undefined') window.MetadataEngine = MetadataEngine;
