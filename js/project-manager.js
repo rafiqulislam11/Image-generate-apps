@@ -141,10 +141,11 @@ const ProjectManager = {
     const a = document.createElement('a');
     a.href = url;
     a.download = (name || 'pattern-project').toLowerCase().replace(/\s+/g, '-') + '.json';
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   },
 
   async importJSON(file) {

@@ -1068,6 +1068,14 @@
                 📄 Export CSV
               </button>
             </div>
+            <div class="export-panel-actions mt-2" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+              <button class="btn-primary" id="btn-download-panel" style="width:100%;justify-content:center;padding:10px;" aria-label="Download current pattern">
+                ⬇ Download Pattern
+              </button>
+              <button class="btn-hdr-master btn-accent" id="btn-download-master-panel" style="width:100%;justify-content:center;padding:10px;" aria-label="Download 10MB+ Master">
+                💎 10MB+ Master Download
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1207,6 +1215,7 @@
           <div class="format-pills">
             <button class="format-pill active" data-format="png" title="Download PNG">PNG</button>
             <button class="format-pill" data-format="jpg" title="Download JPG">JPG</button>
+            <button class="format-pill" data-format="svg" title="Download SVG">SVG</button>
             <button class="format-pill" data-format="webp" title="Download WebP">WebP</button>
           </div>
         </div>
@@ -1422,10 +1431,13 @@
         </div>
         <div id="batch-results-grid" class="batch-results-grid" aria-label="Batch generation results"></div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="display:flex;gap:10px;justify-content:flex-end;align-items:center;">
         <button class="btn-secondary" id="modal-batch-close2">Close</button>
-        <button class="btn-primary" id="btn-batch-dl-all" aria-label="Download all batch patterns">
-          ⬇ Download All + CSV
+        <button class="btn-primary" id="btn-batch-dl-zip" style="background:linear-gradient(135deg, #10b981, #059669);border-color:#059669;color:#fff;font-weight:600;" aria-label="Download all as ZIP archive">
+          📦 Download ZIP (Images + CSV)
+        </button>
+        <button class="btn-secondary" id="btn-batch-dl-all" title="Download each image as a separate file" aria-label="Download separate files">
+          ⬇ Individual Files
         </button>
       </div>
     </div>

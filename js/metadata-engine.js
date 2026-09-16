@@ -49,8 +49,11 @@ const MetadataEngine = {
     index = Math.max(1, index || 1);
     const type = state.patternType || 'geometric';
     const typeName = this.PATTERN_NAMES[type] || 'Pattern';
+    const getColor = (typeof getColorName === 'function') ? getColorName
+      : (typeof ColorEngine !== 'undefined' && typeof ColorEngine.getColorName === 'function') ? ColorEngine.getColorName
+      : (c => c);
     const colors = state.colors || ['#333333'];
-    const colorNames = colors.map(getColorName);
+    const colorNames = colors.map(getColor);
     const seed = state.seed || 1;
 
     const primaryColor = colorNames[0] || 'Multicolor';
@@ -64,7 +67,7 @@ const MetadataEngine = {
     const title = this._buildTitle(typeName, primaryColor, secondaryColor, style);
     const description = this._buildDescription(typeName, paletteDesc, style, use, seed);
     const keywords = this._buildKeywords(type, typeName, colorNames, style, use, state);
-    const filename = this._buildFilename(typeName, primaryColor, secondaryColor, style, index, state.exportFormat || 'png');
+    const filename = this._buildFilename(typeName, primaryColor, secondaryColor, style, index, state.exportFormat || 'png', seed, state.canvasWidth, state.canvasHeight);
     const category = this._inferCategory(type);
     const designType = this._inferDesignType(type);
 
@@ -215,16 +218,18 @@ const MetadataEngine = {
     return [...new Set(base.map(k => k.trim().toLowerCase()).filter(Boolean))].slice(0, 50);
   },
 
-  _buildFilename(typeName, primary, secondary, style, index, format) {
+  _buildFilename(typeName, primary, secondary, style, index, format, seed, width, height) {
+    if (typeof generateFilename === 'function') {
+      return generateFilename(typeName, index, format, seed, width, height);
+    }
     const parts = [
-      style.toLowerCase(),
-      primary.toLowerCase(),
-      secondary ? secondary.toLowerCase() : '',
-      typeName.toLowerCase(),
-      'seamless-pattern',
+      'patternforge',
+      typeName.toLowerCase().replace(/[^a-z0-9]/g, '_'),
+      seed ? `s${seed}` : '',
+      (width && height) ? `${width}x${height}` : '',
       String(index).padStart(3, '0'),
-    ].filter(Boolean).map(p => p.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
-    return parts.join('-') + '.' + format.replace('.', '');
+    ].filter(Boolean);
+    return parts.join('_') + '.' + format.replace('.', '');
   },
 
   _inferCategory(type) {
@@ -279,8 +284,9 @@ const MetadataEngine = {
     const a = document.createElement('a');
     a.href = url;
     a.download = `pgpro_${platform}_metadata.csv`;
+    a.style.display = 'none';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   },
 };
 

@@ -629,6 +629,13 @@ const App = {
         const qualSel = document.getElementById('export-quality');
         if (qualSel) qualSel.value = s.exportQuality;
 
+        const curFmt = (s.exportFormat || 'png').toLowerCase();
+        document.querySelectorAll('.format-pill').forEach(pill => {
+            pill.classList.toggle('active', pill.dataset.format === curFmt);
+        });
+        if (typeof this.syncEasyFmtResUI === 'function') this.syncEasyFmtResUI();
+        if (typeof this.updateEasyMasterLabels === 'function') this.updateEasyMasterLabels();
+
         // Effects
         Object.entries(s.effects).forEach(([name, cfg]) => {
             const tog = document.getElementById(`fx-${name}-toggle`);
@@ -967,23 +974,50 @@ const App = {
         `;
     },
 
+    setDownloadButtonsLoading(isLoading, text) {
+        const ids = [
+            'btn-download',
+            'btn-download-canvas',
+            'btn-download-panel',
+            'btn-easy-download-direct',
+            'nav-btn-download'
+        ];
+        ids.forEach(id => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            if (isLoading) {
+                if (!btn.dataset.origHtml) btn.dataset.origHtml = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<span class="spin-icon">⏳</span> ${text || 'Exporting…'}`;
+            } else {
+                btn.disabled = false;
+                if (btn.dataset.origHtml) {
+                    btn.innerHTML = btn.dataset.origHtml;
+                    delete btn.dataset.origHtml;
+                }
+            }
+        });
+    },
+
     // ─── Single Download ──────────────────────────────────────────────────────
     async download() {
-        const btn = document.getElementById('btn-download');
-        const origText = btn ? btn.innerHTML : '';
-        if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> Exporting…'; }
+        this.setDownloadButtonsLoading(true, 'Exporting…');
         this.updateStatusBar('Rendering export…');
 
         try {
-            const exportCanvas = renderFullResPattern(this.state);
-            await downloadCanvas(exportCanvas, this.state);
+            const renderSettings = Object.assign({}, this.state, {
+                tileMode: this.tileMode || 1
+            });
+            const exportCanvas = renderFullResPattern(renderSettings);
+            await downloadCanvas(exportCanvas, renderSettings);
             this.showToast('⬇ Pattern download started!');
             this.updateStatusBar('Download complete');
         } catch(err) {
+            console.error('Export error:', err);
             this.showError('Export error: ' + err.message);
             this.updateStatusBar('Export failed');
         } finally {
-            if (btn) { btn.disabled = false; btn.innerHTML = origText || '<span>⬇</span> Download'; }
+            this.setDownloadButtonsLoading(false);
         }
     },
 
@@ -992,7 +1026,8 @@ const App = {
         const btns = [
             document.getElementById('btn-download-master-10mb'),
             document.getElementById('btn-easy-download-master'),
-            document.getElementById('btn-canvas-dl-master')
+            document.getElementById('btn-canvas-dl-master'),
+            document.getElementById('btn-download-master-panel')
         ].filter(Boolean);
 
         const fmt = (this.state.exportFormat || 'png').toLowerCase();
@@ -1010,7 +1045,10 @@ const App = {
         this.showToast(`🚀 ${resTag} (${fmtUpper}) মাস্টার ইমেজ রেন্ডার হচ্ছে…`);
 
         try {
-            const res = await exportMasterUltra10MB(this.state);
+            const masterSettings = Object.assign({}, this.state, {
+                tileMode: this.tileMode || 1
+            });
+            const res = await exportMasterUltra10MB(masterSettings);
             if (fmt === 'svg') {
                 this.showToast(`🎉 ${resTag} ভেক্টর SVG মাস্টার তৈরি হয়েছে! (সাইজ: ${res.sizeMB})`);
             } else if (fmt === 'jpg' || fmt === 'jpeg') {
@@ -1132,16 +1170,65 @@ const App = {
         });
     },
 
+    async batchDownloadZip() {
+        if (!this.batchResults || !this.batchResults.length) {
+            this.showToast('No batch results to download. Click "Generate Batch" first!');
+            return;
+        }
+        const btn = document.getElementById('btn-batch-dl-zip');
+        const origText = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳</span> Archiving ZIP…';
+        }
+        const pr = document.getElementById('batch-progress');
+        if (pr) pr.textContent = 'Rendering & packing ZIP archive…';
+
+        try {
+            const format = this.state.exportFormat || 'png';
+            const quality = this.state.exportQuality || 90;
+            await batchExportZip(
+                this.batchResults.map(s => ({
+                    ...s,
+                    exportFormat: format,
+                    exportQuality: quality,
+                    tileMode: this.tileMode || 1
+                })),
+                (done, total) => {
+                    if (pr) pr.textContent = `Packing: ${done} / ${total}`;
+                }
+            );
+            this.showToast('📦 Batch ZIP downloaded successfully!');
+            if (pr) pr.textContent = `Complete! ${this.batchResults.length} patterns packed in ZIP`;
+        } catch (err) {
+            console.error('Batch ZIP export error:', err);
+            this.showError('ZIP export error: ' + err.message);
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origText || '📦 Download ZIP (Images + CSV)';
+            }
+        }
+    },
+
     async batchDownloadAll() {
-        if (!this.batchResults.length) {
-            this.showToast('No batch results to download');
+        if (!this.batchResults || !this.batchResults.length) {
+            this.showToast('No batch results to download. Click "Generate Batch" first!');
             return;
         }
         const btn = document.getElementById('btn-batch-dl-all');
         if (btn) btn.disabled = true;
 
+        const format = this.state.exportFormat || 'png';
+        const quality = this.state.exportQuality || 90;
+
         const metaList = await batchExport(
-            this.batchResults.map(s => ({ ...s, exportFormat: 'png', exportQuality: 90 })),
+            this.batchResults.map(s => ({
+                ...s,
+                exportFormat: format,
+                exportQuality: quality,
+                tileMode: this.tileMode || 1
+            })),
             (done, total) => {
                 const pr = document.getElementById('batch-progress');
                 if (pr) pr.textContent = `Downloading: ${done} / ${total}`;
@@ -1443,7 +1530,7 @@ const App = {
         const kwRaw = document.getElementById('stock-keywords')?.value || '';
         const kwArr = kwRaw.split(',').map(s => s.trim()).filter(Boolean);
         const meta = {
-            filename: generateFilename(this.state.patternType, 1, this.state.exportFormat || 'png'),
+            filename: generateFilename(this.state.patternType, 1, this.state.exportFormat || 'png', this.state.seed, this.state.canvasWidth, this.state.canvasHeight),
             title: document.getElementById('stock-title')?.value || '',
             description: document.getElementById('stock-desc')?.value || '',
             keywords: kwArr,
@@ -1602,6 +1689,9 @@ const App = {
         on('btn-projects-canvas', 'click', () => this.openProjectsModal());
         on('btn-download-canvas', 'click', () => this.download());
         on('btn-quick-download',  'click', () => this.download());
+        on('btn-download-panel',  'click', () => this.download());
+        on('btn-download-master-panel', 'click', () => this.downloadMaster10MB());
+        on('btn-batch-dl-zip',    'click', () => this.batchDownloadZip());
 
         // Format pills in bottom action bar
         document.querySelectorAll('.format-pill').forEach(pill => {
@@ -1611,6 +1701,8 @@ const App = {
                 this.state.exportFormat = pill.dataset.format || 'png';
                 const sel = document.getElementById('export-format');
                 if (sel) sel.value = this.state.exportFormat;
+                this.updateEasyMasterLabels();
+                this.syncEasyFmtResUI();
                 this.showToast(`Export format: ${this.state.exportFormat.toUpperCase()}`);
             });
         });
@@ -1757,6 +1849,9 @@ const App = {
         // Export format / quality
         on('export-format',  'change', e => { 
             this.state.exportFormat  = e.target.value; 
+            document.querySelectorAll('.format-pill').forEach(p => {
+                p.classList.toggle('active', p.dataset.format === this.state.exportFormat);
+            });
             this.updateEasyMasterLabels();
             this.syncEasyFmtResUI();
         });
@@ -2315,11 +2410,12 @@ const App = {
             directDl.addEventListener('click', () => this.download());
         }
 
-        // 💎 Guaranteed 10MB+ Master Download Buttons (Header, Easy Mode, Canvas)
+        // 💎 Guaranteed 10MB+ Master Download Buttons (Header, Easy Mode, Canvas, Panel)
         const masterDls = [
             document.getElementById('btn-download-master-10mb'),
             document.getElementById('btn-easy-download-master'),
-            document.getElementById('btn-canvas-dl-master')
+            document.getElementById('btn-canvas-dl-master'),
+            document.getElementById('btn-download-master-panel')
         ].filter(Boolean);
 
         masterDls.forEach(btn => {

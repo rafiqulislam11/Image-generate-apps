@@ -223,7 +223,66 @@ const ColorEngine = {
     [c[i], c[j]] = [c[j], c[i]];
     return c;
   },
+
+  getColorName(hex) {
+    return getColorName(hex);
+  }
 };
 
-if (typeof window !== 'undefined') window.ColorEngine = ColorEngine;
-if (typeof module !== 'undefined') module.exports = ColorEngine;
+function getColorName(hex) {
+    if (!hex) return 'Unknown';
+    let r = 128, g = 128, b = 128;
+    if (typeof hexToRgb === 'function') {
+        const rgb = hexToRgb(hex);
+        if (rgb) { r = rgb.r; g = rgb.g; b = rgb.b; }
+    } else {
+        const clean = (hex + '').replace('#', '');
+        if (clean.length === 6) {
+            r = parseInt(clean.substring(0, 2), 16) || 0;
+            g = parseInt(clean.substring(2, 4), 16) || 0;
+            b = parseInt(clean.substring(4, 6), 16) || 0;
+        }
+    }
+    let h = 0, s = 0, l = 50;
+    if (typeof rgbToHsl === 'function') {
+        const hsl = rgbToHsl(r, g, b);
+        if (hsl) { h = hsl.h; s = hsl.s; l = hsl.l; }
+    } else {
+        const rf = r / 255, gf = g / 255, bf = b / 255;
+        const max = Math.max(rf, gf, bf), min = Math.min(rf, gf, bf);
+        l = ((max + min) / 2) * 100;
+        const d = max - min;
+        s = (max === min) ? 0 : ((l > 50 ? d / (2 - max - min) : d / (max + min)) * 100);
+        if (max === min) h = 0;
+        else if (max === rf) h = ((gf - bf) / d + (gf < bf ? 6 : 0)) * 60;
+        else if (max === gf) h = ((bf - rf) / d + 2) * 60;
+        else h = ((rf - gf) / d + 4) * 60;
+    }
+    if (l < 8)  return 'Black';
+    if (l > 92) return 'White';
+    if (s < 12) {
+        if (l < 30) return 'Dark Gray';
+        if (l < 65) return 'Gray';
+        return 'Light Gray';
+    }
+    const hueNames = [
+        [10, 'Red'], [28, 'Red-Orange'], [40, 'Orange'], [58, 'Yellow'],
+        [80, 'Yellow-Green'], [150, 'Green'], [185, 'Teal'], [210, 'Cyan'],
+        [250, 'Blue'], [280, 'Indigo'], [320, 'Purple'], [350, 'Magenta'], [360, 'Red'],
+    ];
+    let hueName = 'Red';
+    for (const [threshold, name] of hueNames) {
+        if (h <= threshold) { hueName = name; break; }
+    }
+    const prefix = l < 28 ? 'Dark ' : l > 72 ? 'Light ' : s > 72 ? 'Vibrant ' : '';
+    return prefix + hueName;
+}
+
+if (typeof window !== 'undefined') {
+  window.ColorEngine = ColorEngine;
+  window.getColorName = getColorName;
+}
+if (typeof module !== 'undefined') {
+  module.exports = ColorEngine;
+  module.exports.getColorName = getColorName;
+}
