@@ -5064,6 +5064,7 @@
   newPatterns.torusMandala   = newPatterns.torusSacred;        // data: torusMandala
   newPatterns.greekKey       = newPatterns.greekKeyMeander;    // data: greekKey
   newPatterns.chladniPlate   = newPatterns.chladniAcoustics;   // data: chladniPlate
+  newPatterns.theodorusSpiral = newPatterns.archimedeanSpiral; // data: theodorusSpiral
 
   // ── New Generator: gradient (solid gradient background) ───────────────────
   newPatterns.gradient = function(ctx, w, h, s, rng) {

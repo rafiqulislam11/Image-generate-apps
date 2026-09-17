@@ -785,23 +785,62 @@
           </div>
         </div>
 
-        <!-- ─── CURATED DESIGN TEMPLATES STUDIO ─── -->
+        <!-- ─── CURATED DESIGN TEMPLATES STUDIO (1,000 PRESETS) ─── -->
         <div class="panel panel-section" id="panel-templates">
           <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
             <h3>📋 Design Templates</h3>
-            <span class="badge-easy-pill">Pro Presets</span>
+            <span class="badge-easy-pill" id="template-count-badge">1,000 Presets</span>
           </div>
           <div class="panel-body panel-section-body">
-            <p class="text-xs text-muted mb-2">Instant 1-click ready-made professional patterns & palettes.</p>
-            <div class="category-filter-chips mb-2" id="template-filter-chips">
-              <button class="category-chip active" data-tfilter="all">All</button>
-              <button class="category-chip" data-tfilter="luxury">Luxury</button>
-              <button class="category-chip" data-tfilter="geometric">Geometric</button>
-              <button class="category-chip" data-tfilter="organic">Organic</button>
-              <button class="category-chip" data-tfilter="modern">Modern</button>
+            <div class="templates-header-info mb-2">
+              <p class="text-xs text-muted">Instant 1-click professional pattern presets with tuned colors, density, and FX.</p>
             </div>
+
+            <!-- Search & Quick Action Bar -->
+            <div class="template-search-row mb-2">
+              <div class="template-search-wrapper">
+                <span class="template-search-icon">🔍</span>
+                <input type="text" id="template-search-input" class="template-search-input" placeholder="Search 1,000 presets (e.g. gold, cyberpunk, rose, tartan)..." autocomplete="off">
+                <button type="button" id="template-search-clear" class="template-search-clear" title="Clear search" style="display:none;">✕</button>
+              </div>
+              <button type="button" id="btn-random-template" class="btn-sm-accent btn-random-tpl" title="Apply a random preset from 1,000 presets">🎲 Random</button>
+            </div>
+
+            <!-- View Modes & Counter Toolbar -->
+            <div class="template-toolbar-row mb-2">
+              <div class="template-view-toggle" role="group" aria-label="Preset Button View Mode">
+                <button type="button" class="btn-view-toggle active" id="btn-tpl-view-cards" title="Detailed Cards Button View">🎴 Cards</button>
+                <button type="button" class="btn-view-toggle" id="btn-tpl-view-buttons" title="Compact Pill Buttons View">🔘 Buttons</button>
+              </div>
+              <span class="template-results-counter text-xs text-muted" id="template-results-count">1,000 Presets</span>
+            </div>
+
+            <!-- Category Filter Chips -->
+            <div class="category-filter-chips template-filter-chips mb-3" id="template-filter-chips">
+              <button class="category-chip active" data-tfilter="all">All <span class="chip-count">1,000</span></button>
+              <button class="category-chip" data-tfilter="luxury">👑 Luxury <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="geometric">📐 Geometric <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="floral">🌸 Floral <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="cyberpunk">⚡ Cyberpunk <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="abstract">🌊 Abstract <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="nature">🌿 Nature <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="traditional">🏮 Traditional <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="minimal">✨ Minimal <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="textile">🧶 Textile <span class="chip-count">100</span></button>
+              <button class="category-chip" data-tfilter="cosmic">🌌 Cosmic <span class="chip-count">100</span></button>
+            </div>
+
+            <!-- Presets Button Grid Container -->
             <div class="templates-grid-container" id="templates-grid-container">
-              <!-- Dynamically populated from data/templates.js -->
+              <!-- Dynamically populated 1,000 preset buttons -->
+            </div>
+
+            <!-- Load More Presets Button -->
+            <div class="template-load-more-container mt-2" id="template-load-more-container">
+              <button type="button" id="btn-template-load-more" class="btn-template-load-more">
+                <span>⬇️ Load More Presets</span>
+                <span class="text-xs opacity-75" id="template-load-more-counter">(Showing 60 of 1,000)</span>
+              </button>
             </div>
           </div>
         </div>

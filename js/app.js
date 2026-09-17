@@ -3316,58 +3316,211 @@ const App = {
         this.showToast(`⚡ Generated: ${subCategory.name}`);
     },
 
-    // ─── Curated Design Templates Studio ────────────────────────────────────
+    // ─── Curated Design Templates Studio (1,000 Presets Button Format) ─────
     initTemplates() {
         const container = document.getElementById('templates-grid-container');
         const chips = document.querySelectorAll('#template-filter-chips .category-chip');
+        const searchInput = document.getElementById('template-search-input');
+        const searchClearBtn = document.getElementById('template-search-clear');
+        const randomBtn = document.getElementById('btn-random-template');
+        const btnViewCards = document.getElementById('btn-tpl-view-cards');
+        const btnViewButtons = document.getElementById('btn-tpl-view-buttons');
+        const loadMoreBtn = document.getElementById('btn-template-load-more');
+        const loadMoreContainer = document.getElementById('template-load-more-container');
+        const counterEl = document.getElementById('template-results-count');
+        const loadMoreCounterEl = document.getElementById('template-load-more-counter');
 
         if (!container || typeof PATTERN_TEMPLATES === 'undefined') return;
 
         let activeFilter = 'all';
+        let searchQuery = '';
+        let viewMode = 'cards'; // 'cards' or 'buttons'
+        const pageSize = 60;
+        let visibleCount = pageSize;
+        let activeTemplateId = null;
 
-        const renderTemplates = () => {
-            container.innerHTML = '';
-            const filtered = PATTERN_TEMPLATES.filter(tpl => {
-                if (activeFilter === 'all') return true;
-                return (tpl.category && tpl.category.toLowerCase() === activeFilter.toLowerCase()) ||
-                       (tpl.tags && tpl.tags.some(t => t.toLowerCase() === activeFilter.toLowerCase()));
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-xs text-muted" style="grid-column:1/-1;padding:16px;text-align:center;">No templates found</div>';
-                return;
-            }
-
-            filtered.forEach(tpl => {
-                const card = document.createElement('div');
-                card.className = 'template-studio-card';
-                const colorsHtml = (tpl.state && tpl.state.colors) ? 
-                    tpl.state.colors.slice(0, 4).map(c => `<span class="template-color-dot" style="background:${c}"></span>`).join('') : '';
-
-                card.innerHTML = `
-                    <div class="template-studio-header">
-                        <span class="template-icon">${tpl.icon || '🎨'}</span>
-                        <div class="template-name">${tpl.name}</div>
-                        <span class="template-badge">${tpl.category || 'Preset'}</span>
-                    </div>
-                    <div class="template-desc">${tpl.description || ''}</div>
-                    <div class="template-colors-row">${colorsHtml}</div>
-                `;
-                card.addEventListener('click', () => this.applyTemplate(tpl));
-                container.appendChild(card);
+        const getFilteredTemplates = () => {
+            const query = searchQuery.trim().toLowerCase();
+            return PATTERN_TEMPLATES.filter(tpl => {
+                // Category filter
+                if (activeFilter !== 'all') {
+                    const catMatch = (tpl.category && tpl.category.toLowerCase() === activeFilter.toLowerCase()) ||
+                                     (tpl.tags && tpl.tags.some(t => t.toLowerCase() === activeFilter.toLowerCase()));
+                    if (!catMatch) return false;
+                }
+                // Search query
+                if (!query) return true;
+                if (tpl.name && tpl.name.toLowerCase().includes(query)) return true;
+                if (tpl.description && tpl.description.toLowerCase().includes(query)) return true;
+                if (tpl.category && tpl.category.toLowerCase().includes(query)) return true;
+                if (tpl.categoryName && tpl.categoryName.toLowerCase().includes(query)) return true;
+                if (tpl.state && tpl.state.patternType && tpl.state.patternType.toLowerCase().includes(query)) return true;
+                if (tpl.tags && tpl.tags.some(t => t.toLowerCase().includes(query))) return true;
+                return false;
             });
         };
 
+        const renderBatch = () => {
+            const filtered = getFilteredTemplates();
+            const total = filtered.length;
+
+            if (counterEl) {
+                counterEl.textContent = `${total.toLocaleString()} Presets`;
+            }
+
+            if (total === 0) {
+                container.innerHTML = `
+                    <div class="empty-state-box" style="grid-column: 1 / -1; padding: 32px 16px;">
+                        <span class="empty-state-icon">🔍</span>
+                        <div class="empty-state-text">No Presets Found</div>
+                        <div class="empty-state-sub text-muted">Try another keyword or select 'All' category.</div>
+                    </div>
+                `;
+                if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = '';
+            container.className = `templates-grid-container ${viewMode === 'buttons' ? 'compact-mode' : ''}`;
+
+            const toShow = filtered.slice(0, visibleCount);
+
+            toShow.forEach(tpl => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `template-preset-btn ${viewMode === 'buttons' ? 'compact' : ''} ${activeTemplateId === tpl.id ? 'active' : ''}`;
+                btn.setAttribute('data-tpl-id', tpl.id);
+                btn.title = `${tpl.name} — 1-Click Apply to Canvas`;
+
+                const colorsHtml = (tpl.state && tpl.state.colors) ?
+                    tpl.state.colors.slice(0, 4).map(c => `<span class="template-color-dot" style="background:${c}"></span>`).join('') : '';
+
+                if (viewMode === 'buttons') {
+                    btn.innerHTML = `
+                        <div class="template-preset-header">
+                            <span class="template-preset-icon">${tpl.icon || '🎨'}</span>
+                            <span class="template-preset-title">${tpl.name}</span>
+                        </div>
+                        <div class="template-colors-row">${colorsHtml}</div>
+                    `;
+                } else {
+                    btn.innerHTML = `
+                        <div class="template-preset-header">
+                            <span class="template-preset-icon">${tpl.icon || '🎨'}</span>
+                            <span class="template-preset-title">${tpl.name}</span>
+                            <span class="template-preset-badge">${tpl.category || 'Preset'}</span>
+                        </div>
+                        <div class="template-preset-desc">${tpl.description || ''}</div>
+                        <div class="template-preset-footer">
+                            <div class="template-colors-row">${colorsHtml}</div>
+                            <span class="template-apply-action">Apply ⚡</span>
+                        </div>
+                    `;
+                }
+
+                btn.addEventListener('click', () => {
+                    activeTemplateId = tpl.id;
+                    container.querySelectorAll('.template-preset-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.applyTemplate(tpl);
+                });
+
+                container.appendChild(btn);
+            });
+
+            // Load More button state
+            if (loadMoreContainer) {
+                if (visibleCount < total) {
+                    loadMoreContainer.style.display = 'flex';
+                    if (loadMoreCounterEl) {
+                        loadMoreCounterEl.textContent = `(Showing ${Math.min(visibleCount, total).toLocaleString()} of ${total.toLocaleString()})`;
+                    }
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+            }
+        };
+
+        // Category Filter Chips
         chips.forEach(chip => {
             chip.addEventListener('click', () => {
                 chips.forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
                 activeFilter = chip.getAttribute('data-tfilter') || 'all';
-                renderTemplates();
+                visibleCount = pageSize;
+                renderBatch();
             });
         });
 
-        renderTemplates();
+        // Search Input
+        if (searchInput) {
+            let searchTimeout = null;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchQuery = e.target.value;
+                    if (searchClearBtn) {
+                        searchClearBtn.style.display = searchQuery ? 'block' : 'none';
+                    }
+                    visibleCount = pageSize;
+                    renderBatch();
+                }, 100);
+            });
+        }
+
+        if (searchClearBtn) {
+            searchClearBtn.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                searchQuery = '';
+                searchClearBtn.style.display = 'none';
+                visibleCount = pageSize;
+                renderBatch();
+            });
+        }
+
+        // Random Preset Button
+        if (randomBtn) {
+            randomBtn.addEventListener('click', () => {
+                const list = getFilteredTemplates();
+                if (!list || list.length === 0) return;
+                const randomTpl = list[Math.floor(Math.random() * list.length)];
+                activeTemplateId = randomTpl.id;
+                this.applyTemplate(randomTpl);
+                this.showToast(`🎲 Random Preset: ${randomTpl.name}`);
+                renderBatch();
+                const foundBtn = container.querySelector(`[data-tpl-id="${randomTpl.id}"]`);
+                if (foundBtn) {
+                    foundBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    foundBtn.classList.add('active');
+                }
+            });
+        }
+
+        // View Mode Toggle
+        if (btnViewCards && btnViewButtons) {
+            btnViewCards.addEventListener('click', () => {
+                viewMode = 'cards';
+                btnViewCards.classList.add('active');
+                btnViewButtons.classList.remove('active');
+                renderBatch();
+            });
+            btnViewButtons.addEventListener('click', () => {
+                viewMode = 'buttons';
+                btnViewButtons.classList.add('active');
+                btnViewCards.classList.remove('active');
+                renderBatch();
+            });
+        }
+
+        // Load More Button
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                visibleCount += pageSize;
+                renderBatch();
+            });
+        }
+
+        renderBatch();
     },
 
     applyTemplate(tpl) {
@@ -3379,7 +3532,7 @@ const App = {
         this.requestRender();
         this.updatePatternInfo();
         this.generateVariations();
-        this.showToast(`✨ Applied Template: ${tpl.name}`);
+        this.showToast(`✨ Applied Preset: ${tpl.name}`);
     },
 
     // ─── Command Palette (Ctrl+K) ──────────────────────────────────────────
