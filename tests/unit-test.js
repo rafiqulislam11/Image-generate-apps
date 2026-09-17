@@ -17,13 +17,18 @@ console.log('=== RUNNING AI PATTERN STUDIO PRO TEST SUITE ===\n');
 
 const path = require('path');
 
-// 1. Check Categories
+// 1. Check Categories (96 Background Categories with 100 Sub-categories each = 9,600 total)
 try {
   const PATTERN_CATEGORIES = require(path.join(__dirname, '../data/categories.js'));
   assert(Array.isArray(PATTERN_CATEGORIES), 'PATTERN_CATEGORIES is an array');
-  assert(PATTERN_CATEGORIES.length === 30, `PATTERN_CATEGORIES has 30 categories (found ${PATTERN_CATEGORIES?.length})`);
+  assert(PATTERN_CATEGORIES.length === 96, `PATTERN_CATEGORIES has 96 categories (found ${PATTERN_CATEGORIES?.length})`);
   const firstCat = PATTERN_CATEGORIES[0];
   assert(firstCat.id && firstCat.name && firstCat.patternTypes?.length > 0, 'Category has id, name, and patternTypes');
+  const totalSubCats = PATTERN_CATEGORIES.reduce((sum, c) => sum + (c.subCategories?.length || 0), 0);
+  assert(totalSubCats === 9600, `PATTERN_CATEGORIES has 9,600 total sub-categories (found ${totalSubCats})`);
+  assert(firstCat.subCategories.length === 100, `First category (${firstCat.name}) contains 100 sub-categories`);
+  const lastCat = PATTERN_CATEGORIES[95];
+  assert(lastCat.name === 'Business Background' && lastCat.subCategories.length === 100, `96th category (${lastCat.name}) contains 100 sub-categories`);
 } catch (e) {
   assert(false, 'Failed loading categories.js: ' + e.message);
 }

@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="description" content="PatternForge PRO V2 — Professional procedural pattern & background generator with 50+ seamless patterns, stock metadata generator, color harmony studio, and ultra-high resolution export up to 8K.">
-  <meta name="keywords" content="pattern generator, plaid generator, tartan generator, seamless pattern, background generator, texture generator, geometric pattern, 8k background, stock pattern">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="description"
+    content="PatternForge PRO V2 — Professional procedural pattern & background generator with 50+ seamless patterns, stock metadata generator, color harmony studio, and ultra-high resolution export up to 8K.">
+  <meta name="keywords"
+    content="pattern generator, plaid generator, tartan generator, seamless pattern, background generator, texture generator, geometric pattern, 8k background, stock pattern">
   <meta name="theme-color" content="#0f1117">
   <title>PatternForge PRO V2 — Generate. Customize. Create.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=2.5">
 </head>
+
 <body>
 
   <!-- ─── Backdrop Overlay for Mobile Drawers ───────────────────────────── -->
@@ -20,7 +27,8 @@
   <!-- ─── Header ─────────────────────────────────────────────────────────── -->
   <header id="main-header" role="banner">
     <div class="header-left">
-      <button class="btn-icon mobile-menu-btn" id="btn-toggle-left" aria-label="Toggle controls sidebar" title="Open Controls">
+      <button class="btn-icon mobile-menu-btn" id="btn-toggle-left" aria-label="Toggle controls sidebar"
+        title="Open Controls">
         <span class="icon">☰</span>
       </button>
       <a class="logo header-logo" href="#" aria-label="AI Pattern Studio Home">
@@ -36,16 +44,19 @@
 
       <!-- Easy Mode / Pro Mode Switcher -->
       <div class="mode-switch-group" role="radiogroup" aria-label="Operating Mode">
-        <button class="mode-btn active" id="btn-mode-easy" data-mode="easy" role="radio" aria-checked="true" title="Easy Mode for Beginners">
+        <button class="mode-btn active" id="btn-mode-easy" data-mode="easy" role="radio" aria-checked="true"
+          title="Easy Mode for Beginners">
           <span>✨</span> <span data-i18n="easyMode">Easy</span>
         </button>
-        <button class="mode-btn" id="btn-mode-pro" data-mode="pro" role="radio" aria-checked="false" title="Pro Mode for Advanced Designers">
+        <button class="mode-btn" id="btn-mode-pro" data-mode="pro" role="radio" aria-checked="false"
+          title="Pro Mode for Advanced Designers">
           <span>⚡</span> <span data-i18n="proMode">Pro</span>
         </button>
       </div>
 
       <!-- Command Palette / Quick Search Trigger -->
-      <button class="btn-hdr btn-header" id="btn-command-palette" title="Quick Search & Actions (Ctrl+K)" aria-label="Search">
+      <button class="btn-hdr btn-header" id="btn-command-palette" title="Quick Search & Actions (Ctrl+K)"
+        aria-label="Search">
         <span class="icon">🔍</span> <span class="btn-text">Search (Ctrl+K)</span>
       </button>
     </div>
@@ -70,13 +81,15 @@
         </select>
 
         <!-- AI Credits Meter -->
-        <div id="ai-credits-badge" class="ai-credits-badge" title="AI Generation Credits (Click to View Plan)" role="button" tabindex="0">
+        <div id="ai-credits-badge" class="ai-credits-badge" title="AI Generation Credits (Click to View Plan)"
+          role="button" tabindex="0">
           ✨ <span class="credit-count">72</span> / 100 <span class="credit-label">Credits</span>
         </div>
       </div>
 
       <div class="header-group">
-        <button class="btn-hdr btn-header" id="btn-hotkeys" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
+        <button class="btn-hdr btn-header" id="btn-hotkeys" title="Keyboard Shortcuts (?)"
+          aria-label="Keyboard Shortcuts">
           <span class="icon">⌨</span> <span class="btn-text" data-i18n="hotkeys">Hotkeys</span>
         </button>
         <button class="btn-hdr btn-header" id="btn-undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
@@ -85,25 +98,30 @@
         <button class="btn-hdr btn-header" id="btn-redo" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
           <span class="icon">↷</span> <span class="btn-text" data-i18n="redo">Redo</span>
         </button>
-        <button class="btn-hdr btn-header" id="btn-projects" title="Open Project Manager (P)" aria-label="Open Projects">
+        <button class="btn-hdr btn-header" id="btn-projects" title="Open Project Manager (P)"
+          aria-label="Open Projects">
           <span class="icon">📁</span> <span class="btn-text" data-i18n="projects">Projects</span>
         </button>
-        <button class="btn-hdr-accent btn-accent" id="btn-randomize" title="Randomize all settings (R)" aria-label="Randomize pattern">
+        <button class="btn-hdr-accent btn-accent" id="btn-randomize" title="Randomize all settings (R)"
+          aria-label="Randomize pattern">
           <span class="icon">🎲</span> <span class="btn-text" data-i18n="randomize">Randomize</span>
         </button>
       </div>
 
       <div class="header-group header-group-primary">
-        <button class="btn-hdr-master btn-accent" id="btn-download-master-10mb" title="Download 10MB+ Master PNG (8K Ultra HD)" aria-label="Download 10MB+ Master Pattern">
+        <button class="btn-hdr-master btn-accent" id="btn-download-master-10mb"
+          title="Download 10MB+ Master PNG (8K Ultra HD)" aria-label="Download 10MB+ Master Pattern">
           <span class="icon">💎</span> <span class="btn-text">10MB+ Master</span>
         </button>
-        <button class="btn-hdr-primary btn-accent" id="btn-download" title="Download pattern (Ctrl+S)" aria-label="Download pattern">
+        <button class="btn-hdr-primary btn-accent" id="btn-download" title="Download pattern (Ctrl+S)"
+          aria-label="Download pattern">
           <span class="icon">⬇</span> <span class="btn-text" data-i18n="download">Download</span>
         </button>
         <button class="btn-icon" id="btn-theme" title="Toggle dark/light mode" aria-label="Toggle theme">
           <span id="theme-icon">☀</span>
         </button>
-        <button class="btn-icon mobile-menu-btn" id="btn-toggle-right" aria-label="Toggle palette & metadata" title="Open Palette">
+        <button class="btn-icon mobile-menu-btn" id="btn-toggle-right" aria-label="Toggle palette & metadata"
+          title="Open Palette">
           <span class="icon">🎨</span>
         </button>
       </div>
@@ -122,17 +140,23 @@
 
       <!-- ─── Studio Dock Tabs (Instant 1-Click Panel Switcher) ──────────── -->
       <div class="sidebar-dock-tabs" id="left-dock-tabs" role="tablist" aria-label="Left sidebar tabs">
-        <button class="dock-tab-btn dock-tab-easy active" data-tab="easy" role="tab" title="Easy Mode — 1-Click Magic Design">✨ Easy</button>
-        <button class="dock-tab-btn" data-tab="categories" role="tab" title="30 Searchable Design Categories">📂 Categories</button>
-        <button class="dock-tab-btn" data-tab="patterns" role="tab" title="Procedural Patterns (203+ Available)">🎨 Patterns</button>
-        <button class="dock-tab-btn" data-tab="templates" role="tab" title="Curated Design Templates">📋 Templates</button>
-        <button class="dock-tab-btn" data-tab="ai-generate" role="tab" title="AI Image Generation Studio">🤖 AI Generate</button>
+        <button class="dock-tab-btn dock-tab-easy active" data-tab="easy" role="tab"
+          title="Easy Mode — 1-Click Magic Design">✨ Easy</button>
+        <button class="dock-tab-btn" data-tab="categories" role="tab" title="96 Background Categories (9,600 Sub-styles)">📂
+          Categories</button>
+        <button class="dock-tab-btn" data-tab="patterns" role="tab" title="Procedural Patterns (203+ Available)">🎨
+          Patterns</button>
+        <button class="dock-tab-btn" data-tab="templates" role="tab" title="Curated Design Templates">📋
+          Templates</button>
+        <button class="dock-tab-btn" data-tab="ai-generate" role="tab" title="AI Image Generation Studio">🤖 AI
+          Generate</button>
         <button class="dock-tab-btn" data-tab="colors" role="tab" title="Color Studio & Harmonies">🌈 Colors</button>
         <button class="dock-tab-btn" data-tab="controls" role="tab" title="Parametric Sliders">⚙ Sliders</button>
         <button class="dock-tab-btn" data-tab="effects" role="tab" title="Effects & Gradients">✨ FX</button>
         <button class="dock-tab-btn" data-tab="resolution" role="tab" title="Resolution & Canvas Size">📐 Size</button>
         <button class="dock-tab-btn" data-tab="export" role="tab" title="Export & Settings">📦 Export</button>
-        <button class="dock-tab-btn dock-tab-all" data-tab="all" role="tab" title="Toggle Scroll Mode (All Panels)">☰ All</button>
+        <button class="dock-tab-btn dock-tab-all" data-tab="all" role="tab" title="Toggle Scroll Mode (All Panels)">☰
+          All</button>
       </div>
 
       <div class="sidebar-scroll-content">
@@ -144,7 +168,7 @@
             <span class="badge-easy-pill">Fast & Clean</span>
           </div>
           <div class="panel-body panel-section-body">
-            
+
             <!-- Big 1-Click Magic Auto-Generate Button -->
             <button class="btn-easy-magic-primary" id="btn-easy-magic-gen">
               <span class="magic-sparkle">✨</span>
@@ -161,42 +185,50 @@
             </div>
             <div class="easy-themes-grid">
               <button class="easy-theme-card active" data-theme="cyberpunk" title="Cyberpunk 2099 Quantum Matrix">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ff0055, #00f0ff, #7928ca, #ffe600)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #ff0055, #00f0ff, #7928ca, #ffe600)"></div>
                 <div class="theme-name">⚡ সাইবারপাঙ্ক ২০৯৯</div>
                 <div class="theme-sub">Quantum Godcore</div>
               </button>
               <button class="easy-theme-card" data-theme="royal-gold" title="Royal 24K Liquid Gold & Black Obsidian">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #d4af37, #f3e5ab, #aa7c11, #111111)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #d4af37, #f3e5ab, #aa7c11, #111111)"></div>
                 <div class="theme-name">👑 ২৪কে রয়্যাল গোল্ড</div>
                 <div class="theme-sub">Gold Obsidian</div>
               </button>
               <button class="easy-theme-card" data-theme="pastel-dream" title="Pastel Dream Blush Floral">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #f43f5e, #fda4af, #fecdd3, #a78bfa)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #f43f5e, #fda4af, #fecdd3, #a78bfa)"></div>
                 <div class="theme-name">🌸 প্যাস্টেল ড্রিম</div>
                 <div class="theme-sub">Blush Rose Floral</div>
               </button>
               <button class="easy-theme-card" data-theme="emerald-zen" title="Emerald Zen Sacred Torus">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #10b981, #047857, #6ee7b7, #d4af37)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #10b981, #047857, #6ee7b7, #d4af37)"></div>
                 <div class="theme-name">🍃 এমারেল্ড জেন</div>
                 <div class="theme-sub">Sacred Bamboo Knot</div>
               </button>
               <button class="easy-theme-card" data-theme="cosmic-galaxy" title="Deep Cosmic Galaxy Vortex">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #020617)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #020617)"></div>
                 <div class="theme-name">🌌 কসমিক গ্যালাক্সি</div>
                 <div class="theme-sub">Deep Space Abyss</div>
               </button>
               <button class="easy-theme-card" data-theme="sunset-glow" title="Horizon Sunset Glow Curve">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ea580c, #f59e0b, #be185d, #1e1b4b)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #ea580c, #f59e0b, #be185d, #1e1b4b)"></div>
                 <div class="theme-name">🌅 সানসেট গ্লো</div>
                 <div class="theme-sub">Radiant Twilight</div>
               </button>
               <button class="easy-theme-card" data-theme="sacred-neon" title="Sacred Neon Metatron Cube">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #06b6d4, #a855f7, #f43f5e, #0f172a)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #06b6d4, #a855f7, #f43f5e, #0f172a)"></div>
                 <div class="theme-name">🔯 সেক্রেড নিয়ন</div>
                 <div class="theme-sub">Metatron Cube</div>
               </button>
               <button class="easy-theme-card" data-theme="clean-minimal" title="Monochrome Clean Minimal Hyper-Spiral">
-                <div class="theme-swatch-bar" style="background: linear-gradient(90deg, #ffffff, #94a3b8, #334155, #09090b)"></div>
+                <div class="theme-swatch-bar"
+                  style="background: linear-gradient(90deg, #ffffff, #94a3b8, #334155, #09090b)"></div>
                 <div class="theme-name">⚪ ক্লিন মিনিমাল</div>
                 <div class="theme-sub">Hyper Minimalist</div>
               </button>
@@ -221,14 +253,15 @@
                 <option value="artistic">🎨 আর্টিস্টিক টেক্সচার (8 Artistic)</option>
                 <option value="themed">🎭 থিমড প্যাটার্ন (9 Themed)</option>
               </select>
-              <button class="btn-easy-surprise" id="btn-easy-surprise" title="যেকোনো একটি নতুন প্যাটার্ন আনুন">🎲 র‍্যান্ডম প্যাটার্ন</button>
+              <button class="btn-easy-surprise" id="btn-easy-surprise" title="যেকোনো একটি নতুন প্যাটার্ন আনুন">🎲
+                র‍্যান্ডম প্যাটার্ন</button>
             </div>
 
             <!-- Only 4 Easy Sliders -->
             <div class="easy-section-label">
               <span>🎚 সহজ ৪টি কন্ট্রোল (Simple Controls)</span>
             </div>
-            
+
             <div class="easy-slider-card">
               <div class="easy-slider-header">
                 <span class="easy-slider-title">📏 আকার (Size / Scale)</span>
@@ -243,7 +276,8 @@
                 <span class="easy-slider-title">🌀 ঘূর্ণন কোণ (Angle / Rotation)</span>
                 <span class="easy-slider-val" id="easy-rotation-val">45°</span>
               </div>
-              <input type="range" id="easy-rotation" min="0" max="180" value="45" step="1" aria-label="Easy rotation slider">
+              <input type="range" id="easy-rotation" min="0" max="180" value="45" step="1"
+                aria-label="Easy rotation slider">
               <div class="easy-slider-hints"><span>0°</span><span>45°</span><span>90°</span><span>180°</span></div>
             </div>
 
@@ -252,8 +286,10 @@
                 <span class="easy-slider-title">🧬 রেখার ঘনত্ব (Detail & Lines)</span>
                 <span class="easy-slider-val" id="easy-density-val">5</span>
               </div>
-              <input type="range" id="easy-density" min="1" max="10" value="5" step="0.5" aria-label="Easy density slider">
-              <div class="easy-slider-hints"><span>হালকা (Simple)</span><span>স্ট্যান্ডার্ড</span><span>গাঢ় (Dense)</span></div>
+              <input type="range" id="easy-density" min="1" max="10" value="5" step="0.5"
+                aria-label="Easy density slider">
+              <div class="easy-slider-hints"><span>হালকা (Simple)</span><span>স্ট্যান্ডার্ড</span><span>গাঢ়
+                  (Dense)</span></div>
             </div>
 
             <div class="easy-slider-card">
@@ -261,7 +297,8 @@
                 <span class="easy-slider-title">🌈 রঙের মিশ্রণ (Color Blend)</span>
                 <span class="easy-slider-val" id="easy-blend-val">60%</span>
               </div>
-              <input type="range" id="easy-blend" min="20" max="100" value="60" step="1" aria-label="Easy color blend slider">
+              <input type="range" id="easy-blend" min="20" max="100" value="60" step="1"
+                aria-label="Easy color blend slider">
               <div class="easy-slider-hints"><span>সফট</span><span>স্বাভাবিক</span><span>উজ্জ্বল (Vibrant)</span></div>
             </div>
 
@@ -328,33 +365,47 @@
           </div>
         </div>
 
-        <!-- ─── 30 SEARCHABLE DESIGN CATEGORIES ─── -->
+        <!-- ─── 196 MASTER DESIGN CATEGORIES (100 PATTERNS + 96 BACKGROUNDS) ─── -->
         <div class="panel panel-section" id="panel-categories">
           <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0">
-            <h3>📂 30 Design Categories</h3>
-            <span class="badge-easy-pill">30 Categories</span>
+            <h3 id="panel-categories-header-title">📂 Category Hub (19,600 Styles)</h3>
+            <span class="badge-easy-pill" id="categories-count-badge">100 Patterns · 10,000 Sub-styles</span>
           </div>
           <div class="panel-body panel-section-body">
+            <!-- Mode Switcher: Patterns vs Backgrounds -->
+            <div class="category-mode-switcher mb-2" id="category-mode-switcher">
+              <button class="btn-cat-mode active" data-mode="patterns" id="btn-mode-patterns">
+                <span>🎨</span> 100 Patterns (10,000)
+              </button>
+              <button class="btn-cat-mode" data-mode="backgrounds" id="btn-mode-backgrounds">
+                <span>🌄</span> 96 Backgrounds (9,600)
+              </button>
+            </div>
+
+            <!-- Search Bar -->
             <div class="pattern-search-wrap mb-2">
               <span class="pattern-search-icon">🔍</span>
-              <input type="text" id="category-search-input" class="pattern-search" placeholder="Search 30 categories (e.g. geometric, floral, islamic, luxury)…" aria-label="Search categories">
+              <input type="text" id="category-search-input" class="pattern-search"
+                placeholder="Search 100 pattern categories & 10,000 sub-patterns…"
+                aria-label="Search categories">
             </div>
+
+            <!-- Dynamic Filter Chips -->
             <div class="category-filter-chips mb-2" id="category-filter-chips">
-              <button class="category-chip active" data-cfilter="all">All (30)</button>
-              <button class="category-chip" data-cfilter="classic">Classic</button>
-              <button class="category-chip" data-cfilter="modern">Modern</button>
-              <button class="category-chip" data-cfilter="seasonal">Seasonal</button>
-              <button class="category-chip" data-cfilter="artistic">Artistic</button>
+              <!-- Dynamically populated based on active mode -->
             </div>
+
+            <!-- Category Grid -->
             <div class="categories-grid-container" id="categories-grid-container">
-              <!-- Dynamically populated from data/categories.js -->
+              <!-- Dynamically populated from data/pattern-categories.js or data/categories.js -->
             </div>
           </div>
         </div>
 
         <!-- Pattern Type (211 Patterns with Categories & Live Search) -->
         <div class="panel panel-section" id="panel-patterns">
-          <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0" aria-controls="panel-pattern-body">
+          <div class="panel-header panel-section-header" role="button" aria-expanded="true" tabindex="0"
+            aria-controls="panel-pattern-body">
             <h3>Pattern Studio (<span id="pattern-total-count">211</span>)</h3>
             <span class="collapse-icon collapse-arrow">▼</span>
           </div>
@@ -362,7 +413,9 @@
             <!-- Pattern Search -->
             <div class="pattern-search-wrap">
               <span class="pattern-search-icon">🔍</span>
-              <input type="text" id="pattern-search" class="pattern-search" placeholder="Search 211 patterns (e.g. cosmic, cyberpunk, gold, spiral, rose)…" aria-label="Search patterns">
+              <input type="text" id="pattern-search" class="pattern-search"
+                placeholder="Search 211 patterns (e.g. cosmic, cyberpunk, gold, spiral, rose)…"
+                aria-label="Search patterns">
             </div>
 
             <!-- Category Filter Chips -->
@@ -386,239 +439,348 @@
             <div class="pattern-grid" id="pattern-buttons-grid" role="listbox" aria-label="Select pattern type">
 
               <!-- ── Group 0: 👑 মারাত্মক মাস্টার আর্ট (8 Master 8K Engines) ── -->
-              <button class="pattern-btn pattern-btn-master" data-type="cosmicHyperNebula"       data-cat="master" role="option">🌌 Cosmic Nebula</button>
-              <button class="pattern-btn pattern-btn-master" data-type="cyberpunkQuantumMatrix"  data-cat="master" role="option">⚡ Cyberpunk 2099</button>
-              <button class="pattern-btn pattern-btn-master" data-type="royal24kLiquidGold"      data-cat="master" role="option">👑 24K Liquid Gold</button>
-              <button class="pattern-btn pattern-btn-master" data-type="multiverseSacredPortal"  data-cat="master" role="option">🔯 Multiverse Portal</button>
-              <button class="pattern-btn pattern-btn-master" data-type="prismaticDiamondAurora"  data-cat="master" role="option">🔮 Diamond Aurora</button>
-              <button class="pattern-btn pattern-btn-master" data-type="volcanicMagmaCore"       data-cat="master" role="option">🌋 Volcanic Magma</button>
-              <button class="pattern-btn pattern-btn-master" data-type="bioluminescentAbyss"     data-cat="master" role="option">🧬 Bioluminescent</button>
-              <button class="pattern-btn pattern-btn-master" data-type="quantumParticleStorm"    data-cat="master" role="option">🌀 Quantum Storm</button>
+              <button class="pattern-btn pattern-btn-master" data-type="cosmicHyperNebula" data-cat="master"
+                role="option">🌌 Cosmic Nebula</button>
+              <button class="pattern-btn pattern-btn-master" data-type="cyberpunkQuantumMatrix" data-cat="master"
+                role="option">⚡ Cyberpunk 2099</button>
+              <button class="pattern-btn pattern-btn-master" data-type="royal24kLiquidGold" data-cat="master"
+                role="option">👑 24K Liquid Gold</button>
+              <button class="pattern-btn pattern-btn-master" data-type="multiverseSacredPortal" data-cat="master"
+                role="option">🔯 Multiverse Portal</button>
+              <button class="pattern-btn pattern-btn-master" data-type="prismaticDiamondAurora" data-cat="master"
+                role="option">🔮 Diamond Aurora</button>
+              <button class="pattern-btn pattern-btn-master" data-type="volcanicMagmaCore" data-cat="master"
+                role="option">🌋 Volcanic Magma</button>
+              <button class="pattern-btn pattern-btn-master" data-type="bioluminescentAbyss" data-cat="master"
+                role="option">🧬 Bioluminescent</button>
+              <button class="pattern-btn pattern-btn-master" data-type="quantumParticleStorm" data-cat="master"
+                role="option">🌀 Quantum Storm</button>
 
               <!-- ── Group 1: 🌀 Spirals & Vortices (25) ── -->
-              <button class="pattern-btn" data-type="archimedeanSpiral"     data-cat="spirals" role="option">Archimedean</button>
-              <button class="pattern-btn" data-type="goldenSpiral"          data-cat="spirals" role="option">Golden Spiral</button>
-              <button class="pattern-btn" data-type="logarithmicSpiral"     data-cat="spirals" role="option">Log Spiral</button>
-              <button class="pattern-btn" data-type="fermatSpiral"          data-cat="spirals" role="option">Fermat Spiral</button>
-              <button class="pattern-btn" data-type="hyperbolicSpiral"      data-cat="spirals" role="option">Hyperbolic</button>
-              <button class="pattern-btn" data-type="lituusSpiral"          data-cat="spirals" role="option">Lituus</button>
-              <button class="pattern-btn" data-type="dualInterlockingSpiral" data-cat="spirals" role="option">Dual Spiral</button>
-              <button class="pattern-btn" data-type="tripleSpiral"          data-cat="spirals" role="option">Triskelion</button>
-              <button class="pattern-btn" data-type="quadSpiral"            data-cat="spirals" role="option">Quad Spiral</button>
-              <button class="pattern-btn" data-type="hexSpiral"             data-cat="spirals" role="option">Hex Spiral</button>
-              <button class="pattern-btn" data-type="octaSpiral"            data-cat="spirals" role="option">Octa Spiral</button>
-              <button class="pattern-btn" data-type="spiralGalaxy"          data-cat="spirals" role="option">Galaxy Spiral</button>
-              <button class="pattern-btn" data-type="vortexWhirlpool"       data-cat="spirals" role="option">Whirlpool</button>
-              <button class="pattern-btn" data-type="squircleSpiral"        data-cat="spirals" role="option">Squircle Spiral</button>
-              <button class="pattern-btn" data-type="polygonalSpiral"       data-cat="spirals" role="option">Poly Spiral</button>
-              <button class="pattern-btn" data-type="concentricRipple"      data-cat="spirals" role="option">Ripple Spiral</button>
-              <button class="pattern-btn" data-type="fibonacciLattice"      data-cat="spirals" role="option">Phyllotaxis</button>
-              <button class="pattern-btn" data-type="cycloneSpiral"         data-cat="spirals" role="option">Cyclone</button>
-              <button class="pattern-btn" data-type="nebulaSpiral"          data-cat="spirals" role="option">Nebula</button>
-              <button class="pattern-btn" data-type="chasmSpiral"           data-cat="spirals" role="option">Chasm Tunnel</button>
-              <button class="pattern-btn" data-type="helixRibbon"           data-cat="spirals" role="option">Helix Ribbon</button>
-              <button class="pattern-btn" data-type="spiralLabyrinth"       data-cat="spirals" role="option">Spiral Maze</button>
-              <button class="pattern-btn" data-type="solarFlareSpiral"      data-cat="spirals" role="option">Solar Flare</button>
-              <button class="pattern-btn" data-type="quantumVortex"         data-cat="spirals" role="option">Quantum Vortex</button>
-              <button class="pattern-btn" data-type="infinitySpiral"        data-cat="spirals" role="option">Infinity Spiral</button>
+              <button class="pattern-btn" data-type="archimedeanSpiral" data-cat="spirals"
+                role="option">Archimedean</button>
+              <button class="pattern-btn" data-type="goldenSpiral" data-cat="spirals" role="option">Golden
+                Spiral</button>
+              <button class="pattern-btn" data-type="logarithmicSpiral" data-cat="spirals" role="option">Log
+                Spiral</button>
+              <button class="pattern-btn" data-type="fermatSpiral" data-cat="spirals" role="option">Fermat
+                Spiral</button>
+              <button class="pattern-btn" data-type="hyperbolicSpiral" data-cat="spirals"
+                role="option">Hyperbolic</button>
+              <button class="pattern-btn" data-type="lituusSpiral" data-cat="spirals" role="option">Lituus</button>
+              <button class="pattern-btn" data-type="dualInterlockingSpiral" data-cat="spirals" role="option">Dual
+                Spiral</button>
+              <button class="pattern-btn" data-type="tripleSpiral" data-cat="spirals" role="option">Triskelion</button>
+              <button class="pattern-btn" data-type="quadSpiral" data-cat="spirals" role="option">Quad Spiral</button>
+              <button class="pattern-btn" data-type="hexSpiral" data-cat="spirals" role="option">Hex Spiral</button>
+              <button class="pattern-btn" data-type="octaSpiral" data-cat="spirals" role="option">Octa Spiral</button>
+              <button class="pattern-btn" data-type="spiralGalaxy" data-cat="spirals" role="option">Galaxy
+                Spiral</button>
+              <button class="pattern-btn" data-type="vortexWhirlpool" data-cat="spirals"
+                role="option">Whirlpool</button>
+              <button class="pattern-btn" data-type="squircleSpiral" data-cat="spirals" role="option">Squircle
+                Spiral</button>
+              <button class="pattern-btn" data-type="polygonalSpiral" data-cat="spirals" role="option">Poly
+                Spiral</button>
+              <button class="pattern-btn" data-type="concentricRipple" data-cat="spirals" role="option">Ripple
+                Spiral</button>
+              <button class="pattern-btn" data-type="fibonacciLattice" data-cat="spirals"
+                role="option">Phyllotaxis</button>
+              <button class="pattern-btn" data-type="cycloneSpiral" data-cat="spirals" role="option">Cyclone</button>
+              <button class="pattern-btn" data-type="nebulaSpiral" data-cat="spirals" role="option">Nebula</button>
+              <button class="pattern-btn" data-type="chasmSpiral" data-cat="spirals" role="option">Chasm Tunnel</button>
+              <button class="pattern-btn" data-type="helixRibbon" data-cat="spirals" role="option">Helix Ribbon</button>
+              <button class="pattern-btn" data-type="spiralLabyrinth" data-cat="spirals" role="option">Spiral
+                Maze</button>
+              <button class="pattern-btn" data-type="solarFlareSpiral" data-cat="spirals" role="option">Solar
+                Flare</button>
+              <button class="pattern-btn" data-type="quantumVortex" data-cat="spirals" role="option">Quantum
+                Vortex</button>
+              <button class="pattern-btn" data-type="infinitySpiral" data-cat="spirals" role="option">Infinity
+                Spiral</button>
 
               <!-- ── Group 2: 📐 Spirographs & Rose Curves (25) ── -->
-              <button class="pattern-btn" data-type="rhodoneaRose"          data-cat="spiro" role="option">Rhodonea Rose</button>
-              <button class="pattern-btn" data-type="maurerRose"            data-cat="spiro" role="option">Maurer Rose</button>
-              <button class="pattern-btn" data-type="epitrochoid"           data-cat="spiro" role="option">Epitrochoid</button>
-              <button class="pattern-btn" data-type="hypotrochoid"          data-cat="spiro" role="option">Hypotrochoid</button>
-              <button class="pattern-btn" data-type="limacon"               data-cat="spiro" role="option">Limaçon</button>
-              <button class="pattern-btn" data-type="cardioid"              data-cat="spiro" role="option">Cardioid</button>
-              <button class="pattern-btn" data-type="nephroid"              data-cat="spiro" role="option">Nephroid</button>
-              <button class="pattern-btn" data-type="astroid"               data-cat="spiro" role="option">Astroid Star</button>
-              <button class="pattern-btn" data-type="deltoid"               data-cat="spiro" role="option">Deltoid</button>
-              <button class="pattern-btn" data-type="lissajousCurve"        data-cat="spiro" role="option">Lissajous</button>
-              <button class="pattern-btn" data-type="lissajousGrid"         data-cat="spiro" role="option">Lissajous Grid</button>
-              <button class="pattern-btn" data-type="guillocheBanknote"     data-cat="spiro" role="option">Banknote Rosette</button>
-              <button class="pattern-btn" data-type="guillocheBorder"       data-cat="spiro" role="option">Guilloché Wave</button>
-              <button class="pattern-btn" data-type="butterflyCurve"        data-cat="spiro" role="option">Butterfly</button>
-              <button class="pattern-btn" data-type="superformula"          data-cat="spiro" role="option">Superformula</button>
-              <button class="pattern-btn" data-type="harmonograph"          data-cat="spiro" role="option">Harmonograph</button>
-              <button class="pattern-btn" data-type="spiroFloral"           data-cat="spiro" role="option">Spiro Floral</button>
-              <button class="pattern-btn" data-type="spiroStar"             data-cat="spiro" role="option">Spiro Star</button>
-              <button class="pattern-btn" data-type="cycloidWave"           data-cat="spiro" role="option">Cycloid Wave</button>
-              <button class="pattern-btn" data-type="involuteGear"          data-cat="spiro" role="option">Involute Gear</button>
-              <button class="pattern-btn" data-type="hypocycloidMatrix"     data-cat="spiro" role="option">Hypocycloid</button>
-              <button class="pattern-btn" data-type="epicycloidRosette"     data-cat="spiro" role="option">Epicycloid</button>
-              <button class="pattern-btn" data-type="dampedHarmonic"        data-cat="spiro" role="option">Harmonic Wave</button>
-              <button class="pattern-btn" data-type="trochoidLattice"       data-cat="spiro" role="option">Trochoid</button>
-              <button class="pattern-btn" data-type="clelieCurve"           data-cat="spiro" role="option">Clélie Curve</button>
+              <button class="pattern-btn" data-type="rhodoneaRose" data-cat="spiro" role="option">Rhodonea Rose</button>
+              <button class="pattern-btn" data-type="maurerRose" data-cat="spiro" role="option">Maurer Rose</button>
+              <button class="pattern-btn" data-type="epitrochoid" data-cat="spiro" role="option">Epitrochoid</button>
+              <button class="pattern-btn" data-type="hypotrochoid" data-cat="spiro" role="option">Hypotrochoid</button>
+              <button class="pattern-btn" data-type="limacon" data-cat="spiro" role="option">Limaçon</button>
+              <button class="pattern-btn" data-type="cardioid" data-cat="spiro" role="option">Cardioid</button>
+              <button class="pattern-btn" data-type="nephroid" data-cat="spiro" role="option">Nephroid</button>
+              <button class="pattern-btn" data-type="astroid" data-cat="spiro" role="option">Astroid Star</button>
+              <button class="pattern-btn" data-type="deltoid" data-cat="spiro" role="option">Deltoid</button>
+              <button class="pattern-btn" data-type="lissajousCurve" data-cat="spiro" role="option">Lissajous</button>
+              <button class="pattern-btn" data-type="lissajousGrid" data-cat="spiro" role="option">Lissajous
+                Grid</button>
+              <button class="pattern-btn" data-type="guillocheBanknote" data-cat="spiro" role="option">Banknote
+                Rosette</button>
+              <button class="pattern-btn" data-type="guillocheBorder" data-cat="spiro" role="option">Guilloché
+                Wave</button>
+              <button class="pattern-btn" data-type="butterflyCurve" data-cat="spiro" role="option">Butterfly</button>
+              <button class="pattern-btn" data-type="superformula" data-cat="spiro" role="option">Superformula</button>
+              <button class="pattern-btn" data-type="harmonograph" data-cat="spiro" role="option">Harmonograph</button>
+              <button class="pattern-btn" data-type="spiroFloral" data-cat="spiro" role="option">Spiro Floral</button>
+              <button class="pattern-btn" data-type="spiroStar" data-cat="spiro" role="option">Spiro Star</button>
+              <button class="pattern-btn" data-type="cycloidWave" data-cat="spiro" role="option">Cycloid Wave</button>
+              <button class="pattern-btn" data-type="involuteGear" data-cat="spiro" role="option">Involute Gear</button>
+              <button class="pattern-btn" data-type="hypocycloidMatrix" data-cat="spiro"
+                role="option">Hypocycloid</button>
+              <button class="pattern-btn" data-type="epicycloidRosette" data-cat="spiro"
+                role="option">Epicycloid</button>
+              <button class="pattern-btn" data-type="dampedHarmonic" data-cat="spiro" role="option">Harmonic
+                Wave</button>
+              <button class="pattern-btn" data-type="trochoidLattice" data-cat="spiro" role="option">Trochoid</button>
+              <button class="pattern-btn" data-type="clelieCurve" data-cat="spiro" role="option">Clélie Curve</button>
 
               <!-- ── Group 3: 🔯 Sacred Geometry & Mystic (25) ── -->
-              <button class="pattern-btn" data-type="flowerOfLife"          data-cat="sacred" role="option">Flower of Life</button>
-              <button class="pattern-btn" data-type="seedOfLife"            data-cat="sacred" role="option">Seed of Life</button>
-              <button class="pattern-btn" data-type="fruitOfLife"           data-cat="sacred" role="option">Fruit of Life</button>
-              <button class="pattern-btn" data-type="metatronCube"          data-cat="sacred" role="option">Metatron Cube</button>
-              <button class="pattern-btn" data-type="sriYantra"             data-cat="sacred" role="option">Sri Yantra</button>
-              <button class="pattern-btn" data-type="vesicaPiscis"          data-cat="sacred" role="option">Vesica Piscis</button>
-              <button class="pattern-btn" data-type="torusSacred"           data-cat="sacred" role="option">Torus Field</button>
-              <button class="pattern-btn" data-type="celticKnotwork"        data-cat="sacred" role="option">Celtic Knot</button>
-              <button class="pattern-btn" data-type="endlessKnot"           data-cat="sacred" role="option">Endless Knot</button>
-              <button class="pattern-btn" data-type="borromeanRings"        data-cat="sacred" role="option">Borromean</button>
-              <button class="pattern-btn" data-type="solomonSeal"           data-cat="sacred" role="option">Solomon Seal</button>
-              <button class="pattern-btn" data-type="octagramStar"          data-cat="sacred" role="option">Octagram Star</button>
-              <button class="pattern-btn" data-type="decagramStar"          data-cat="sacred" role="option">Decagram Star</button>
-              <button class="pattern-btn" data-type="dodecagram"            data-cat="sacred" role="option">Dodecagram</button>
-              <button class="pattern-btn" data-type="enneagram"             data-cat="sacred" role="option">Enneagram</button>
-              <button class="pattern-btn" data-type="kabbalahTree"          data-cat="sacred" role="option">Tree of Life</button>
-              <button class="pattern-btn" data-type="triquetra"             data-cat="sacred" role="option">Triquetra</button>
-              <button class="pattern-btn" data-type="goldenTriangle"        data-cat="sacred" role="option">Golden Triangle</button>
-              <button class="pattern-btn" data-type="goldenSpiralGrid"      data-cat="sacred" role="option">Golden Rects</button>
-              <button class="pattern-btn" data-type="mandalaLotus"          data-cat="sacred" role="option">Mandala Lotus</button>
-              <button class="pattern-btn" data-type="sacredHexagram"        data-cat="sacred" role="option">Sacred Hex</button>
-              <button class="pattern-btn" data-type="islamicMuqarnas"       data-cat="sacred" role="option">Muqarnas</button>
-              <button class="pattern-btn" data-type="girihTiling"           data-cat="sacred" role="option">Girih Tile</button>
-              <button class="pattern-btn" data-type="zelligeTile"           data-cat="sacred" role="option">Zellige Mosaic</button>
-              <button class="pattern-btn" data-type="chakraWheel"           data-cat="sacred" role="option">Chakra Wheel</button>
+              <button class="pattern-btn" data-type="flowerOfLife" data-cat="sacred" role="option">Flower of
+                Life</button>
+              <button class="pattern-btn" data-type="seedOfLife" data-cat="sacred" role="option">Seed of Life</button>
+              <button class="pattern-btn" data-type="fruitOfLife" data-cat="sacred" role="option">Fruit of Life</button>
+              <button class="pattern-btn" data-type="metatronCube" data-cat="sacred" role="option">Metatron
+                Cube</button>
+              <button class="pattern-btn" data-type="sriYantra" data-cat="sacred" role="option">Sri Yantra</button>
+              <button class="pattern-btn" data-type="vesicaPiscis" data-cat="sacred" role="option">Vesica
+                Piscis</button>
+              <button class="pattern-btn" data-type="torusSacred" data-cat="sacred" role="option">Torus Field</button>
+              <button class="pattern-btn" data-type="celticKnotwork" data-cat="sacred" role="option">Celtic
+                Knot</button>
+              <button class="pattern-btn" data-type="endlessKnot" data-cat="sacred" role="option">Endless Knot</button>
+              <button class="pattern-btn" data-type="borromeanRings" data-cat="sacred" role="option">Borromean</button>
+              <button class="pattern-btn" data-type="solomonSeal" data-cat="sacred" role="option">Solomon Seal</button>
+              <button class="pattern-btn" data-type="octagramStar" data-cat="sacred" role="option">Octagram
+                Star</button>
+              <button class="pattern-btn" data-type="decagramStar" data-cat="sacred" role="option">Decagram
+                Star</button>
+              <button class="pattern-btn" data-type="dodecagram" data-cat="sacred" role="option">Dodecagram</button>
+              <button class="pattern-btn" data-type="enneagram" data-cat="sacred" role="option">Enneagram</button>
+              <button class="pattern-btn" data-type="kabbalahTree" data-cat="sacred" role="option">Tree of Life</button>
+              <button class="pattern-btn" data-type="triquetra" data-cat="sacred" role="option">Triquetra</button>
+              <button class="pattern-btn" data-type="goldenTriangle" data-cat="sacred" role="option">Golden
+                Triangle</button>
+              <button class="pattern-btn" data-type="goldenSpiralGrid" data-cat="sacred" role="option">Golden
+                Rects</button>
+              <button class="pattern-btn" data-type="mandalaLotus" data-cat="sacred" role="option">Mandala
+                Lotus</button>
+              <button class="pattern-btn" data-type="sacredHexagram" data-cat="sacred" role="option">Sacred Hex</button>
+              <button class="pattern-btn" data-type="islamicMuqarnas" data-cat="sacred" role="option">Muqarnas</button>
+              <button class="pattern-btn" data-type="girihTiling" data-cat="sacred" role="option">Girih Tile</button>
+              <button class="pattern-btn" data-type="zelligeTile" data-cat="sacred" role="option">Zellige
+                Mosaic</button>
+              <button class="pattern-btn" data-type="chakraWheel" data-cat="sacred" role="option">Chakra Wheel</button>
 
               <!-- ── Group 4: 🔬 Fractals, Physics & Chaos (25) ── -->
-              <button class="pattern-btn" data-type="sierpinskiTriangle"    data-cat="fractals" role="option">Sierpinski Tri</button>
-              <button class="pattern-btn" data-type="sierpinskiCarpet"      data-cat="fractals" role="option">Sierpinski Carpet</button>
-              <button class="pattern-btn" data-type="kochSnowflake"         data-cat="fractals" role="option">Koch Snowflake</button>
-              <button class="pattern-btn" data-type="dragonCurve"           data-cat="fractals" role="option">Dragon Curve</button>
-              <button class="pattern-btn" data-type="barnsleyFern"          data-cat="fractals" role="option">Barnsley Fern</button>
-              <button class="pattern-btn" data-type="cantorDust"            data-cat="fractals" role="option">Cantor Dust</button>
-              <button class="pattern-btn" data-type="chladniAcoustics"      data-cat="fractals" role="option">Chladni Plate</button>
-              <button class="pattern-btn" data-type="moireInterference"     data-cat="fractals" role="option">Moiré Wave</button>
-              <button class="pattern-btn" data-type="magneticField"         data-cat="fractals" role="option">Magnetic Field</button>
-              <button class="pattern-btn" data-type="electricPotential"     data-cat="fractals" role="option">Electric Field</button>
-              <button class="pattern-btn" data-type="voronoiStainedGlass"   data-cat="fractals" role="option">Voronoi Glass</button>
-              <button class="pattern-btn" data-type="voronoiBubbles"        data-cat="fractals" role="option">Voronoi Bubbles</button>
-              <button class="pattern-btn" data-type="perlinTopography"      data-cat="fractals" role="option">Perlin Topo</button>
-              <button class="pattern-btn" data-type="quantumWavefunction"   data-cat="fractals" role="option">Quantum Wave</button>
-              <button class="pattern-btn" data-type="reactionDiffusion"     data-cat="fractals" role="option">Turing Spots</button>
-              <button class="pattern-btn" data-type="strangeAttractor"      data-cat="fractals" role="option">Attractor Chaos</button>
-              <button class="pattern-btn" data-type="cellularAutomata"      data-cat="fractals" role="option">Cellular Rule30</button>
-              <button class="pattern-btn" data-type="apollonianGasket"      data-cat="fractals" role="option">Apollonian</button>
-              <button class="pattern-btn" data-type="dendriteCrystal"       data-cat="fractals" role="option">Dendrite</button>
-              <button class="pattern-btn" data-type="diffusionLimited"      data-cat="fractals" role="option">DLA Cluster</button>
-              <button class="pattern-btn" data-type="fractalTree"           data-cat="fractals" role="option">Fractal Tree</button>
-              <button class="pattern-btn" data-type="plasmaDischarge"       data-cat="fractals" role="option">Plasma Lightning</button>
-              <button class="pattern-btn" data-type="gravitationalLens"     data-cat="fractals" role="option">Photon Rings</button>
-              <button class="pattern-btn" data-type="fluidTurbulence"       data-cat="fractals" role="option">Fluid Eddies</button>
-              <button class="pattern-btn" data-type="acousticLattice"       data-cat="fractals" role="option">Acoustic Matrix</button>
+              <button class="pattern-btn" data-type="sierpinskiTriangle" data-cat="fractals" role="option">Sierpinski
+                Tri</button>
+              <button class="pattern-btn" data-type="sierpinskiCarpet" data-cat="fractals" role="option">Sierpinski
+                Carpet</button>
+              <button class="pattern-btn" data-type="kochSnowflake" data-cat="fractals" role="option">Koch
+                Snowflake</button>
+              <button class="pattern-btn" data-type="dragonCurve" data-cat="fractals" role="option">Dragon
+                Curve</button>
+              <button class="pattern-btn" data-type="barnsleyFern" data-cat="fractals" role="option">Barnsley
+                Fern</button>
+              <button class="pattern-btn" data-type="cantorDust" data-cat="fractals" role="option">Cantor Dust</button>
+              <button class="pattern-btn" data-type="chladniAcoustics" data-cat="fractals" role="option">Chladni
+                Plate</button>
+              <button class="pattern-btn" data-type="moireInterference" data-cat="fractals" role="option">Moiré
+                Wave</button>
+              <button class="pattern-btn" data-type="magneticField" data-cat="fractals" role="option">Magnetic
+                Field</button>
+              <button class="pattern-btn" data-type="electricPotential" data-cat="fractals" role="option">Electric
+                Field</button>
+              <button class="pattern-btn" data-type="voronoiStainedGlass" data-cat="fractals" role="option">Voronoi
+                Glass</button>
+              <button class="pattern-btn" data-type="voronoiBubbles" data-cat="fractals" role="option">Voronoi
+                Bubbles</button>
+              <button class="pattern-btn" data-type="perlinTopography" data-cat="fractals" role="option">Perlin
+                Topo</button>
+              <button class="pattern-btn" data-type="quantumWavefunction" data-cat="fractals" role="option">Quantum
+                Wave</button>
+              <button class="pattern-btn" data-type="reactionDiffusion" data-cat="fractals" role="option">Turing
+                Spots</button>
+              <button class="pattern-btn" data-type="strangeAttractor" data-cat="fractals" role="option">Attractor
+                Chaos</button>
+              <button class="pattern-btn" data-type="cellularAutomata" data-cat="fractals" role="option">Cellular
+                Rule30</button>
+              <button class="pattern-btn" data-type="apollonianGasket" data-cat="fractals"
+                role="option">Apollonian</button>
+              <button class="pattern-btn" data-type="dendriteCrystal" data-cat="fractals"
+                role="option">Dendrite</button>
+              <button class="pattern-btn" data-type="diffusionLimited" data-cat="fractals" role="option">DLA
+                Cluster</button>
+              <button class="pattern-btn" data-type="fractalTree" data-cat="fractals" role="option">Fractal
+                Tree</button>
+              <button class="pattern-btn" data-type="plasmaDischarge" data-cat="fractals" role="option">Plasma
+                Lightning</button>
+              <button class="pattern-btn" data-type="gravitationalLens" data-cat="fractals" role="option">Photon
+                Rings</button>
+              <button class="pattern-btn" data-type="fluidTurbulence" data-cat="fractals" role="option">Fluid
+                Eddies</button>
+              <button class="pattern-btn" data-type="acousticLattice" data-cat="fractals" role="option">Acoustic
+                Matrix</button>
 
               <!-- ── Group 5: 🏛 Architecture & Optical (25) ── -->
-              <button class="pattern-btn" data-type="penroseTiling"         data-cat="architectural" role="option">Penrose Tile</button>
-              <button class="pattern-btn" data-type="truchetTiles"          data-cat="architectural" role="option">Truchet Arcs</button>
-              <button class="pattern-btn" data-type="truchetDiagonal"       data-cat="architectural" role="option">Truchet Maze</button>
-              <button class="pattern-btn" data-type="escherCubes"           data-cat="architectural" role="option">Escher Cubes</button>
-              <button class="pattern-btn" data-type="impossibleTriangle"    data-cat="architectural" role="option">Penrose Tribar</button>
-              <button class="pattern-btn" data-type="bauhausGeo"            data-cat="architectural" role="option">Bauhaus Geo</button>
-              <button class="pattern-btn" data-type="artDecoFan"            data-cat="architectural" role="option">Art Deco Fan</button>
-              <button class="pattern-btn" data-type="artDecoChevron"        data-cat="architectural" role="option">Art Deco Chevron</button>
-              <button class="pattern-btn" data-type="houndstoothPro"        data-cat="architectural" role="option">Houndstooth Pro</button>
-              <button class="pattern-btn" data-type="harlequinDiamond"      data-cat="architectural" role="option">Harlequin</button>
-              <button class="pattern-btn" data-type="tartarugaTortoise"     data-cat="architectural" role="option">Tortoise Shell</button>
-              <button class="pattern-btn" data-type="fishScales"            data-cat="architectural" role="option">Seigaiha Wave</button>
-              <button class="pattern-btn" data-type="basketWeavePro"        data-cat="architectural" role="option">Basket Weave</button>
-              <button class="pattern-btn" data-type="honeycombLattice"      data-cat="architectural" role="option">Honeycomb</button>
-              <button class="pattern-btn" data-type="wireframeTerrain"      data-cat="architectural" role="option">Synthwave Wire</button>
-              <button class="pattern-btn" data-type="geodesicDome"          data-cat="architectural" role="option">Geodesic Dome</button>
-              <button class="pattern-btn" data-type="origamiFold"           data-cat="architectural" role="option">Origami Fold</button>
-              <button class="pattern-btn" data-type="opArtTunnel"           data-cat="architectural" role="option">Op-Art Tunnel</button>
-              <button class="pattern-btn" data-type="opArtWave"             data-cat="architectural" role="option">Op-Art Wave</button>
-              <button class="pattern-btn" data-type="cuboctahedron"         data-cat="architectural" role="option">Cuboctahedron</button>
-              <button class="pattern-btn" data-type="kagomeLattice"         data-cat="architectural" role="option">Kagome Lattice</button>
-              <button class="pattern-btn" data-type="marquetryWood"         data-cat="architectural" role="option">Marquetry</button>
-              <button class="pattern-btn" data-type="arabesqueScroll"       data-cat="architectural" role="option">Arabesque</button>
-              <button class="pattern-btn" data-type="greekKeyMeander"       data-cat="architectural" role="option">Greek Key</button>
-              <button class="pattern-btn" data-type="versaceBaroque"        data-cat="architectural" role="option">Versace Baroque</button>
+              <button class="pattern-btn" data-type="penroseTiling" data-cat="architectural" role="option">Penrose
+                Tile</button>
+              <button class="pattern-btn" data-type="truchetTiles" data-cat="architectural" role="option">Truchet
+                Arcs</button>
+              <button class="pattern-btn" data-type="truchetDiagonal" data-cat="architectural" role="option">Truchet
+                Maze</button>
+              <button class="pattern-btn" data-type="escherCubes" data-cat="architectural" role="option">Escher
+                Cubes</button>
+              <button class="pattern-btn" data-type="impossibleTriangle" data-cat="architectural" role="option">Penrose
+                Tribar</button>
+              <button class="pattern-btn" data-type="bauhausGeo" data-cat="architectural" role="option">Bauhaus
+                Geo</button>
+              <button class="pattern-btn" data-type="artDecoFan" data-cat="architectural" role="option">Art Deco
+                Fan</button>
+              <button class="pattern-btn" data-type="artDecoChevron" data-cat="architectural" role="option">Art Deco
+                Chevron</button>
+              <button class="pattern-btn" data-type="houndstoothPro" data-cat="architectural" role="option">Houndstooth
+                Pro</button>
+              <button class="pattern-btn" data-type="harlequinDiamond" data-cat="architectural"
+                role="option">Harlequin</button>
+              <button class="pattern-btn" data-type="tartarugaTortoise" data-cat="architectural" role="option">Tortoise
+                Shell</button>
+              <button class="pattern-btn" data-type="fishScales" data-cat="architectural" role="option">Seigaiha
+                Wave</button>
+              <button class="pattern-btn" data-type="basketWeavePro" data-cat="architectural" role="option">Basket
+                Weave</button>
+              <button class="pattern-btn" data-type="honeycombLattice" data-cat="architectural"
+                role="option">Honeycomb</button>
+              <button class="pattern-btn" data-type="wireframeTerrain" data-cat="architectural" role="option">Synthwave
+                Wire</button>
+              <button class="pattern-btn" data-type="geodesicDome" data-cat="architectural" role="option">Geodesic
+                Dome</button>
+              <button class="pattern-btn" data-type="origamiFold" data-cat="architectural" role="option">Origami
+                Fold</button>
+              <button class="pattern-btn" data-type="opArtTunnel" data-cat="architectural" role="option">Op-Art
+                Tunnel</button>
+              <button class="pattern-btn" data-type="opArtWave" data-cat="architectural" role="option">Op-Art
+                Wave</button>
+              <button class="pattern-btn" data-type="cuboctahedron" data-cat="architectural"
+                role="option">Cuboctahedron</button>
+              <button class="pattern-btn" data-type="kagomeLattice" data-cat="architectural" role="option">Kagome
+                Lattice</button>
+              <button class="pattern-btn" data-type="marquetryWood" data-cat="architectural"
+                role="option">Marquetry</button>
+              <button class="pattern-btn" data-type="arabesqueScroll" data-cat="architectural"
+                role="option">Arabesque</button>
+              <button class="pattern-btn" data-type="greekKeyMeander" data-cat="architectural" role="option">Greek
+                Key</button>
+              <button class="pattern-btn" data-type="versaceBaroque" data-cat="architectural" role="option">Versace
+                Baroque</button>
 
               <!-- ── Group 6: ⚡ Digital, Futuristic, Cosmic & Abstract (25) ── -->
-              <button class="pattern-btn" data-type="cyberpunkCircuit"      data-cat="digital" role="option">Cyber Circuit</button>
-              <button class="pattern-btn" data-type="synthwaveSun"          data-cat="digital" role="option">Synthwave Sun</button>
-              <button class="pattern-btn" data-type="matrixRain"            data-cat="digital" role="option">Matrix Rain</button>
-              <button class="pattern-btn" data-type="hologramHex"           data-cat="digital" role="option">Holo Shield</button>
-              <button class="pattern-btn" data-type="audioSpectrum"         data-cat="digital" role="option">Audio Spectrum</button>
-              <button class="pattern-btn" data-type="dnaHelix"              data-cat="digital" role="option">DNA Helix</button>
-              <button class="pattern-btn" data-type="quantumDots"           data-cat="digital" role="option">Quantum Dots</button>
-              <button class="pattern-btn" data-type="glitchScanlines"       data-cat="digital" role="option">Glitch Lines</button>
-              <button class="pattern-btn" data-type="fiberOptic"            data-cat="digital" role="option">Fiber Optic</button>
-              <button class="pattern-btn" data-type="laserGrid"             data-cat="digital" role="option">Laser Grid</button>
-              <button class="pattern-btn" data-type="warpSpeed"             data-cat="digital" role="option">Warp Speed</button>
-              <button class="pattern-btn" data-type="cosmicConstellation"   data-cat="digital" role="option">Constellation</button>
-              <button class="pattern-btn" data-type="supernovaBurst"        data-cat="digital" role="option">Supernova</button>
-              <button class="pattern-btn" data-type="auroraBorealis"        data-cat="digital" role="option">Aurora Lights</button>
-              <button class="pattern-btn" data-type="blackHoleDisk"         data-cat="digital" role="option">Black Hole Disk</button>
-              <button class="pattern-btn" data-type="carbonFiberTwill"      data-cat="digital" role="option">Carbon Fiber</button>
-              <button class="pattern-btn" data-type="retrofuturism"         data-cat="digital" role="option">Atomic 50s</button>
-              <button class="pattern-btn" data-type="halftonePopArt"        data-cat="digital" role="option">Halftone Pop</button>
-              <button class="pattern-btn" data-type="vectorFlowField"       data-cat="digital" role="option">Flow Field</button>
-              <button class="pattern-btn" data-type="topographicIso"        data-cat="digital" role="option">Iso Contour</button>
-              <button class="pattern-btn" data-type="neonCityGrid"          data-cat="digital" role="option">Neon Grid</button>
-              <button class="pattern-btn" data-type="deepSeaCoral"          data-cat="digital" role="option">Deep Sea Coral</button>
-              <button class="pattern-btn" data-type="crystalGeode"          data-cat="digital" role="option">Crystal Geode</button>
-              <button class="pattern-btn" data-type="liquidMercury"         data-cat="digital" role="option">Liquid Mercury</button>
-              <button class="pattern-btn" data-type="kaleidoscopeLens"      data-cat="digital" role="option">Kaleidoscope</button>
+              <button class="pattern-btn" data-type="cyberpunkCircuit" data-cat="digital" role="option">Cyber
+                Circuit</button>
+              <button class="pattern-btn" data-type="synthwaveSun" data-cat="digital" role="option">Synthwave
+                Sun</button>
+              <button class="pattern-btn" data-type="matrixRain" data-cat="digital" role="option">Matrix Rain</button>
+              <button class="pattern-btn" data-type="hologramHex" data-cat="digital" role="option">Holo Shield</button>
+              <button class="pattern-btn" data-type="audioSpectrum" data-cat="digital" role="option">Audio
+                Spectrum</button>
+              <button class="pattern-btn" data-type="dnaHelix" data-cat="digital" role="option">DNA Helix</button>
+              <button class="pattern-btn" data-type="quantumDots" data-cat="digital" role="option">Quantum Dots</button>
+              <button class="pattern-btn" data-type="glitchScanlines" data-cat="digital" role="option">Glitch
+                Lines</button>
+              <button class="pattern-btn" data-type="fiberOptic" data-cat="digital" role="option">Fiber Optic</button>
+              <button class="pattern-btn" data-type="laserGrid" data-cat="digital" role="option">Laser Grid</button>
+              <button class="pattern-btn" data-type="warpSpeed" data-cat="digital" role="option">Warp Speed</button>
+              <button class="pattern-btn" data-type="cosmicConstellation" data-cat="digital"
+                role="option">Constellation</button>
+              <button class="pattern-btn" data-type="supernovaBurst" data-cat="digital" role="option">Supernova</button>
+              <button class="pattern-btn" data-type="auroraBorealis" data-cat="digital" role="option">Aurora
+                Lights</button>
+              <button class="pattern-btn" data-type="blackHoleDisk" data-cat="digital" role="option">Black Hole
+                Disk</button>
+              <button class="pattern-btn" data-type="carbonFiberTwill" data-cat="digital" role="option">Carbon
+                Fiber</button>
+              <button class="pattern-btn" data-type="retrofuturism" data-cat="digital" role="option">Atomic 50s</button>
+              <button class="pattern-btn" data-type="halftonePopArt" data-cat="digital" role="option">Halftone
+                Pop</button>
+              <button class="pattern-btn" data-type="vectorFlowField" data-cat="digital" role="option">Flow
+                Field</button>
+              <button class="pattern-btn" data-type="topographicIso" data-cat="digital" role="option">Iso
+                Contour</button>
+              <button class="pattern-btn" data-type="neonCityGrid" data-cat="digital" role="option">Neon Grid</button>
+              <button class="pattern-btn" data-type="deepSeaCoral" data-cat="digital" role="option">Deep Sea
+                Coral</button>
+              <button class="pattern-btn" data-type="crystalGeode" data-cat="digital" role="option">Crystal
+                Geode</button>
+              <button class="pattern-btn" data-type="liquidMercury" data-cat="digital" role="option">Liquid
+                Mercury</button>
+              <button class="pattern-btn" data-type="kaleidoscopeLens" data-cat="digital"
+                role="option">Kaleidoscope</button>
 
               <!-- ── Stripes & Weave (13) ── -->
-              <button class="pattern-btn active" data-type="plaid"          data-cat="stripes" role="option">Plaid</button>
-              <button class="pattern-btn"        data-type="tartan"         data-cat="stripes" role="option">Tartan</button>
-              <button class="pattern-btn"        data-type="checkered"      data-cat="stripes" role="option">Checkered</button>
-              <button class="pattern-btn"        data-type="gingham"        data-cat="stripes" role="option">Gingham</button>
-              <button class="pattern-btn"        data-type="stripe"         data-cat="stripes" role="option">Stripe</button>
-              <button class="pattern-btn"        data-type="diagonalStripe" data-cat="stripes" role="option">Diag Stripe</button>
-              <button class="pattern-btn"        data-type="crossStripe"    data-cat="stripes" role="option">Cross Stripe</button>
-              <button class="pattern-btn"        data-type="multiStripe"    data-cat="stripes" role="option">Multi Stripe</button>
-              <button class="pattern-btn"        data-type="woven"          data-cat="stripes" role="option">Woven</button>
-              <button class="pattern-btn"        data-type="herringbone"    data-cat="stripes" role="option">Herringbone</button>
-              <button class="pattern-btn"        data-type="chevron"        data-cat="stripes" role="option">Chevron</button>
-              <button class="pattern-btn"        data-type="zigzag"         data-cat="stripes" role="option">Zigzag</button>
-              <button class="pattern-btn"        data-type="abstractTextile" data-cat="stripes" role="option">Abst. Textile</button>
+              <button class="pattern-btn active" data-type="plaid" data-cat="stripes" role="option">Plaid</button>
+              <button class="pattern-btn" data-type="tartan" data-cat="stripes" role="option">Tartan</button>
+              <button class="pattern-btn" data-type="checkered" data-cat="stripes" role="option">Checkered</button>
+              <button class="pattern-btn" data-type="gingham" data-cat="stripes" role="option">Gingham</button>
+              <button class="pattern-btn" data-type="stripe" data-cat="stripes" role="option">Stripe</button>
+              <button class="pattern-btn" data-type="diagonalStripe" data-cat="stripes" role="option">Diag
+                Stripe</button>
+              <button class="pattern-btn" data-type="crossStripe" data-cat="stripes" role="option">Cross Stripe</button>
+              <button class="pattern-btn" data-type="multiStripe" data-cat="stripes" role="option">Multi Stripe</button>
+              <button class="pattern-btn" data-type="woven" data-cat="stripes" role="option">Woven</button>
+              <button class="pattern-btn" data-type="herringbone" data-cat="stripes" role="option">Herringbone</button>
+              <button class="pattern-btn" data-type="chevron" data-cat="stripes" role="option">Chevron</button>
+              <button class="pattern-btn" data-type="zigzag" data-cat="stripes" role="option">Zigzag</button>
+              <button class="pattern-btn" data-type="abstractTextile" data-cat="stripes" role="option">Abst.
+                Textile</button>
 
               <!-- ── Geometric (13) ── -->
-              <button class="pattern-btn"        data-type="grid"           data-cat="geometric" role="option">Grid</button>
-              <button class="pattern-btn"        data-type="squareGrid"     data-cat="geometric" role="option">Square Grid</button>
-              <button class="pattern-btn"        data-type="geometric"      data-cat="geometric" role="option">Geometric</button>
-              <button class="pattern-btn"        data-type="interlockingGrid" data-cat="geometric" role="option">Interlock</button>
-              <button class="pattern-btn"        data-type="diamond"        data-cat="geometric" role="option">Diamond</button>
-              <button class="pattern-btn"        data-type="hexagonal"      data-cat="geometric" role="option">Hexagonal</button>
-              <button class="pattern-btn"        data-type="triangle"       data-cat="geometric" role="option">Triangle</button>
-              <button class="pattern-btn"        data-type="hexStar"        data-cat="geometric" role="option">Hex Star</button>
-              <button class="pattern-btn"        data-type="cross"          data-cat="geometric" role="option">Cross</button>
-              <button class="pattern-btn"        data-type="isometric"      data-cat="geometric" role="option">Isometric</button>
-              <button class="pattern-btn"        data-type="pixel"          data-cat="geometric" role="option">Pixel Art</button>
-              <button class="pattern-btn"        data-type="minimalLine"    data-cat="geometric" role="option">Minimal Line</button>
-              <button class="pattern-btn"        data-type="randomGeometric" data-cat="geometric" role="option">Rnd. Geo</button>
+              <button class="pattern-btn" data-type="grid" data-cat="geometric" role="option">Grid</button>
+              <button class="pattern-btn" data-type="squareGrid" data-cat="geometric" role="option">Square Grid</button>
+              <button class="pattern-btn" data-type="geometric" data-cat="geometric" role="option">Geometric</button>
+              <button class="pattern-btn" data-type="interlockingGrid" data-cat="geometric"
+                role="option">Interlock</button>
+              <button class="pattern-btn" data-type="diamond" data-cat="geometric" role="option">Diamond</button>
+              <button class="pattern-btn" data-type="hexagonal" data-cat="geometric" role="option">Hexagonal</button>
+              <button class="pattern-btn" data-type="triangle" data-cat="geometric" role="option">Triangle</button>
+              <button class="pattern-btn" data-type="hexStar" data-cat="geometric" role="option">Hex Star</button>
+              <button class="pattern-btn" data-type="cross" data-cat="geometric" role="option">Cross</button>
+              <button class="pattern-btn" data-type="isometric" data-cat="geometric" role="option">Isometric</button>
+              <button class="pattern-btn" data-type="pixel" data-cat="geometric" role="option">Pixel Art</button>
+              <button class="pattern-btn" data-type="minimalLine" data-cat="geometric" role="option">Minimal
+                Line</button>
+              <button class="pattern-btn" data-type="randomGeometric" data-cat="geometric" role="option">Rnd.
+                Geo</button>
 
               <!-- ── Organic & Flow (10) ── -->
-              <button class="pattern-btn"        data-type="wave"           data-cat="organic" role="option">Wave</button>
-              <button class="pattern-btn"        data-type="spiral"         data-cat="organic" role="option">Spiral</button>
-              <button class="pattern-btn"        data-type="marble"         data-cat="organic" role="option">Marble</button>
-              <button class="pattern-btn"        data-type="organic"        data-cat="organic" role="option">Organic</button>
-              <button class="pattern-btn"        data-type="organicFlow"    data-cat="organic" role="option">Organic Flow</button>
-              <button class="pattern-btn"        data-type="floral"         data-cat="organic" role="option">Floral</button>
-              <button class="pattern-btn"        data-type="botanical"      data-cat="organic" role="option">Botanical</button>
-              <button class="pattern-btn"        data-type="leaves"         data-cat="organic" role="option">Leaves</button>
-              <button class="pattern-btn"        data-type="mandala"        data-cat="organic" role="option">Mandala</button>
-              <button class="pattern-btn"        data-type="abstractLine"   data-cat="organic" role="option">Abst. Line</button>
+              <button class="pattern-btn" data-type="wave" data-cat="organic" role="option">Wave</button>
+              <button class="pattern-btn" data-type="spiral" data-cat="organic" role="option">Spiral</button>
+              <button class="pattern-btn" data-type="marble" data-cat="organic" role="option">Marble</button>
+              <button class="pattern-btn" data-type="organic" data-cat="organic" role="option">Organic</button>
+              <button class="pattern-btn" data-type="organicFlow" data-cat="organic" role="option">Organic Flow</button>
+              <button class="pattern-btn" data-type="floral" data-cat="organic" role="option">Floral</button>
+              <button class="pattern-btn" data-type="botanical" data-cat="organic" role="option">Botanical</button>
+              <button class="pattern-btn" data-type="leaves" data-cat="organic" role="option">Leaves</button>
+              <button class="pattern-btn" data-type="mandala" data-cat="organic" role="option">Mandala</button>
+              <button class="pattern-btn" data-type="abstractLine" data-cat="organic" role="option">Abst. Line</button>
 
               <!-- ── Artistic & Cultural (8) ── -->
-              <button class="pattern-btn"        data-type="memphis"        data-cat="artistic" role="option">Memphis</button>
-              <button class="pattern-btn"        data-type="lineart"        data-cat="artistic" role="option">Line Art</button>
-              <button class="pattern-btn"        data-type="doodle"         data-cat="artistic" role="option">Doodle</button>
-              <button class="pattern-btn"        data-type="retro"          data-cat="artistic" role="option">Retro</button>
-              <button class="pattern-btn"        data-type="gridNoise"      data-cat="artistic" role="option">Grid Noise</button>
-              <button class="pattern-btn"        data-type="moroccan"       data-cat="artistic" role="option">Moroccan</button>
-              <button class="pattern-btn"        data-type="islamic"        data-cat="artistic" role="option">Islamic Star</button>
-              <button class="pattern-btn"        data-type="polkaDot"       data-cat="artistic" role="option">Polka Dot</button>
+              <button class="pattern-btn" data-type="memphis" data-cat="artistic" role="option">Memphis</button>
+              <button class="pattern-btn" data-type="lineart" data-cat="artistic" role="option">Line Art</button>
+              <button class="pattern-btn" data-type="doodle" data-cat="artistic" role="option">Doodle</button>
+              <button class="pattern-btn" data-type="retro" data-cat="artistic" role="option">Retro</button>
+              <button class="pattern-btn" data-type="gridNoise" data-cat="artistic" role="option">Grid Noise</button>
+              <button class="pattern-btn" data-type="moroccan" data-cat="artistic" role="option">Moroccan</button>
+              <button class="pattern-btn" data-type="islamic" data-cat="artistic" role="option">Islamic Star</button>
+              <button class="pattern-btn" data-type="polkaDot" data-cat="artistic" role="option">Polka Dot</button>
 
               <!-- ── Themed & Specialized (9) ── -->
-              <button class="pattern-btn"        data-type="luxury"         data-cat="themed" role="option">Luxury</button>
-              <button class="pattern-btn"        data-type="technology"     data-cat="themed" role="option">Technology</button>
-              <button class="pattern-btn"        data-type="futuristic"     data-cat="themed" role="option">Futuristic</button>
-              <button class="pattern-btn"        data-type="business"       data-cat="themed" role="option">Business</button>
-              <button class="pattern-btn"        data-type="kids"           data-cat="themed" role="option">Kids Fun</button>
-              <button class="pattern-btn"        data-type="christmas"      data-cat="themed" role="option">Christmas</button>
-              <button class="pattern-btn"        data-type="halloween"      data-cat="themed" role="option">Halloween</button>
-              <button class="pattern-btn"        data-type="wedding"        data-cat="themed" role="option">Wedding</button>
-              <button class="pattern-btn"        data-type="valentine"      data-cat="themed" role="option">Valentine</button>
+              <button class="pattern-btn" data-type="luxury" data-cat="themed" role="option">Luxury</button>
+              <button class="pattern-btn" data-type="technology" data-cat="themed" role="option">Technology</button>
+              <button class="pattern-btn" data-type="futuristic" data-cat="themed" role="option">Futuristic</button>
+              <button class="pattern-btn" data-type="business" data-cat="themed" role="option">Business</button>
+              <button class="pattern-btn" data-type="kids" data-cat="themed" role="option">Kids Fun</button>
+              <button class="pattern-btn" data-type="christmas" data-cat="themed" role="option">Christmas</button>
+              <button class="pattern-btn" data-type="halloween" data-cat="themed" role="option">Halloween</button>
+              <button class="pattern-btn" data-type="wedding" data-cat="themed" role="option">Wedding</button>
+              <button class="pattern-btn" data-type="valentine" data-cat="themed" role="option">Valentine</button>
             </div>
           </div>
         </div>
@@ -656,19 +818,22 @@
               <div class="ai-provider-status-dot offline" id="ai-provider-status-dot"></div>
               <div class="ai-provider-info">
                 <div class="ai-provider-title" id="ai-provider-status-text">AI provider not configured.</div>
-                <div class="ai-provider-desc" id="ai-provider-status-desc">Using built-in Local Demo Generator. Add an API key for live external AI.</div>
+                <div class="ai-provider-desc" id="ai-provider-status-desc">Using built-in Local Demo Generator. Add an
+                  API key for live external AI.</div>
               </div>
               <button class="btn-xs-accent" id="btn-open-ai-config-panel">⚙ Setup</button>
             </div>
 
             <div class="form-field form-group mt-2">
               <label for="ai-studio-prompt">Prompt Description</label>
-              <textarea id="ai-studio-prompt" class="ai-studio-textarea" rows="3" placeholder="e.g. Luxurious emerald and gold art deco damask with floral symmetry, seamless 8K wallpaper"></textarea>
+              <textarea id="ai-studio-prompt" class="ai-studio-textarea" rows="3"
+                placeholder="e.g. Luxurious emerald and gold art deco damask with floral symmetry, seamless 8K wallpaper"></textarea>
             </div>
 
             <div class="form-field form-group">
               <label for="ai-negative-prompt">Negative Prompt (Exclude)</label>
-              <input type="text" id="ai-negative-prompt" placeholder="blurry, low resolution, watermark, deformed, ugly" value="blurry, low resolution, watermark, artifacts, low quality">
+              <input type="text" id="ai-negative-prompt" placeholder="blurry, low resolution, watermark, deformed, ugly"
+                value="blurry, low resolution, watermark, artifacts, low quality">
             </div>
 
             <div class="grid-2">
@@ -806,35 +971,43 @@
           </div>
           <div class="panel-body panel-section-body">
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Pattern Scale</span><span class="slider-val control-value" id="scale-val">50</span></div>
+              <div class="slider-label control-label"><span>Pattern Scale</span><span class="slider-val control-value"
+                  id="scale-val">50</span></div>
               <input type="range" id="scale" min="5" max="120" value="50" step="1" aria-label="Pattern scale">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Stripe Width</span><span class="slider-val control-value" id="stripe-width-val">30</span></div>
+              <div class="slider-label control-label"><span>Stripe Width</span><span class="slider-val control-value"
+                  id="stripe-width-val">30</span></div>
               <input type="range" id="stripe-width" min="2" max="100" value="30" step="1" aria-label="Stripe width">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Stripe Gap</span><span class="slider-val control-value" id="stripe-gap-val">4</span></div>
+              <div class="slider-label control-label"><span>Stripe Gap</span><span class="slider-val control-value"
+                  id="stripe-gap-val">4</span></div>
               <input type="range" id="stripe-gap" min="0" max="40" value="4" step="1" aria-label="Stripe gap">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Line Thickness</span><span class="slider-val control-value" id="line-thickness-val">1</span></div>
+              <div class="slider-label control-label"><span>Line Thickness</span><span class="slider-val control-value"
+                  id="line-thickness-val">1</span></div>
               <input type="range" id="line-thickness" min="0" max="8" value="1" step="0.5" aria-label="Line thickness">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Density</span><span class="slider-val control-value" id="density-val">5</span></div>
+              <div class="slider-label control-label"><span>Density</span><span class="slider-val control-value"
+                  id="density-val">5</span></div>
               <input type="range" id="density" min="1" max="10" value="5" step="0.5" aria-label="Pattern density">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Opacity %</span><span class="slider-val control-value" id="opacity-val">85</span></div>
+              <div class="slider-label control-label"><span>Opacity %</span><span class="slider-val control-value"
+                  id="opacity-val">85</span></div>
               <input type="range" id="opacity" min="20" max="100" value="85" step="1" aria-label="Opacity">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Rotation °</span><span class="slider-val control-value" id="rotation-val">45</span></div>
+              <div class="slider-label control-label"><span>Rotation °</span><span class="slider-val control-value"
+                  id="rotation-val">45</span></div>
               <input type="range" id="rotation" min="0" max="180" value="45" step="1" aria-label="Rotation angle">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Blend Strength %</span><span class="slider-val control-value" id="blend-strength-val">60</span></div>
+              <div class="slider-label control-label"><span>Blend Strength %</span><span
+                  class="slider-val control-value" id="blend-strength-val">60</span></div>
               <input type="range" id="blend-strength" min="0" max="100" value="60" step="1" aria-label="Blend strength">
             </div>
           </div>
@@ -857,7 +1030,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-blur-intensity-val">20</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-blur-intensity-val">20</span></div>
                   <input type="range" id="fx-blur-intensity" min="0" max="100" value="20" step="1">
                 </div>
               </div>
@@ -874,7 +1048,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-grain-intensity-val">30</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-grain-intensity-val">30</span></div>
                   <input type="range" id="fx-grain-intensity" min="0" max="100" value="30" step="1">
                 </div>
               </div>
@@ -891,7 +1066,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-noise-intensity-val">20</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-noise-intensity-val">20</span></div>
                   <input type="range" id="fx-noise-intensity" min="0" max="100" value="20" step="1">
                 </div>
               </div>
@@ -908,7 +1084,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-paper-intensity-val">40</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-paper-intensity-val">40</span></div>
                   <input type="range" id="fx-paper-intensity" min="0" max="100" value="40" step="1">
                 </div>
               </div>
@@ -925,7 +1102,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-fabric-intensity-val">50</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-fabric-intensity-val">50</span></div>
                   <input type="range" id="fx-fabric-intensity" min="0" max="100" value="50" step="1">
                 </div>
               </div>
@@ -942,7 +1120,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-glass-intensity-val">30</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-glass-intensity-val">30</span></div>
                   <input type="range" id="fx-glass-intensity" min="0" max="100" value="30" step="1">
                 </div>
               </div>
@@ -959,7 +1138,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-frosted-intensity-val">40</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-frosted-intensity-val">40</span></div>
                   <input type="range" id="fx-frosted-intensity" min="0" max="100" value="40" step="1">
                 </div>
               </div>
@@ -976,7 +1156,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-shadow-intensity-val">30</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-shadow-intensity-val">30</span></div>
                   <input type="range" id="fx-shadow-intensity" min="0" max="100" value="30" step="1">
                 </div>
               </div>
@@ -993,7 +1174,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-glow-intensity-val">40</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-glow-intensity-val">40</span></div>
                   <input type="range" id="fx-glow-intensity" min="0" max="100" value="40" step="1">
                 </div>
               </div>
@@ -1010,7 +1192,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-vintage-intensity-val">30</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-vintage-intensity-val">30</span></div>
                   <input type="range" id="fx-vintage-intensity" min="0" max="100" value="30" step="1">
                 </div>
               </div>
@@ -1027,7 +1210,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-distortion-intensity-val">20</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-distortion-intensity-val">20</span></div>
                   <input type="range" id="fx-distortion-intensity" min="0" max="100" value="20" step="1">
                 </div>
               </div>
@@ -1044,7 +1228,8 @@
               </div>
               <div class="effect-body">
                 <div class="slider-row control-row">
-                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value" id="fx-gradient-intensity-val">50</span></div>
+                  <div class="slider-label control-label"><span>Intensity</span><span class="slider-val control-value"
+                      id="fx-gradient-intensity-val">50</span></div>
                   <input type="range" id="fx-gradient-intensity" min="0" max="100" value="50" step="1">
                 </div>
               </div>
@@ -1074,12 +1259,16 @@
               </select>
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Angle °</span><span class="slider-val control-value" id="gradient-angle-val">135</span></div>
-              <input type="range" id="gradient-angle" min="0" max="360" value="135" step="1" aria-label="Gradient angle">
+              <div class="slider-label control-label"><span>Angle °</span><span class="slider-val control-value"
+                  id="gradient-angle-val">135</span></div>
+              <input type="range" id="gradient-angle" min="0" max="360" value="135" step="1"
+                aria-label="Gradient angle">
             </div>
             <div class="slider-row control-row">
-              <div class="slider-label control-label"><span>Opacity %</span><span class="slider-val control-value" id="gradient-opacity-val">50</span></div>
-              <input type="range" id="gradient-opacity" min="0" max="100" value="50" step="1" aria-label="Gradient opacity">
+              <div class="slider-label control-label"><span>Opacity %</span><span class="slider-val control-value"
+                  id="gradient-opacity-val">50</span></div>
+              <input type="range" id="gradient-opacity" min="0" max="100" value="50" step="1"
+                aria-label="Gradient opacity">
             </div>
           </div>
         </div>
@@ -1126,9 +1315,11 @@
             <!-- Custom Size Inputs with Aspect Ratio Lock -->
             <div class="custom-res-row">
               <div class="number-input-wrap canvas-size-inputs">
-                <label for="canvas-w">W <input type="number" id="canvas-w" value="4000" min="100" max="8000" step="1" aria-label="Canvas width"></label>
+                <label for="canvas-w">W <input type="number" id="canvas-w" value="4000" min="100" max="8000" step="1"
+                    aria-label="Canvas width"></label>
                 <span class="sep">×</span>
-                <label for="canvas-h">H <input type="number" id="canvas-h" value="2663" min="100" max="8000" step="1" aria-label="Canvas height"></label>
+                <label for="canvas-h">H <input type="number" id="canvas-h" value="2663" min="100" max="8000" step="1"
+                    aria-label="Canvas height"></label>
               </div>
               <div class="toggle-wrap mt-1">
                 <span class="toggle-label-text">Lock Aspect Ratio</span>
@@ -1141,7 +1332,8 @@
 
             <!-- PPI / DPI Options -->
             <div class="slider-row control-row mt-2">
-              <label class="slider-label control-label"><span>Print Resolution (PPI)</span><span class="control-value" id="current-ppi-val">300 PPI</span></label>
+              <label class="slider-label control-label"><span>Print Resolution (PPI)</span><span class="control-value"
+                  id="current-ppi-val">300 PPI</span></label>
               <div class="ppi-options" role="radiogroup" aria-label="PPI Selection">
                 <button class="ppi-btn" data-ppi="72">72</button>
                 <button class="ppi-btn" data-ppi="150">150</button>
@@ -1213,10 +1405,12 @@
               </button>
             </div>
             <div class="export-panel-actions mt-2" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
-              <button class="btn-primary" id="btn-download-panel" style="width:100%;justify-content:center;padding:10px;" aria-label="Download current pattern">
+              <button class="btn-primary" id="btn-download-panel"
+                style="width:100%;justify-content:center;padding:10px;" aria-label="Download current pattern">
                 ⬇ Download Pattern
               </button>
-              <button class="btn-hdr-master btn-accent" id="btn-download-master-panel" style="width:100%;justify-content:center;padding:10px;" aria-label="Download 10MB+ Master">
+              <button class="btn-hdr-master btn-accent" id="btn-download-master-panel"
+                style="width:100%;justify-content:center;padding:10px;" aria-label="Download 10MB+ Master">
                 💎 10MB+ Master Download
               </button>
             </div>
@@ -1236,7 +1430,8 @@
           <span id="zoom-level" class="zoom-level-display" aria-live="polite">100%</span>
           <button class="btn-icon btn-toolbar" id="btn-zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
           <button class="btn-icon btn-toolbar" id="btn-fit" title="Fit to screen" aria-label="Fit to screen">⊡</button>
-          <button class="btn-icon btn-toolbar" id="btn-fullscreen" title="Fullscreen preview" aria-label="Fullscreen">⛶</button>
+          <button class="btn-icon btn-toolbar" id="btn-fullscreen" title="Fullscreen preview"
+            aria-label="Fullscreen">⛶</button>
         </div>
 
         <div class="toolbar-sep"></div>
@@ -1254,10 +1449,14 @@
         <div class="toolbar-sep"></div>
 
         <div class="toolbar-toolset-group">
-          <button class="btn-icon btn-toolbar" id="btn-toggle-rulers" title="Toggle Pixel Rulers (Ctrl+R)" aria-label="Toggle rulers">📏</button>
-          <button class="btn-icon btn-toolbar" id="btn-toggle-grid" title="Toggle Alignment Grid (Ctrl+G)" aria-label="Toggle grid">#</button>
-          <button class="btn-icon btn-toolbar" id="btn-center-view" title="Center Viewport" aria-label="Center view">⌖</button>
-          <button class="btn-icon btn-toolbar" id="btn-rotate-view" title="Rotate Canvas 90°" aria-label="Rotate canvas">↻</button>
+          <button class="btn-icon btn-toolbar" id="btn-toggle-rulers" title="Toggle Pixel Rulers (Ctrl+R)"
+            aria-label="Toggle rulers">📏</button>
+          <button class="btn-icon btn-toolbar" id="btn-toggle-grid" title="Toggle Alignment Grid (Ctrl+G)"
+            aria-label="Toggle grid">#</button>
+          <button class="btn-icon btn-toolbar" id="btn-center-view" title="Center Viewport"
+            aria-label="Center view">⌖</button>
+          <button class="btn-icon btn-toolbar" id="btn-rotate-view" title="Rotate Canvas 90°"
+            aria-label="Rotate canvas">↻</button>
         </div>
 
         <div class="toolbar-sep"></div>
@@ -1270,7 +1469,8 @@
           <span class="toolbar-label">Seamless</span>
         </div>
 
-        <button class="btn-toolbar-seamless" id="btn-seamless-test" title="Open Seamless Matrix Tester with Mathematical Edge Check">
+        <button class="btn-toolbar-seamless" id="btn-seamless-test"
+          title="Open Seamless Matrix Tester with Mathematical Edge Check">
           🔍 Test Seamless
         </button>
 
@@ -1320,9 +1520,9 @@
       <div id="ai-prompt-bar" class="ai-prompt-bar" role="search" aria-label="AI Pattern Generator">
         <div class="ai-prompt-input-row">
           <div class="ai-prompt-icon" aria-hidden="true">✨</div>
-          <input type="text" id="ai-prompt-input" class="ai-prompt-input" 
-                 placeholder="Describe a pattern with AI (e.g. 'spiral galaxy gold and navy', 'sacred geometry flower of life', 'cyberpunk circuit neon')…" 
-                 aria-label="AI pattern prompt">
+          <input type="text" id="ai-prompt-input" class="ai-prompt-input"
+            placeholder="Describe a pattern with AI (e.g. 'spiral galaxy gold and navy', 'sacred geometry flower of life', 'cyberpunk circuit neon')…"
+            aria-label="AI pattern prompt">
           <button id="btn-ai-generate" class="btn-ai-generate" title="Generate pattern from prompt (Enter)">
             <span class="ai-btn-icon">⚡</span> <span class="ai-btn-text">AI Generate</span>
           </button>
@@ -1330,10 +1530,12 @@
         <div class="ai-prompt-chips" role="group" aria-label="Quick prompt suggestions">
           <span class="ai-chips-label">Ideas:</span>
           <button class="ai-chip" data-prompt="archimedean spiral vortex gold and navy">🌀 Archimedean Spiral</button>
-          <button class="ai-chip" data-prompt="sacred geometry flower of life emerald and gold">🔯 Flower of Life</button>
+          <button class="ai-chip" data-prompt="sacred geometry flower of life emerald and gold">🔯 Flower of
+            Life</button>
           <button class="ai-chip" data-prompt="cyberpunk circuit neon cyan technology grid">⚡ Cyberpunk Circuit</button>
           <button class="ai-chip" data-prompt="rhodonea rose curve delicate harmonic pastel">📐 Rose Curve</button>
-          <button class="ai-chip" data-prompt="sierpinski fractal recursive geometric monochrome">🔬 Sierpinski Fractal</button>
+          <button class="ai-chip" data-prompt="sierpinski fractal recursive geometric monochrome">🔬 Sierpinski
+            Fractal</button>
           <button class="ai-chip" data-prompt="art deco fan gold and midnight black luxury">🏛 Art Deco Fan</button>
         </div>
 
@@ -1387,10 +1589,10 @@
         <div id="ruler-corner" class="ruler-corner" style="display:none;"></div>
         <canvas id="ruler-top" class="ruler-canvas ruler-top" style="display:none;"></canvas>
         <canvas id="ruler-left" class="ruler-canvas ruler-left" style="display:none;"></canvas>
-        
+
         <!-- Grid overlay -->
         <div id="canvas-grid-overlay" class="canvas-grid-overlay" style="display:none;"></div>
-        
+
         <!-- Interactive Before/After Split Slider Container -->
         <div id="before-after-container" class="before-after-container" style="display:none;">
           <div class="before-after-inner" id="before-after-inner">
@@ -1410,28 +1612,36 @@
 
       <!-- Canvas Bottom Master Actions Bar -->
       <div id="canvas-actions" role="toolbar" aria-label="Pattern master actions">
-        <button class="btn-primary-large btn-generate-main" id="btn-generate-20" title="Create 20 unique designs" aria-label="Create 20 unique patterns">
+        <button class="btn-primary-large btn-generate-main" id="btn-generate-20" title="Create 20 unique designs"
+          aria-label="Create 20 unique patterns">
           ✨ <span class="action-btn-text">20 Unique</span>
         </button>
-        <button class="btn-primary btn-canvas-action btn-gen-trigger" id="btn-generate" title="Generate pattern (Space / ⚡)" aria-label="Generate pattern">
+        <button class="btn-primary btn-canvas-action btn-gen-trigger" id="btn-generate"
+          title="Generate pattern (Space / ⚡)" aria-label="Generate pattern">
           ⚡ <span class="action-btn-text">Generate</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-randomize-canvas" title="Randomize settings (R)" aria-label="Randomize settings">
+        <button class="btn-secondary btn-canvas-action" id="btn-randomize-canvas" title="Randomize settings (R)"
+          aria-label="Randomize settings">
           🎲 <span class="action-btn-text">Random</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-variation" title="Generate a variation (V)" aria-label="Generate variation">
+        <button class="btn-secondary btn-canvas-action" id="btn-variation" title="Generate a variation (V)"
+          aria-label="Generate variation">
           🔁 <span class="action-btn-text">Variation</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-favorite" title="Save to favorites (F)" aria-label="Save to favorites">
+        <button class="btn-secondary btn-canvas-action" id="btn-favorite" title="Save to favorites (F)"
+          aria-label="Save to favorites">
           ❤️ <span class="action-btn-text">Favorite</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-batch-canvas" title="Batch pattern generator (B)" aria-label="Open batch generator">
+        <button class="btn-secondary btn-canvas-action" id="btn-batch-canvas" title="Batch pattern generator (B)"
+          aria-label="Open batch generator">
           📦 <span class="action-btn-text">Batch</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-stock-export2" title="Commercial stock metadata (S)" aria-label="Stock export">
+        <button class="btn-secondary btn-canvas-action" id="btn-stock-export2" title="Commercial stock metadata (S)"
+          aria-label="Stock export">
           🏷 <span class="action-btn-text">Stock</span>
         </button>
-        <button class="btn-secondary btn-canvas-action" id="btn-projects-canvas" title="Project manager (P)" aria-label="Projects">
+        <button class="btn-secondary btn-canvas-action" id="btn-projects-canvas" title="Project manager (P)"
+          aria-label="Projects">
           📁 <span class="action-btn-text">Projects</span>
         </button>
         <div class="download-split-group">
@@ -1456,7 +1666,8 @@
       </div>
 
       <!-- ─── Right Dock Tabs ───────────────────────────────────────────── -->
-      <div class="sidebar-dock-tabs right-dock-tabs" id="right-dock-tabs" role="tablist" aria-label="Right sidebar tabs">
+      <div class="sidebar-dock-tabs right-dock-tabs" id="right-dock-tabs" role="tablist"
+        aria-label="Right sidebar tabs">
         <button class="dock-tab-btn active" data-tab="palette" role="tab" title="Active Palette">🎨 Palette</button>
         <button class="dock-tab-btn" data-tab="layers" role="tab" title="Layer Stack">📑 Layers</button>
         <button class="dock-tab-btn" data-tab="variations" role="tab" title="Live Variations">🔁 Variations</button>
@@ -1475,7 +1686,7 @@
           </div>
           <div class="panel-body panel-section-body">
             <div id="palette-display" aria-label="Current palette colors"></div>
-            
+
             <!-- CMYK Print Preview Box -->
             <div class="cmyk-display-box mt-2" id="cmyk-display-box">
               <div class="cmyk-header">
@@ -1527,10 +1738,12 @@
           </div>
           <div class="panel-body panel-section-body">
             <div class="seed-display seed-row">
-              <input type="number" id="seed-input" class="seed-input" value="483920" min="1" max="999999" aria-label="Pattern seed number">
-              <button class="btn-icon seed-btn" id="btn-random-seed" title="Random seed" aria-label="Random seed">🎲</button>
-              <button class="btn-icon seed-btn" id="btn-copy-seed"   title="Copy seed"   aria-label="Copy seed">📋</button>
-              <button class="btn-icon seed-btn" id="btn-lock-seed"   title="Lock seed"   aria-label="Lock seed">🔓</button>
+              <input type="number" id="seed-input" class="seed-input" value="483920" min="1" max="999999"
+                aria-label="Pattern seed number">
+              <button class="btn-icon seed-btn" id="btn-random-seed" title="Random seed"
+                aria-label="Random seed">🎲</button>
+              <button class="btn-icon seed-btn" id="btn-copy-seed" title="Copy seed" aria-label="Copy seed">📋</button>
+              <button class="btn-icon seed-btn" id="btn-lock-seed" title="Lock seed" aria-label="Lock seed">🔓</button>
             </div>
             <p class="text-xs text-muted mt-1">Same seed + settings = identical pattern output</p>
           </div>
@@ -1566,7 +1779,8 @@
               Drop image here<br>or <strong>click to upload</strong><br>
               <span class="text-xs">JPG, PNG, WebP — max 20 MB</span>
             </div>
-            <input type="file" id="upload-input" accept="image/jpeg,image/png,image/webp" style="display:none" aria-label="Image file input">
+            <input type="file" id="upload-input" accept="image/jpeg,image/png,image/webp" style="display:none"
+              aria-label="Image file input">
             <button class="btn-secondary w-full mt-1" id="upload-btn" aria-label="Choose image file">
               📁 Choose File
             </button>
@@ -1692,10 +1906,13 @@
       </div>
       <div class="modal-footer" style="display:flex;gap:10px;justify-content:flex-end;align-items:center;">
         <button class="btn-secondary" id="modal-batch-close2">Close</button>
-        <button class="btn-primary" id="btn-batch-dl-zip" style="background:linear-gradient(135deg, #10b981, #059669);border-color:#059669;color:#fff;font-weight:600;" aria-label="Download all as ZIP archive">
+        <button class="btn-primary" id="btn-batch-dl-zip"
+          style="background:linear-gradient(135deg, #10b981, #059669);border-color:#059669;color:#fff;font-weight:600;"
+          aria-label="Download all as ZIP archive">
           📦 Download ZIP (Images + CSV)
         </button>
-        <button class="btn-secondary" id="btn-batch-dl-all" title="Download each image as a separate file" aria-label="Download separate files">
+        <button class="btn-secondary" id="btn-batch-dl-all" title="Download each image as a separate file"
+          aria-label="Download separate files">
           ⬇ Individual Files
         </button>
       </div>
@@ -1716,7 +1933,8 @@
       <div class="modal-body">
         <!-- Save Current Project Bar -->
         <div class="project-save-bar">
-          <input type="text" id="project-save-name" class="project-input" placeholder="Project name (e.g., Luxury Blue Silk)" aria-label="Project name">
+          <input type="text" id="project-save-name" class="project-input"
+            placeholder="Project name (e.g., Luxury Blue Silk)" aria-label="Project name">
           <select id="project-folder-select" class="project-folder-select" title="Target Folder">
             <option value="my_designs">📁 My Designs</option>
             <option value="favorites">❤️ Favorites</option>
@@ -1725,16 +1943,21 @@
             <option value="templates">📋 Templates</option>
             <option value="archived">📦 Archived</option>
           </select>
-          <input type="text" id="project-tags-input" class="project-tags-input" placeholder="Tags (e.g. gold, geo)" style="max-width:140px;">
+          <input type="text" id="project-tags-input" class="project-tags-input" placeholder="Tags (e.g. gold, geo)"
+            style="max-width:140px;">
           <button class="btn-primary" id="btn-save-project-action">💾 Save</button>
-          <button class="btn-secondary" id="btn-export-project-json" title="Download project JSON file">📤 Export</button>
-          <button class="btn-secondary" id="btn-import-project-trigger" title="Load project from JSON file">📥 Import</button>
-          <input type="file" id="project-file-input" accept=".json" style="display:none" aria-label="Project JSON file input">
+          <button class="btn-secondary" id="btn-export-project-json" title="Download project JSON file">📤
+            Export</button>
+          <button class="btn-secondary" id="btn-import-project-trigger" title="Load project from JSON file">📥
+            Import</button>
+          <input type="file" id="project-file-input" accept=".json" style="display:none"
+            aria-label="Project JSON file input">
         </div>
 
         <!-- Filter & Search Bar -->
         <div class="project-filters-bar mt-2" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <input type="text" id="project-search-filter" class="pattern-search" placeholder="Filter projects by title, pattern, or tag…" style="flex:1;min-width:180px;">
+          <input type="text" id="project-search-filter" class="pattern-search"
+            placeholder="Filter projects by title, pattern, or tag…" style="flex:1;min-width:180px;">
           <div class="project-folder-pills" id="project-folder-pills" style="display:flex;gap:4px;flex-wrap:wrap;">
             <button class="category-chip active" data-pfolder="all">All</button>
             <button class="category-chip" data-pfolder="my_designs">My Designs</button>
@@ -1766,7 +1989,8 @@
       <div class="modal-header">
         <div class="modal-header-text">
           <h2 id="stock-modal-title">🏷 Commercial Stock Metadata Studio</h2>
-          <p class="modal-subtitle">SEO-optimized titles, descriptions & keywords for Adobe Stock, Shutterstock & Pond5.</p>
+          <p class="modal-subtitle">SEO-optimized titles, descriptions & keywords for Adobe Stock, Shutterstock & Pond5.
+          </p>
         </div>
         <button class="modal-close" id="modal-stock-close" aria-label="Close stock modal">✕</button>
       </div>
@@ -1801,20 +2025,24 @@
             <label for="stock-desc">Description</label>
             <div class="field-meta">
               <span id="stock-desc-count" class="char-count">0 / 250</span>
-              <button type="button" class="btn-copy-field" id="btn-copy-stock-desc" title="Copy description">📋 Copy</button>
+              <button type="button" class="btn-copy-field" id="btn-copy-stock-desc" title="Copy description">📋
+                Copy</button>
             </div>
           </div>
-          <textarea id="stock-desc" rows="3" placeholder="Pattern description…" aria-label="Stock description"></textarea>
+          <textarea id="stock-desc" rows="3" placeholder="Pattern description…"
+            aria-label="Stock description"></textarea>
         </div>
 
         <div class="form-field form-group">
           <div class="field-header">
             <label for="stock-keywords">Keywords (<span id="stock-keywords-count">0</span> tags)</label>
             <div class="field-meta">
-              <button type="button" class="btn-copy-field" id="btn-copy-stock-keywords" title="Copy comma-separated keywords">📋 Copy Keywords</button>
+              <button type="button" class="btn-copy-field" id="btn-copy-stock-keywords"
+                title="Copy comma-separated keywords">📋 Copy Keywords</button>
             </div>
           </div>
-          <textarea id="stock-keywords" rows="3" placeholder="keyword1, keyword2…" aria-label="Stock keywords"></textarea>
+          <textarea id="stock-keywords" rows="3" placeholder="keyword1, keyword2…"
+            aria-label="Stock keywords"></textarea>
           <!-- Keywords Cloud Pills -->
           <div id="stock-keywords-tags" class="keywords-tags-cloud" aria-label="Keyword tags"></div>
         </div>
@@ -1826,13 +2054,14 @@
           </div>
           <div class="form-field form-group">
             <label for="stock-design-type">Design Type</label>
-            <input type="text" id="stock-design-type" placeholder="Design type…" aria-label="Design type" value="Digital Artwork / Pattern">
+            <input type="text" id="stock-design-type" placeholder="Design type…" aria-label="Design type"
+              value="Digital Artwork / Pattern">
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn-secondary" id="btn-regen-meta" aria-label="Regenerate metadata">🔄 Regenerate</button>
-        <button class="btn-primary"   id="btn-stock-csv"  aria-label="Export stock CSV">📄 Export CSV</button>
+        <button class="btn-primary" id="btn-stock-csv" aria-label="Export stock CSV">📄 Export CSV</button>
       </div>
     </div>
   </div>
@@ -1898,10 +2127,12 @@
         <div class="form-field form-group">
           <label for="ai-cfg-key">API Key</label>
           <div class="input-with-action" style="display:flex;gap:4px;">
-            <input type="password" id="ai-cfg-key" placeholder="Enter your API Key (stored locally only)" style="flex:1;">
+            <input type="password" id="ai-cfg-key" placeholder="Enter your API Key (stored locally only)"
+              style="flex:1;">
             <button type="button" class="btn-secondary" id="btn-toggle-ai-key-vis" title="Toggle visibility">👁</button>
           </div>
-          <span class="text-xs text-muted">Keys remain strictly on your device in localStorage and are never sent to external third parties.</span>
+          <span class="text-xs text-muted">Keys remain strictly on your device in localStorage and are never sent to
+            external third parties.</span>
         </div>
         <div class="form-field form-group" id="ai-cfg-endpoint-group" style="display:none;">
           <label for="ai-cfg-endpoint">Base URL</label>
@@ -1911,7 +2142,8 @@
           <label for="ai-cfg-model">Model Name</label>
           <input type="text" id="ai-cfg-model" placeholder="gemini-2.5-flash" value="gemini-2.5-flash">
         </div>
-        <div class="ai-test-status" id="ai-test-status-box" style="display:none;padding:10px;border-radius:6px;font-size:12px;margin-top:8px;"></div>
+        <div class="ai-test-status" id="ai-test-status-box"
+          style="display:none;padding:10px;border-radius:6px;font-size:12px;margin-top:8px;"></div>
       </div>
       <div class="modal-footer">
         <button class="btn-secondary" id="btn-test-ai-connection">Test Connection</button>
@@ -1932,17 +2164,22 @@
         <button class="modal-close" id="modal-ai-credits-close" aria-label="Close credits modal">✕</button>
       </div>
       <div class="modal-body">
-        <div class="credit-balance-hero" style="text-align:center;padding:20px;background:var(--bg-card);border-radius:8px;margin-bottom:16px;">
+        <div class="credit-balance-hero"
+          style="text-align:center;padding:20px;background:var(--bg-card);border-radius:8px;margin-bottom:16px;">
           <div class="credit-balance-big" style="font-size:36px;font-weight:bold;color:var(--accent);">
-            <span class="credit-num" id="modal-credit-balance">72</span> <span style="font-size:18px;color:var(--text-muted);">/ 100</span>
+            <span class="credit-num" id="modal-credit-balance">72</span> <span
+              style="font-size:18px;color:var(--text-muted);">/ 100</span>
           </div>
           <div class="credit-lbl" style="font-weight:600;margin-top:4px;">Credits Remaining</div>
           <p class="credit-sub text-xs text-muted mt-1">1 Credit = 1 AI Generation or Commercial High-Res Export</p>
         </div>
-        <div class="plans-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;">
-          <div class="plan-card" style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
+        <div class="plans-grid"
+          style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;">
+          <div class="plan-card"
+            style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
             <div class="plan-name" style="font-weight:700;font-size:16px;">Starter</div>
-            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$9 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$9 <span
+                style="font-size:12px;color:var(--text-muted)">/mo</span></div>
             <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
               <li>✓ 100 AI Generation Credits</li>
               <li>✓ Standard Resolution (4K)</li>
@@ -1950,21 +2187,28 @@
             </ul>
             <button class="btn-secondary w-full" onclick="alert('Starter Plan selected (Demo)')">Select Starter</button>
           </div>
-          <div class="plan-card plan-featured" style="padding:16px;background:var(--bg-secondary);border:2px solid var(--accent);border-radius:8px;position:relative;">
-            <div class="plan-badge" style="position:absolute;top:-10px;right:12px;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">Most Popular</div>
+          <div class="plan-card plan-featured"
+            style="padding:16px;background:var(--bg-secondary);border:2px solid var(--accent);border-radius:8px;position:relative;">
+            <div class="plan-badge"
+              style="position:absolute;top:-10px;right:12px;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">
+              Most Popular</div>
             <div class="plan-name" style="font-weight:700;font-size:16px;">Pro Studio</div>
-            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;color:var(--accent);">$29 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;color:var(--accent);">$29 <span
+                style="font-size:12px;color:var(--text-muted)">/mo</span></div>
             <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
               <li>✓ 500 AI Generation Credits</li>
               <li>✓ 8K Ultra HD & 10MB+ Master</li>
               <li>✓ Commercial Stock CSV Exports</li>
               <li>✓ Vector SVG & Print PDF</li>
             </ul>
-            <button class="btn-primary w-full" onclick="alert('Pro Studio Plan selected (Demo)')">Upgrade to Pro</button>
+            <button class="btn-primary w-full" onclick="alert('Pro Studio Plan selected (Demo)')">Upgrade to
+              Pro</button>
           </div>
-          <div class="plan-card" style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
+          <div class="plan-card"
+            style="padding:16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;">
             <div class="plan-name" style="font-weight:700;font-size:16px;">Agency</div>
-            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$79 <span style="font-size:12px;color:var(--text-muted)">/mo</span></div>
+            <div class="plan-price" style="font-size:24px;font-weight:bold;margin:8px 0;">$79 <span
+                style="font-size:12px;color:var(--text-muted)">/mo</span></div>
             <ul class="plan-features text-xs" style="list-style:none;padding:0;margin:0 0 16px 0;line-height:1.8;">
               <li>✓ 2,000 AI Credits</li>
               <li>✓ Multi-seat Collaboration</li>
@@ -1987,7 +2231,9 @@
     <div class="cmd-palette-box">
       <div class="cmd-search-row">
         <span class="cmd-search-icon">🔍</span>
-        <input type="text" id="cmd-input" class="cmd-input" placeholder="Type a command, pattern, or template (e.g. 'Cosmic', 'Export PDF', 'Rulers')…" autocomplete="off">
+        <input type="text" id="cmd-input" class="cmd-input"
+          placeholder="Type a command, pattern, or template (e.g. 'Cosmic', 'Export PDF', 'Rulers')…"
+          autocomplete="off">
         <kbd class="cmd-shortcut-badge">ESC</kbd>
       </div>
       <div class="cmd-results-list" id="cmd-results-list" role="listbox">
@@ -2003,13 +2249,16 @@
       <div class="modal-header">
         <div class="modal-header-text">
           <h2 id="seamless-test-title">🔍 Seamless Repeating Matrix & Math Edge Check</h2>
-          <p class="modal-subtitle">Inspect infinite repetition grid and mathematically verify pixel-perfect boundary matching.</p>
+          <p class="modal-subtitle">Inspect infinite repetition grid and mathematically verify pixel-perfect boundary
+            matching.</p>
         </div>
         <button class="modal-close" id="modal-seamless-close" aria-label="Close seamless tester modal">✕</button>
       </div>
       <div class="modal-body">
-        <div class="seamless-modal-toolbar" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-          <div class="seamless-grid-selector" role="radiogroup" aria-label="Matrix Grid Size" style="display:flex;gap:4px;">
+        <div class="seamless-modal-toolbar"
+          style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div class="seamless-grid-selector" role="radiogroup" aria-label="Matrix Grid Size"
+            style="display:flex;gap:4px;">
             <button class="category-chip" data-grid="2">2×2</button>
             <button class="category-chip active" data-grid="3">3×3</button>
             <button class="category-chip" data-grid="4">4×4</button>
@@ -2024,8 +2273,10 @@
         </div>
 
         <!-- Verification Results Alert Banner -->
-        <div id="seamless-edge-report" class="seamless-edge-report" style="padding:10px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;margin-bottom:12px;">
-          <div class="edge-report-header" style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+        <div id="seamless-edge-report" class="seamless-edge-report"
+          style="padding:10px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;margin-bottom:12px;">
+          <div class="edge-report-header"
+            style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
             <span class="edge-status-pill pending" id="edge-status-pill">Analysis Pending</span>
             <span class="edge-score" id="edge-score-text">Edge Delta MSE: --</span>
           </div>
@@ -2034,7 +2285,8 @@
           </div>
         </div>
 
-        <div class="seamless-preview-viewport" id="seamless-preview-viewport" style="width:100%;height:380px;overflow:auto;background:#18181b;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+        <div class="seamless-preview-viewport" id="seamless-preview-viewport"
+          style="width:100%;height:380px;overflow:auto;background:#18181b;border-radius:6px;display:flex;align-items:center;justify-content:center;">
           <div class="seamless-matrix-canvas-wrap" id="seamless-matrix-canvas-wrap">
             <canvas id="seamless-matrix-canvas"></canvas>
           </div>
@@ -2047,11 +2299,58 @@
     </div>
   </div>
 
+  <!-- ─── 96 BACKGROUND CATEGORIES — 100 SUB-CATEGORY EXPLORER MODAL ─── -->
+  <div id="modal-subcategory-explorer" class="modal" role="dialog" aria-modal="true" aria-labelledby="subcat-modal-title">
+    <div class="modal-backdrop" id="modal-subcat-backdrop"></div>
+    <div class="modal-box modal-box-lg subcat-modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h2 id="subcat-modal-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span id="subcat-modal-icon" style="font-size:24px;">🎨</span>
+            <span id="subcat-modal-category-name">Abstract Background</span>
+            <span class="badge-easy-pill" id="subcat-modal-count-badge">100 Sub-categories</span>
+          </h2>
+          <p class="modal-subtitle" id="subcat-modal-desc">Browse, search, and apply 100 curated variations and AI prompts.</p>
+        </div>
+        <button class="modal-close" id="modal-subcat-close" aria-label="Close Subcategory Explorer">✕</button>
+      </div>
+      <div class="modal-body subcat-modal-body">
+        <!-- Subcategory Search & Toolbar -->
+        <div class="subcat-toolbar" style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+          <div class="pattern-search-wrap" style="flex:1;min-width:200px;">
+            <span class="pattern-search-icon">🔍</span>
+            <input type="text" id="subcat-search-input" class="pattern-search"
+              placeholder="Search 100 sub-categories (e.g. Minimalist, Gold, Neon, 3D, Cyber)…"
+              aria-label="Search subcategories in this category">
+          </div>
+          <button class="btn btn-sm btn-outline-glow" id="btn-subcat-random" style="padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;">
+            <span>🎲</span> Random Sub-style
+          </button>
+        </div>
+        
+        <!-- Category Tags Bar -->
+        <div class="subcat-tags-bar" id="subcat-tags-container" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+          <!-- Dynamically populated tags -->
+        </div>
+
+        <!-- 100 Sub-categories Grid -->
+        <div class="subcat-grid-container" id="subcat-grid-container">
+          <!-- Dynamically populated from subCategories -->
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="text-xs text-muted" id="subcat-footer-info">Showing 100 / 100 curated styles</span>
+        <button class="btn btn-secondary" id="btn-subcat-close-footer">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── Toast System ──────────────────────────────────────────────────── -->
   <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ─── Engine & Data Scripts ────────────────────────────────────────── -->
   <script src="data/categories.js?v=3.0"></script>
+  <script src="data/pattern-categories.js?v=3.0"></script>
   <script src="data/templates.js?v=3.0"></script>
   <script src="data/palettes.js?v=3.0"></script>
   <script src="js/i18n.js?v=3.0"></script>
@@ -2074,4 +2373,5 @@
   <script src="js/app.js?v=3.0"></script>
 
 </body>
+
 </html>

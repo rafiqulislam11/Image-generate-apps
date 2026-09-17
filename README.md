@@ -1,28 +1,32 @@
 # AI Pattern & Image Design Studio PRO
 
 ![AI Pattern Studio PRO](https://img.shields.io/badge/AI_Pattern_Studio-PRO_SaaS-6366f1?style=for-the-badge&logo=canvas&logoColor=white)
-![Categories](https://img.shields.io/badge/Categories-30_Design_Categories-10b981?style=for-the-badge)
+![Master Categories](https://img.shields.io/badge/Categories-196_Master_Categories-10b981?style=for-the-badge)
+![Curated Styles](https://img.shields.io/badge/Curated_Styles-19%2C600_Variations-8b5cf6?style=for-the-badge)
 ![Patterns](https://img.shields.io/badge/Patterns-203+_Procedural_+_8_Master-ec4899?style=for-the-badge)
 ![Exports](https://img.shields.io/badge/Exports-PNG_|_JPG_|_SVG_|_PDF_|_CSV_|_ZIP-f59e0b?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-A state-of-the-art, high-performance generative pattern, texture, and commercial stock design studio. Combines natural language AI prompt parsing, 203+ mathematical procedural engines, curated templates, multi-layer compositing, seamless tiling diagnostics, and multi-platform commercial stock metadata generation.
+A state-of-the-art, high-performance generative pattern, texture, and commercial stock design studio. Combines natural language AI prompt parsing, **196 Master Categories** (100 Core Pattern Categories + 96 Background Categories) with **19,600 curated styles & sub-patterns**, 203+ mathematical procedural engines, curated templates, multi-layer compositing, seamless tiling diagnostics, and multi-platform commercial stock metadata generation.
 
 ---
 
 ## 🌟 Core Product Capabilities
 
 ### 1. 🤖 Prompt → AI Analysis → Live Studio
-- **Natural Language Prompt Parser (`js/ai-parser.js`)**: Parses complex design prompts into structured design cards specifying: Category, Pattern Engine, Color Palette, Scale, Line Density, Complexity, and Recommended Export Dimensions.
+- **Natural Language Prompt Parser (`js/ai-parser.js`)**: Parses complex design prompts into structured design cards specifying: Category, Pattern Engine, Color Palette, Scale, Line Density, Complexity, and Recommended Export Dimensions. Supports cross-matching across both 100 Pattern Categories and 96 Background Categories.
 - **AI Service Integration (`js/ai-service.js`)**:
   - Transparent connection manager supporting Google Gemini, OpenAI, or Stability AI.
   - **Zero Fake AI**: When no API key is provided, clearly indicates `"AI provider not configured."` and executes the deterministic **Local Demo Generator**.
   - Built-in credit management indicator (e.g. 72 / 100 remaining).
   - `.env.example` provided for safe, environment-based key setup.
 
-### 2. 🗂️ 30 Searchable Design Categories (`data/categories.js`)
-- Geometric, Floral, Botanical, Islamic Geometric, Radial Mandala, Abstract Fluid, Minimal Line Art, Seamless Repeating, Hand-Drawn Line Art, Organic Cellular, Kids & Nursery, Animal Print, Food & Culinary, Nature Landscapes, Retro 70s/80s, Vintage Victorian, Luxury Gold, Christmas Holiday, Halloween Gothic, New Year Glamour, Wedding Romantic, Corporate Business, Woven Textile, Wallpaper & Mural, Background Texture, Decorative Ornament, Monogram Typographic, Damask Acanthus, Tribal Ethnic, and Zentangle Doodle.
-- Searchable by name, description, tags, and category chips (`Classic`, `Modern`, `Seasonal`, `Artistic`).
+### 2. 🗂️ 196 Master Design Categories & 19,600 Curated Styles
+
+The studio features a high-speed **Dual-Mode Category Hub** allowing seamless toggling between:
+- **🎨 100 Core Pattern Categories (`data/pattern-categories.js`)**: 100 Categories × 100 Sub-patterns = **10,000 sub-patterns**. Spanning Geometric, Abstract, Floral, Botanical, Leaf, Flower, Tropical, Nature, Animal, Bird, Butterfly, Insect, Fish, Ocean, Marine, Shell, Fruit, Vegetable, Food, Dessert, Bakery, Coffee, Tea, Beverage, Kitchen, Fashion, Clothing, Textile, Fabric, Sewing, Lace, Crochet, Knitting, Islamic, Arabic, Moroccan, Persian, Indian, Mandala, Paisley, Aztec, Tribal, African, Japanese, Chinese, Korean, Scandinavian, Celtic, Vintage, Retro, Y2K, Memphis, Psychedelic, Boho, Minimal, Line, Dot, Stripe, Wave, Grid, Checkered, Plaid, Chevron, Zigzag, Spiral, Circle, Triangle, Square, Hexagon, Polygon, Diamond, Star, Heart, Doodle, Hand Drawn, Sketch, Watercolor, Brush, Ink, Grunge, Concrete, Marble, Stone, Wood, Paper, Metal, Gold, Holographic, Gradient, Neon, Glow, 3D, Technology, Circuit, Digital, Cyberpunk, Futuristic, Luxury, Wedding, and Seasonal Patterns.
+- **🌄 96 Background Categories (`data/categories.js`)**: 96 Categories × 100 Sub-styles = **9,600 sub-styles**. Spanning Abstract, Gradient, Blur, Bokeh, Mesh, Liquid, Fluid, Wave, Curve, Spiral, Swirl, Smoke, Fog, Mist, Cloud, Sky, Galaxy, Cosmic, Star, Nebula, Space, Universe, Aurora, Light, Glow, Neon, Luminous, Shimmer, Sparkle, Glitter, Particle, Dust, Energy, Fire, Water, Ocean, Ice, Crystal, Glass, Frosted Glass, Metallic, Gold, Silver, Copper, Chrome, Holographic, Iridescent, Chrome Gradient, 3D, 3D Render, Minimal, White, Black, Dark, Pastel, Colorful, Monochrome, Duotone, Color Block, Memphis, Geometric, Triangle, Circle, Square, Hexagon, Grid, Dot, Line, Stripe, Wave Line, Seamless, Pattern, Floral, Botanical, Leaf, Nature, Marble, Stone, Concrete, Paper, Fabric, Wood, Sand, Grain, Noise, Halftone, Grunge, Vintage, Retro, Y2K, Cyberpunk, Futuristic, Technology, Digital, Blockchain, and Business Backgrounds.
+- **Interactive Sub-Category Explorer Modal**: Instant browsing with full tag filtering, real-time live search, **⚡ Apply to Studio** (instant canvas re-render and parameter mapping), **✍️ Prompt** (loads directly into AI generator), **📋 Copy**, and **🎲 Random Sub-pattern**.
 
 ### 3. 🎨 Curated Design Templates (`data/templates.js`)
 - 1-click ready-to-edit templates across Luxury, Geometric, Organic, Minimalist, Cyberpunk, and Classic styles.
@@ -107,10 +111,13 @@ A state-of-the-art, high-performance generative pattern, texture, and commercial
 
 ## 🧪 Running Automated Tests
 
-Run the comprehensive unit test suite:
+Run the comprehensive test suites across data integrity, engines, UI assets, and interactive flows:
 ```bash
-node tests/unit-test.js
-node tests/verify-assets.js
+node tests/test-100-patterns.js           # 100 Core Pattern Categories & 10,000 sub-patterns
+node tests/test-96-categories.js            # 96 Background Categories & 9,600 sub-styles
+node tests/test-categories-interactive.js   # Dual-mode switcher, real-time search & modal actions
+node tests/unit-test.js                     # Core engines, parser, similarity, metadata & projects
+node tests/verify-assets.js                 # Scripts, stylesheets, and asset integrity
 ```
 
 ---

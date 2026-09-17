@@ -5052,6 +5052,344 @@
     }
   };
 
+  // ══════════════════════════════════════════════════════════════════════════
+  // MISSING GENERATORS & ALIASES (Fix for background/pattern data mapping)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── Aliases for name mismatches between data files and generators ──────────
+  newPatterns.goldSpiral     = newPatterns.goldenSpiral;       // data: goldSpiral
+  newPatterns.guilloche      = newPatterns.guillocheBanknote;  // data: guilloche
+  newPatterns.metatronsCube  = newPatterns.metatronCube;       // data: metatronsCube
+  newPatterns.voronoiCells   = newPatterns.voronoiBubbles;     // data: voronoiCells
+  newPatterns.torusMandala   = newPatterns.torusSacred;        // data: torusMandala
+  newPatterns.greekKey       = newPatterns.greekKeyMeander;    // data: greekKey
+  newPatterns.chladniPlate   = newPatterns.chladniAcoustics;   // data: chladniPlate
+
+  // ── New Generator: gradient (solid gradient background) ───────────────────
+  newPatterns.gradient = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const angle = ((s.rotation || 135) * Math.PI) / 180;
+    const x1 = w / 2 - Math.cos(angle) * w;
+    const y1 = h / 2 - Math.sin(angle) * h;
+    const x2 = w / 2 + Math.cos(angle) * w;
+    const y2 = h / 2 + Math.sin(angle) * h;
+    const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+    cols.forEach((c, i) => grad.addColorStop(i / Math.max(1, cols.length - 1), c));
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    // Soft noise overlay for richness
+    const op = S.opacity(s) * 0.08;
+    for (let i = 0; i < 4000; i++) {
+      ctx.fillStyle = S.alphaColor(cols[i % cols.length], rng() * op);
+      ctx.fillRect(rng() * w, rng() * h, 1 + rng() * 2, 1 + rng() * 2);
+    }
+  };
+
+  // ── New Generator: circle (concentric circles / radial rings) ─────────────
+  newPatterns.circle = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const lt = S.lt(s, 2);
+    const dens = S.density(s);
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.hypot(cx, cy);
+    const step = Math.max(8, (30 + S.stripeW(s)) * sc / dens);
+
+    ctx.fillStyle = cols[0];
+    ctx.fillRect(0, 0, w, h);
+
+    let r = step;
+    let idx = 1;
+    while (r < maxR * 1.2) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = S.alphaColor(cols[idx % cols.length], op);
+      ctx.lineWidth = lt * sc;
+      ctx.stroke();
+      r += step;
+      idx++;
+    }
+  };
+
+  // ── New Generator: cloud (soft cloud-like blobs) ───────────────────────────
+  newPatterns.cloud = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const dens = S.density(s);
+    const numClouds = Math.round(6 + dens * 2);
+
+    // Sky background
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+    skyGrad.addColorStop(0, cols[0]);
+    skyGrad.addColorStop(1, cols[1 % cols.length]);
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    for (let c = 0; c < numClouds; c++) {
+      const cx = rng() * w;
+      const cy = rng() * h;
+      const baseR = (40 + rng() * 80) * sc;
+      const col = cols[(c + 2) % cols.length];
+      const numBlobs = 4 + Math.floor(rng() * 5);
+
+      ctx.save();
+      for (let b = 0; b < numBlobs; b++) {
+        const bx = cx + (rng() - 0.5) * baseR * 1.5;
+        const by = cy + (rng() - 0.5) * baseR * 0.6;
+        const br = baseR * (0.5 + rng() * 0.7);
+        const cloudGrad = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+        cloudGrad.addColorStop(0, S.alphaColor(col, op * 0.95));
+        cloudGrad.addColorStop(0.5, S.alphaColor(col, op * 0.6));
+        cloudGrad.addColorStop(1, S.alphaColor(col, 0));
+        ctx.fillStyle = cloudGrad;
+        ctx.beginPath();
+        ctx.arc(bx, by, br, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  };
+
+  // ── New Generator: colorBlock (flat color block grid) ─────────────────────
+  newPatterns.colorBlock = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const dens = S.density(s);
+    const op = S.opacity(s);
+    const cols2 = Math.max(2, Math.round(dens * 1.5));
+    const rows2 = Math.max(2, Math.round(cols2 * (h / w)));
+    const cw = w / cols2;
+    const ch = h / rows2;
+
+    for (let r = 0; r < rows2; r++) {
+      for (let c = 0; c < cols2; c++) {
+        const idx = (r * cols2 + c + Math.floor(rng() * cols.length)) % cols.length;
+        ctx.fillStyle = S.alphaColor(cols[idx], op);
+        ctx.fillRect(c * cw, r * ch, cw, ch);
+      }
+    }
+
+    // Subtle white grid lines
+    ctx.strokeStyle = `rgba(255,255,255,${op * 0.15})`;
+    ctx.lineWidth = Math.max(1, sc);
+    for (let r = 0; r <= rows2; r++) {
+      ctx.beginPath();
+      ctx.moveTo(0, r * ch);
+      ctx.lineTo(w, r * ch);
+      ctx.stroke();
+    }
+    for (let c = 0; c <= cols2; c++) {
+      ctx.beginPath();
+      ctx.moveTo(c * cw, 0);
+      ctx.lineTo(c * cw, h);
+      ctx.stroke();
+    }
+  };
+
+  // ── New Generator: meshWireframe (3D wireframe mesh illusion) ─────────────
+  newPatterns.meshWireframe = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const lt = S.lt(s, 1);
+    const dens = S.density(s);
+    const rot = S.rot(s);
+    const cols2 = Math.max(4, Math.round(dens * 3));
+    const rows2 = Math.max(4, Math.round(cols2 * 0.6));
+
+    ctx.fillStyle = cols[0];
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(rot);
+
+    const perspective = 500 * sc;
+    const gridW = w * 1.4;
+    const gridH = h * 1.4;
+    const stepX = gridW / cols2;
+    const stepY = gridH / rows2;
+
+    const project = (x, y, z) => {
+      const fac = perspective / (perspective + z);
+      return { x: x * fac, y: y * fac };
+    };
+
+    const tilt = 0.5;
+
+    for (let r = 0; r <= rows2; r++) {
+      ctx.beginPath();
+      for (let c2 = 0; c2 <= cols2; c2++) {
+        const wx = -gridW / 2 + c2 * stepX;
+        const wy = -gridH / 2 + r * stepY;
+        const wz = (rng() - 0.5) * 80 * sc;
+        const p = project(wx, wy * tilt + wz * 0.5, wz);
+        if (c2 === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = S.alphaColor(cols[(r + 1) % cols.length], op * (0.4 + 0.6 * r / rows2));
+      ctx.lineWidth = lt * sc;
+      ctx.stroke();
+    }
+
+    for (let c2 = 0; c2 <= cols2; c2++) {
+      ctx.beginPath();
+      for (let r = 0; r <= rows2; r++) {
+        const wx = -gridW / 2 + c2 * stepX;
+        const wy = -gridH / 2 + r * stepY;
+        const wz = (rng() - 0.5) * 80 * sc;
+        const p = project(wx, wy * tilt + wz * 0.5, wz);
+        if (r === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = S.alphaColor(cols[(c2 + 2) % cols.length], op * (0.4 + 0.6 * c2 / cols2));
+      ctx.lineWidth = lt * sc * 0.8;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  };
+
+  // ── New Generator: roseCurve (rhodonea / rose mathematical curve) ──────────
+  newPatterns.roseCurve = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const lt = S.lt(s, 2);
+    const dens = S.density(s);
+    const rot = S.rot(s);
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.min(cx, cy) * 0.88;
+
+    ctx.fillStyle = cols[0];
+    ctx.fillRect(0, 0, w, h);
+
+    const k = Math.max(2, Math.round(dens * 0.8 + 2));
+    const numPetals = k % 2 === 0 ? k : k;
+
+    for (let layer = 0; layer < 3; layer++) {
+      ctx.beginPath();
+      const layerRot = rot + (layer * Math.PI) / (numPetals * 3);
+      for (let t = 0; t <= 2000; t++) {
+        const theta = (t / 2000) * 2 * Math.PI;
+        const r = maxR * Math.cos(numPetals * theta) * (0.9 - layer * 0.2);
+        const x = cx + r * Math.cos(theta + layerRot);
+        const y = cy + r * Math.sin(theta + layerRot);
+        if (t === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = S.alphaColor(cols[(layer + 1) % cols.length], op * (1 - layer * 0.25));
+      ctx.lineWidth = lt * sc * (2 - layer * 0.5);
+      ctx.stroke();
+
+      if (layer === 0) {
+        ctx.fillStyle = S.alphaColor(cols[2 % cols.length], op * 0.12);
+        ctx.fill();
+      }
+    }
+  };
+
+  // ── New Generator: sineLattice (sine wave grid lattice) ───────────────────
+  newPatterns.sineLattice = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const lt = S.lt(s, 1.5);
+    const dens = S.density(s);
+    const rot = S.rot(s);
+
+    ctx.fillStyle = cols[0];
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(rot);
+
+    const amp = (20 + dens * 5) * sc;
+    const freq = (0.005 + dens * 0.002) / sc;
+    const numLines = Math.round(12 + dens * 3);
+    const spacing = Math.max(h, w) * 1.5 / numLines;
+
+    for (let i = 0; i < numLines; i++) {
+      const yOff = -Math.max(h, w) * 0.75 + i * spacing;
+      ctx.beginPath();
+      for (let x = -w; x <= w; x += 2) {
+        const y = yOff + amp * Math.sin(x * freq + i * 0.5);
+        if (x === -w) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = S.alphaColor(cols[(i + 1) % cols.length], op * (0.5 + 0.5 * (i / numLines)));
+      ctx.lineWidth = lt * sc;
+      ctx.stroke();
+    }
+
+    // Cross-hatch with perpendicular sine
+    ctx.rotate(Math.PI / 2);
+    for (let i = 0; i < numLines; i++) {
+      const yOff = -Math.max(h, w) * 0.75 + i * spacing;
+      ctx.beginPath();
+      for (let x = -w; x <= w; x += 2) {
+        const y = yOff + amp * Math.sin(x * freq + i * 0.7 + Math.PI / 4);
+        if (x === -w) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = S.alphaColor(cols[(i + 2) % cols.length], op * 0.35);
+      ctx.lineWidth = lt * sc * 0.6;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  };
+
+  // ── New Generator: torusMandala (torus-based mandala rings) ───────────────
+  newPatterns.torusMandala = function(ctx, w, h, s, rng) {
+    const cols = S.colors(s);
+    const sc = S.scale(s);
+    const op = S.opacity(s);
+    const lt = S.lt(s, 1.5);
+    const dens = S.density(s);
+    const rot = S.rot(s);
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.min(cx, cy) * 0.9;
+
+    ctx.fillStyle = cols[0];
+    ctx.fillRect(0, 0, w, h);
+
+    const numRings = Math.max(3, Math.round(dens * 1.5));
+    const numPoints = Math.max(6, Math.round(dens * 3 + 6));
+
+    for (let ring = 0; ring < numRings; ring++) {
+      const R = maxR * ((ring + 1) / numRings);
+      const r = R * 0.22 * sc;
+      const col = cols[(ring + 1) % cols.length];
+
+      for (let p = 0; p < numPoints; p++) {
+        const angle = (p / numPoints) * Math.PI * 2 + rot + ring * 0.3;
+        const cx2 = cx + R * Math.cos(angle);
+        const cy2 = cy + R * Math.sin(angle);
+
+        ctx.beginPath();
+        ctx.arc(cx2, cy2, r, 0, Math.PI * 2);
+        ctx.strokeStyle = S.alphaColor(col, op * (0.5 + 0.5 * (ring / numRings)));
+        ctx.lineWidth = lt * sc * (1 + ring * 0.3);
+        ctx.stroke();
+
+        ctx.fillStyle = S.alphaColor(col, op * 0.1);
+        ctx.fill();
+      }
+
+      // Ring outline
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = S.alphaColor(cols[(ring + 2) % cols.length], op * 0.2);
+      ctx.lineWidth = lt * sc * 0.5;
+      ctx.stroke();
+    }
+  };
+
   // ─── Register with PatternEngine ──────────────────────────────────────────
   if (typeof window !== 'undefined') {
     window._NEW_SPIRAL_PATTERNS = newPatterns;

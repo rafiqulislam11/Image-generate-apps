@@ -2874,84 +2874,446 @@ const App = {
         }
     },
 
-    // ─── 30 Design Categories Studio ────────────────────────────────────────
+    // ─── 196 Categories (100 Patterns + 96 Backgrounds) & 19,600 Sub-styles Studio ───
     initCategories() {
         const container = document.getElementById('categories-grid-container');
         const searchInput = document.getElementById('category-search-input');
-        const chips = document.querySelectorAll('#category-filter-chips .category-chip');
+        const chipsContainer = document.getElementById('category-filter-chips');
+        const countBadge = document.getElementById('categories-count-badge');
+        const headerTitle = document.getElementById('panel-categories-header-title');
+        const btnModePatterns = document.getElementById('btn-mode-patterns');
+        const btnModeBackgrounds = document.getElementById('btn-mode-backgrounds');
 
-        if (!container || typeof PATTERN_CATEGORIES === 'undefined') return;
+        if (!container) return;
 
-        let activeFilter = 'all';
-        let searchQuery = '';
+        this._activeCategoryMode = 'patterns'; // 'patterns' (100) or 'backgrounds' (96)
+        this._activeCategoryFilter = 'all';
+        this._categorySearchQuery = '';
+
+        const PATTERN_FILTER_GROUPS = [
+            { id: 'all', label: 'All (100)' },
+            { id: 'geometric', label: 'Geometric (26)' },
+            { id: 'floral', label: 'Botanical & Floral (5)' },
+            { id: 'animals', label: 'Animals & Birds (4)' },
+            { id: 'marine', label: 'Marine & Ocean (4)' },
+            { id: 'food', label: 'Food & Culinary (9)' },
+            { id: 'textiles', label: 'Textiles & Fashion (8)' },
+            { id: 'cultural', label: 'Cultural & Ethnic (15)' },
+            { id: 'vintage', label: 'Vintage & Retro (6)' },
+            { id: 'artistic', label: 'Artistic & Hand-Drawn (6)' },
+            { id: 'textures', label: 'Textures & Surfaces (7)' },
+            { id: 'luxury', label: 'Luxury & Glow (5)' },
+            { id: '3d', label: '3D & Tech (6)' },
+            { id: 'events', label: 'Events & Holiday (3)' }
+        ];
+
+        const BACKGROUND_FILTER_GROUPS = [
+            { id: 'all', label: 'All (96)' },
+            { id: 'abstract', label: 'Abstract & Fluid (11)' },
+            { id: 'space', label: 'Space & Sky (12)' },
+            { id: 'light', label: 'Light & Glow (10)' },
+            { id: 'nature', label: 'Nature & Elements (9)' },
+            { id: '3d', label: '3D & Materials (12)' },
+            { id: 'color', label: 'Colors & Tones (9)' },
+            { id: 'geometric', label: 'Geometric & Lines (12)' },
+            { id: 'texture', label: 'Textures & Surfaces (11)' },
+            { id: 'retro', label: 'Vintage & Retro (3)' },
+            { id: 'tech', label: 'Tech & Digital (5)' },
+            { id: 'corporate', label: 'Corporate (2)' }
+        ];
+
+        const renderFilterChips = () => {
+            if (!chipsContainer) return;
+            chipsContainer.innerHTML = '';
+
+            const groups = this._activeCategoryMode === 'patterns' 
+                ? PATTERN_FILTER_GROUPS 
+                : BACKGROUND_FILTER_GROUPS;
+
+            groups.forEach(g => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'category-chip' + (this._activeCategoryFilter === g.id ? ' active' : '');
+                btn.setAttribute('data-cfilter', g.id);
+                btn.textContent = g.label;
+                btn.addEventListener('click', () => {
+                    this._activeCategoryFilter = g.id;
+                    chipsContainer.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderCategories();
+                });
+                chipsContainer.appendChild(btn);
+            });
+        };
 
         const renderCategories = () => {
             container.innerHTML = '';
-            const filtered = PATTERN_CATEGORIES.filter(cat => {
-                const matchesFilter = activeFilter === 'all' || 
-                    (cat.tags && cat.tags.some(t => t.toLowerCase() === activeFilter.toLowerCase())) ||
-                    (cat.id && cat.id.toLowerCase().includes(activeFilter.toLowerCase()));
-                const q = searchQuery.toLowerCase().trim();
-                const matchesQuery = !q || 
+            
+            const isPatternMode = this._activeCategoryMode === 'patterns';
+            const dataset = isPatternMode
+                ? (typeof CORE_PATTERN_CATEGORIES !== 'undefined' ? CORE_PATTERN_CATEGORIES : [])
+                : (typeof PATTERN_CATEGORIES !== 'undefined' ? PATTERN_CATEGORIES : []);
+
+            const filtered = dataset.filter(cat => {
+                const matchesFilter = this._activeCategoryFilter === 'all' ||
+                    cat.group === this._activeCategoryFilter ||
+                    (cat.groupBengali && cat.groupBengali.toLowerCase().includes(this._activeCategoryFilter.toLowerCase())) ||
+                    (cat.tags && cat.tags.some(t => t.toLowerCase() === this._activeCategoryFilter.toLowerCase())) ||
+                    (cat.id && cat.id.toLowerCase().includes(this._activeCategoryFilter.toLowerCase()));
+
+                const q = this._categorySearchQuery.toLowerCase().trim();
+                const matchesQuery = !q ||
                     cat.name.toLowerCase().includes(q) ||
+                    (cat.nameBengali && cat.nameBengali.toLowerCase().includes(q)) ||
                     cat.description.toLowerCase().includes(q) ||
                     (cat.tags && cat.tags.some(t => t.toLowerCase().includes(q))) ||
-                    (cat.patternTypes && cat.patternTypes.some(pt => pt.toLowerCase().includes(q)));
+                    (cat.patternTypes && cat.patternTypes.some(pt => pt.toLowerCase().includes(q))) ||
+                    (cat.subCategories && cat.subCategories.some(sub => 
+                        sub.name.toLowerCase().includes(q) || 
+                        (sub.theme && sub.theme.toLowerCase().includes(q)) ||
+                        (sub.style && sub.style.toLowerCase().includes(q)) ||
+                        (sub.prompt && sub.prompt.toLowerCase().includes(q))
+                    ));
+
                 return matchesFilter && matchesQuery;
             });
 
+            if (headerTitle) {
+                headerTitle.textContent = isPatternMode 
+                    ? '📂 100 Pattern Categories' 
+                    : '📂 96 Background Categories';
+            }
+
+            if (countBadge) {
+                const totalSub = filtered.length * 100;
+                countBadge.textContent = isPatternMode
+                    ? `${filtered.length} / 100 Patterns (${totalSub.toLocaleString()} Sub-patterns)`
+                    : `${filtered.length} / 96 Backgrounds (${totalSub.toLocaleString()} Sub-styles)`;
+            }
+
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-xs text-muted" style="grid-column:1/-1;padding:16px;text-align:center;">No matching categories found</div>';
+                container.innerHTML = `<div class="text-xs text-muted" style="grid-column:1/-1;padding:24px;text-align:center;">No matching categories found for "${this._categorySearchQuery || this._activeCategoryFilter}"</div>`;
                 return;
             }
 
             filtered.forEach(cat => {
                 const card = document.createElement('div');
                 card.className = 'category-studio-card';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                const subCount = cat.subCategories ? cat.subCategories.length : 100;
+                card.setAttribute('aria-label', `${cat.name} (${subCount} ${isPatternMode ? 'sub-patterns' : 'sub-styles'})`);
+
+                const bengaliTitle = cat.nameBengali ? ` <span class="text-muted" style="font-size:12px;font-weight:normal;">(${cat.nameBengali})</span>` : '';
+
                 card.innerHTML = `
-                    <div class="category-studio-icon">${cat.icon || '📁'}</div>
+                    <div class="category-studio-card-header">
+                        <div class="category-studio-icon">${cat.icon || '🎨'}</div>
+                        <span class="category-subcat-badge">${subCount} ${isPatternMode ? 'Sub-patterns' : 'Sub-styles'}</span>
+                    </div>
                     <div class="category-studio-content">
-                        <div class="category-studio-name">${cat.name}</div>
+                        <div class="category-studio-name">
+                            <span>${cat.name}${bengaliTitle}</span>
+                            <span class="category-num-pill">#${cat.num || ''}</span>
+                        </div>
                         <div class="category-studio-desc">${cat.description}</div>
                         <div class="category-studio-tags">
                             ${(cat.tags || []).slice(0, 3).map(t => `<span class="category-tag-badge">#${t}</span>`).join('')}
                         </div>
                     </div>
+                    <div class="category-card-actions">
+                        <button type="button" class="btn-explore-subcats">
+                            <span>🔍 Explore 100 ${isPatternMode ? 'Patterns' : 'Styles'}</span>
+                            <span style="font-size:12px;">➔</span>
+                        </button>
+                    </div>
                 `;
-                card.addEventListener('click', () => {
-                    if (cat.patternTypes && cat.patternTypes.length > 0) {
-                        const targetPattern = cat.patternTypes[0];
-                        this.selectPattern(targetPattern);
+
+                const handleSelect = () => {
+                    this.openSubCategoryModal(cat);
+                };
+
+                card.addEventListener('click', handleSelect);
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelect();
                     }
-                    if (cat.suggestedPrompts && cat.suggestedPrompts.length > 0) {
-                        const promptInput = document.getElementById('ai-prompt-input');
-                        const studioPrompt = document.getElementById('ai-studio-prompt');
-                        if (promptInput) promptInput.value = cat.suggestedPrompts[0];
-                        if (studioPrompt) studioPrompt.value = cat.suggestedPrompts[0];
-                    }
-                    this.showToast(`📁 Selected: ${cat.name}`);
                 });
+
                 container.appendChild(card);
             });
         };
 
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                searchQuery = e.target.value;
+        // Mode switch buttons
+        if (btnModePatterns) {
+            btnModePatterns.addEventListener('click', () => {
+                this._activeCategoryMode = 'patterns';
+                btnModePatterns.classList.add('active');
+                if (btnModeBackgrounds) btnModeBackgrounds.classList.remove('active');
+                if (searchInput) searchInput.placeholder = 'Search 100 pattern categories & 10,000 sub-patterns…';
+                this._activeCategoryFilter = 'all';
+                this._categorySearchQuery = '';
+                if (searchInput) searchInput.value = '';
+                renderFilterChips();
                 renderCategories();
             });
         }
 
-        chips.forEach(chip => {
-            chip.addEventListener('click', () => {
-                chips.forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                activeFilter = chip.getAttribute('data-cfilter') || 'all';
+        if (btnModeBackgrounds) {
+            btnModeBackgrounds.addEventListener('click', () => {
+                this._activeCategoryMode = 'backgrounds';
+                btnModeBackgrounds.classList.add('active');
+                if (btnModePatterns) btnModePatterns.classList.remove('active');
+                if (searchInput) searchInput.placeholder = 'Search 96 background categories & 9,600 sub-categories…';
+                this._activeCategoryFilter = 'all';
+                this._categorySearchQuery = '';
+                if (searchInput) searchInput.value = '';
+                renderFilterChips();
                 renderCategories();
             });
-        });
+        }
 
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this._categorySearchQuery = e.target.value;
+                renderCategories();
+            });
+        }
+
+        renderFilterChips();
         renderCategories();
+        this.initSubCategoryModalEvents();
+    },
+
+    // ─── Sub-category Modal Explorer ─────────────────────────────────────────
+    initSubCategoryModalEvents() {
+        const modal = document.getElementById('modal-subcategory-explorer');
+        const backdrop = document.getElementById('modal-subcat-backdrop');
+        const closeBtn = document.getElementById('modal-subcat-close');
+        const footerCloseBtn = document.getElementById('btn-subcat-close-footer');
+        const randomBtn = document.getElementById('btn-subcat-random');
+
+        if (!modal) return;
+
+        const closeModal = () => {
+            modal.classList.remove('active');
+        };
+
+        if (backdrop) backdrop.addEventListener('click', closeModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (footerCloseBtn) footerCloseBtn.addEventListener('click', closeModal);
+
+        if (randomBtn) {
+            randomBtn.addEventListener('click', () => {
+                const currentCat = this._activeCategoryForModal;
+                if (!currentCat || !currentCat.subCategories) return;
+                const randomSub = currentCat.subCategories[Math.floor(Math.random() * currentCat.subCategories.length)];
+                this.applySubCategoryToStudio(currentCat, randomSub);
+            });
+        }
+    },
+
+    openSubCategoryModal(category) {
+        if (!category) return;
+        this._activeCategoryForModal = category;
+
+        const modal = document.getElementById('modal-subcategory-explorer');
+        const iconEl = document.getElementById('subcat-modal-icon');
+        const nameEl = document.getElementById('subcat-modal-category-name');
+        const countBadge = document.getElementById('subcat-modal-count-badge');
+        const descEl = document.getElementById('subcat-modal-desc');
+        const searchInput = document.getElementById('subcat-search-input');
+        const tagsContainer = document.getElementById('subcat-tags-container');
+        const gridContainer = document.getElementById('subcat-grid-container');
+        const footerInfo = document.getElementById('subcat-footer-info');
+
+        if (!modal) return;
+
+        const isPatternMode = this._activeCategoryMode === 'patterns';
+        const subCount = category.subCategories ? category.subCategories.length : 100;
+
+        if (iconEl) iconEl.textContent = category.icon || '🎨';
+        const bName = category.nameBengali ? ` (${category.nameBengali})` : '';
+        if (nameEl) nameEl.textContent = `${category.name}${bName} (#${category.num || ''})`;
+        if (countBadge) countBadge.textContent = `${subCount} ${isPatternMode ? 'Sub-patterns' : 'Sub-categories'}`;
+        if (descEl) descEl.textContent = category.description;
+        if (searchInput) searchInput.value = '';
+
+        let activeSubTag = 'all';
+
+        // Render Tags
+        if (tagsContainer) {
+            tagsContainer.innerHTML = '';
+            const allPill = document.createElement('span');
+            allPill.className = 'subcat-tag-pill active';
+            allPill.textContent = isPatternMode ? 'All Sub-patterns' : 'All Sub-styles';
+            tagsContainer.appendChild(allPill);
+
+            allPill.addEventListener('click', () => {
+                tagsContainer.querySelectorAll('.subcat-tag-pill').forEach(p => p.classList.remove('active'));
+                allPill.classList.add('active');
+                activeSubTag = 'all';
+                renderSubCategories(searchInput ? searchInput.value : '');
+            });
+
+            (category.tags || []).forEach(tag => {
+                const pill = document.createElement('span');
+                pill.className = 'subcat-tag-pill';
+                pill.textContent = `#${tag}`;
+                pill.addEventListener('click', () => {
+                    tagsContainer.querySelectorAll('.subcat-tag-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    activeSubTag = tag.toLowerCase();
+                    renderSubCategories(searchInput ? searchInput.value : '');
+                });
+                tagsContainer.appendChild(pill);
+            });
+        }
+
+        const renderSubCategories = (query = '') => {
+            if (!gridContainer) return;
+            gridContainer.innerHTML = '';
+
+            const subCats = category.subCategories || [];
+            const q = query.toLowerCase().trim();
+
+            const filtered = subCats.filter(sub => {
+                const matchesTag = activeSubTag === 'all' || 
+                    (sub.style && sub.style.toLowerCase().includes(activeSubTag)) ||
+                    (sub.theme && sub.theme.toLowerCase().includes(activeSubTag)) ||
+                    (sub.name && sub.name.toLowerCase().includes(activeSubTag));
+
+                const matchesQuery = !q || (
+                    sub.name.toLowerCase().includes(q) ||
+                    (sub.style && sub.style.toLowerCase().includes(q)) ||
+                    (sub.theme && sub.theme.toLowerCase().includes(q)) ||
+                    (sub.prompt && sub.prompt.toLowerCase().includes(q))
+                );
+
+                return matchesTag && matchesQuery;
+            });
+
+            if (footerInfo) {
+                footerInfo.textContent = `Showing ${filtered.length} / ${subCats.length} curated variations for ${category.name}`;
+            }
+
+            if (filtered.length === 0) {
+                gridContainer.innerHTML = '<div class="text-xs text-muted" style="grid-column:1/-1;padding:24px;text-align:center;">No sub-items matched your search query.</div>';
+                return;
+            }
+
+            filtered.forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'subcat-card';
+
+                const dotsHtml = (sub.colors || category.baseColors || ['#1e293b', '#6366f1'])
+                    .slice(0, 4)
+                    .map(c => `<span class="subcat-color-dot" style="background:${c};" title="${c}"></span>`)
+                    .join('');
+
+                card.innerHTML = `
+                    <div class="subcat-card-header">
+                        <div class="subcat-title">${sub.name}</div>
+                        <span class="subcat-num-tag">#${sub.num}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <span class="subcat-style-badge">${sub.style || 'Modern'}</span>
+                        <div class="subcat-palette-dots">${dotsHtml}</div>
+                    </div>
+                    <div class="subcat-prompt-preview">${sub.prompt}</div>
+                    <div class="subcat-actions">
+                        <button type="button" class="btn-subcat-apply" title="Apply this pattern & colors immediately to canvas">
+                            <span>⚡</span> Apply to Studio
+                        </button>
+                        <button type="button" class="btn-subcat-use-prompt" title="Load prompt into AI Generator">
+                            <span>✍️</span> Prompt
+                        </button>
+                        <button type="button" class="btn-subcat-copy" title="Copy prompt to clipboard">
+                            <span>📋</span>
+                        </button>
+                    </div>
+                `;
+
+                // Bind Buttons
+                const applyBtn = card.querySelector('.btn-subcat-apply');
+                const promptBtn = card.querySelector('.btn-subcat-use-prompt');
+                const copyBtn = card.querySelector('.btn-subcat-copy');
+
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.applySubCategoryToStudio(category, sub);
+                    });
+                }
+
+                if (promptBtn) {
+                    promptBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const promptInput = document.getElementById('ai-prompt-input');
+                        const studioPrompt = document.getElementById('ai-studio-prompt');
+                        if (promptInput) promptInput.value = sub.prompt;
+                        if (studioPrompt) studioPrompt.value = sub.prompt;
+                        if (typeof this.switchDockTab === 'function') this.switchDockTab('ai-generate');
+                        modal.classList.remove('active');
+                        this.showToast(`✍️ Prompt loaded: ${sub.name}`);
+                    });
+                }
+
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(sub.prompt);
+                            this.showToast(`📋 Copied prompt for ${sub.name}`);
+                        }
+                    });
+                }
+
+                gridContainer.appendChild(card);
+            });
+        };
+
+        if (searchInput) {
+            searchInput.oninput = (e) => {
+                renderSubCategories(e.target.value);
+            };
+        }
+
+        renderSubCategories('');
+        modal.classList.add('active');
+    },
+
+    applySubCategoryToStudio(category, subCategory) {
+        if (!subCategory) return;
+        
+        // Select pattern
+        const targetPattern = subCategory.patternType || (category.patternTypes && category.patternTypes[0]) || 'geometric';
+        if (typeof this.selectPattern === 'function') {
+            this.selectPattern(targetPattern);
+        } else {
+            this.state.patternType = targetPattern;
+        }
+
+        // Apply colors
+        if (subCategory.colors && subCategory.colors.length >= 2) {
+            this.state.colors = [...subCategory.colors];
+        }
+
+        // Update Prompt input
+        const promptInput = document.getElementById('ai-prompt-input');
+        const studioPrompt = document.getElementById('ai-studio-prompt');
+        if (promptInput) promptInput.value = subCategory.prompt;
+        if (studioPrompt) studioPrompt.value = subCategory.prompt;
+
+        this.applyStateToUI();
+        this.syncEasySlidersFromState();
+        this.pushHistory();
+        this.requestRender();
+        this.updatePatternInfo();
+        this.generateVariations();
+
+        this.showToast(`⚡ Generated: ${subCategory.name}`);
     },
 
     // ─── Curated Design Templates Studio ────────────────────────────────────
